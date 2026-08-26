@@ -3,17 +3,22 @@
 import { motion } from "framer-motion";
 import { useInView } from "@/hooks/useInView";
 import { siteData } from "@/data/siteData";
-import { Mail, Phone, MapPin, ArrowUpRight, Clock, ShieldCheck } from "lucide-react";
+import { Mail, Phone, MapPin, ArrowUpRight, ShieldCheck } from "lucide-react";
 
 export default function Contact() {
   const { ref, isInView } = useInView({ threshold: 0.1 });
 
   return (
-    <section id="contact" className="section-padding relative overflow-hidden" ref={ref}>
+    <section
+      id="contact"
+      className="relative overflow-hidden"
+      ref={ref}
+      style={{ paddingTop: "clamp(6rem, 12vh, 12rem)", paddingBottom: "clamp(6rem, 12vh, 12rem)" }}
+    >
       <div className="container-custom">
         {/* Section Header */}
         <motion.div
-          className="flex items-center gap-3 mb-6"
+          className="flex items-center gap-3 mb-10"
           initial={{ opacity: 0, x: -20 }}
           animate={isInView ? { opacity: 1, x: 0 } : {}}
           transition={{ duration: 0.6 }}
@@ -25,12 +30,14 @@ export default function Contact() {
           </span>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-          
-          {/* Left Column: Heading, Subtext, Availability & Action Buttons */}
-          <div className="lg:col-span-6 space-y-8">
+        {/* Two-column layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-20 items-start">
+
+          {/* ── Left Column: CTA ── */}
+          <div className="lg:col-span-6">
+            {/* Heading */}
             <motion.h2
-              className="text-display font-display font-bold tracking-[-0.02em] leading-[0.95]"
+              className="text-display font-display font-bold tracking-[-0.02em] leading-[0.92] mb-10"
               initial={{ opacity: 0, y: 35 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, delay: 0.15 }}
@@ -42,7 +49,7 @@ export default function Contact() {
               <span className="relative inline-block">
                 MEANINGFUL
                 <motion.span
-                  className="absolute -bottom-2 left-0 h-[2px] bg-[var(--color-accent)]"
+                  className="absolute -bottom-3 left-0 h-[2px] bg-[var(--color-accent)]"
                   initial={{ width: 0 }}
                   animate={isInView ? { width: "100%" } : {}}
                   transition={{ duration: 0.8, delay: 0.7 }}
@@ -51,8 +58,9 @@ export default function Contact() {
               <span className="text-[var(--color-accent)]">.</span>
             </motion.h2>
 
+            {/* Description */}
             <motion.p
-              className="text-[var(--color-text-secondary)] text-base md:text-lg leading-relaxed max-w-lg"
+              className="text-[var(--color-text-secondary)] text-base md:text-lg leading-[1.85] max-w-lg mb-10"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.3 }}
@@ -61,141 +69,137 @@ export default function Contact() {
               master planning, and turnkey project site execution worldwide.
             </motion.p>
 
-            {/* Status Pill */}
+            {/* Availability */}
             <motion.div
-              className="inline-flex items-center gap-3 px-4 py-2 bg-[var(--color-bg-alt)] border border-[var(--color-border)] text-xs font-semibold tracking-wider text-[var(--color-text)]"
+              className="inline-flex items-center gap-3 px-5 py-3 bg-[var(--color-bg-alt)] border border-[var(--color-border)] mb-12"
               initial={{ opacity: 0 }}
               animate={isInView ? { opacity: 1 } : {}}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>AVAILABLE FOR NEW COMMISSIONS & CONSULTING</span>
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-xs font-semibold tracking-[0.15em] uppercase text-[var(--color-text)]">
+                AVAILABLE FOR NEW COMMISSIONS
+              </span>
             </motion.div>
 
-            {/* Action Buttons */}
+            {/* Buttons */}
             <motion.div
-              className="flex flex-wrap gap-4 pt-2"
+              className="flex flex-wrap gap-5"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.5 }}
             >
               <a
                 href={`mailto:${siteData.personal.email}`}
-                className="btn-primary group text-xs md:text-sm py-4 px-8 font-semibold tracking-widest"
+                className="btn-primary group py-5 px-10"
               >
-                <span>EMAIL DIRECTLY</span>
-                <Mail className="w-4 h-4 text-[var(--color-accent)] group-hover:text-white transition-colors" />
+                EMAIL DIRECTLY
+                <Mail className="w-4 h-4" />
               </a>
               <a
                 href={`tel:${siteData.personal.phone}`}
-                className="btn-outline group text-xs md:text-sm py-4 px-8 font-semibold tracking-widest"
+                className="btn-outline group py-5 px-10"
               >
-                <span>CALL NOW</span>
-                <Phone className="w-4 h-4 text-[var(--color-accent)] group-hover:translate-x-0.5 transition-transform" />
+                CALL NOW
+                <Phone className="w-4 h-4" />
               </a>
             </motion.div>
           </div>
 
-          {/* Right Column: Architectural Contact Cards Grid */}
-          <div className="lg:col-span-6 space-y-5">
-            
-            {/* Card 1: Direct Email */}
+          {/* ── Right Column: Contact Cards ── */}
+          <div className="lg:col-span-6 space-y-6 lg:pt-6">
+
+            {/* Email Card */}
             <motion.a
               href={`mailto:${siteData.personal.email}`}
-              className="group block p-6 md:p-7 border border-[var(--color-border)] bg-[var(--color-bg-alt)]/40 hover:bg-[var(--color-bg-alt)] hover:border-[var(--color-accent)] transition-all duration-400 relative overflow-hidden"
+              className="group block p-8 md:p-10 border border-[var(--color-border)] hover:border-[var(--color-accent)] bg-[var(--color-bg-alt)]/30 hover:bg-[var(--color-bg-alt)] transition-all duration-400 relative overflow-hidden"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.3 }}
             >
               <div className="absolute top-0 left-0 w-1 h-full bg-[var(--color-accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <div className="flex items-start justify-between">
-                <div>
-                  <div className="flex items-center gap-2 text-micro text-[var(--color-accent)] font-semibold mb-2">
-                    <Mail className="w-3.5 h-3.5" />
-                    <span>DIRECT EMAIL INQUIRIES</span>
+              <div className="flex items-start justify-between gap-4">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2.5">
+                    <Mail className="w-4 h-4 text-[var(--color-accent)]" />
+                    <span className="text-micro text-[var(--color-accent)] font-semibold">
+                      EMAIL
+                    </span>
                   </div>
-                  <h3 className="font-display text-lg md:text-xl font-bold text-[var(--color-text)] group-hover:text-[var(--color-accent)] transition-colors">
+                  <h3 className="font-display text-xl md:text-2xl font-bold text-[var(--color-text)] group-hover:text-[var(--color-accent)] transition-colors">
                     {siteData.personal.email}
                   </h3>
-                  <p className="text-xs text-[var(--color-text-muted)] mt-1">
-                    Typical response time within 24 hours
+                  <p className="text-sm text-[var(--color-text-muted)]">
+                    Typical response within 24 hours
                   </p>
                 </div>
-                <div className="w-9 h-9 border border-[var(--color-border)] group-hover:border-[var(--color-accent)] flex items-center justify-center transition-colors">
-                  <ArrowUpRight className="w-4 h-4 text-[var(--color-text-secondary)] group-hover:text-[var(--color-accent)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                <div className="w-10 h-10 border border-[var(--color-border)] group-hover:border-[var(--color-accent)] group-hover:bg-[var(--color-accent)] flex items-center justify-center transition-all duration-300 shrink-0">
+                  <ArrowUpRight className="w-4 h-4 text-[var(--color-text-secondary)] group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
                 </div>
               </div>
             </motion.a>
 
-            {/* Card 2: Phone & WhatsApp */}
+            {/* Phone Card */}
             <motion.a
               href={`tel:${siteData.personal.phone}`}
-              className="group block p-6 md:p-7 border border-[var(--color-border)] bg-[var(--color-bg-alt)]/40 hover:bg-[var(--color-bg-alt)] hover:border-[var(--color-accent)] transition-all duration-400 relative overflow-hidden"
+              className="group block p-8 md:p-10 border border-[var(--color-border)] hover:border-[var(--color-accent)] bg-[var(--color-bg-alt)]/30 hover:bg-[var(--color-bg-alt)] transition-all duration-400 relative overflow-hidden"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
               <div className="absolute top-0 left-0 w-1 h-full bg-[var(--color-accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <div className="flex items-start justify-between">
-                <div>
-                  <div className="flex items-center gap-2 text-micro text-[var(--color-accent)] font-semibold mb-2">
-                    <Phone className="w-3.5 h-3.5" />
-                    <span>DIRECT PHONE / WHATSAPP</span>
+              <div className="flex items-start justify-between gap-4">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2.5">
+                    <Phone className="w-4 h-4 text-[var(--color-accent)]" />
+                    <span className="text-micro text-[var(--color-accent)] font-semibold">
+                      PHONE / WHATSAPP
+                    </span>
                   </div>
-                  <h3 className="font-display text-lg md:text-xl font-bold text-[var(--color-text)] group-hover:text-[var(--color-accent)] transition-colors">
+                  <h3 className="font-display text-xl md:text-2xl font-bold text-[var(--color-text)] group-hover:text-[var(--color-accent)] transition-colors">
                     {siteData.personal.phone}
                   </h3>
-                  <p className="text-xs text-[var(--color-text-muted)] mt-1">
-                    Available Mon – Sat, 9:00 AM – 7:00 PM PKT
+                  <p className="text-sm text-[var(--color-text-muted)]">
+                    Mon – Sat, 9:00 AM – 7:00 PM PKT
                   </p>
                 </div>
-                <div className="w-9 h-9 border border-[var(--color-border)] group-hover:border-[var(--color-accent)] flex items-center justify-center transition-colors">
-                  <ArrowUpRight className="w-4 h-4 text-[var(--color-text-secondary)] group-hover:text-[var(--color-accent)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                <div className="w-10 h-10 border border-[var(--color-border)] group-hover:border-[var(--color-accent)] group-hover:bg-[var(--color-accent)] flex items-center justify-center transition-all duration-300 shrink-0">
+                  <ArrowUpRight className="w-4 h-4 text-[var(--color-text-secondary)] group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
                 </div>
               </div>
             </motion.a>
 
-            {/* Card 3: Location / Studio */}
+            {/* Location Card */}
             <motion.div
-              className="p-6 md:p-7 border border-[var(--color-border)] bg-[var(--color-bg-alt)]/40 relative overflow-hidden"
+              className="p-8 md:p-10 border border-[var(--color-border)] bg-[var(--color-bg-alt)]/30 relative overflow-hidden"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.5 }}
             >
-              <div className="flex items-start justify-between">
-                <div>
-                  <div className="flex items-center gap-2 text-micro text-[var(--color-accent)] font-semibold mb-2">
-                    <MapPin className="w-3.5 h-3.5" />
-                    <span>LOCATION & REGIONS</span>
+              <div className="flex items-start justify-between gap-4">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2.5">
+                    <MapPin className="w-4 h-4 text-[var(--color-accent)]" />
+                    <span className="text-micro text-[var(--color-accent)] font-semibold">
+                      BASED IN
+                    </span>
                   </div>
-                  <h3 className="font-display text-lg md:text-xl font-bold text-[var(--color-text)]">
+                  <h3 className="font-display text-xl md:text-2xl font-bold text-[var(--color-text)]">
                     {siteData.personal.location}
                   </h3>
-                  <p className="text-xs text-[var(--color-text-muted)] mt-1">
-                    Serving nationwide Pakistan & International Clients (Guyana, UAE, UK)
+                  <p className="text-sm text-[var(--color-text-muted)]">
+                    Pakistan &amp; International — Guyana, UAE, UK
                   </p>
                 </div>
-                <div className="w-9 h-9 border border-[var(--color-border)] flex items-center justify-center">
+                <div className="w-10 h-10 border border-[var(--color-border)] flex items-center justify-center shrink-0">
                   <ShieldCheck className="w-4 h-4 text-[var(--color-accent)]" />
                 </div>
               </div>
             </motion.div>
 
           </div>
-
         </div>
       </div>
-
-      {/* Background Architectural Grid Lines */}
-      <motion.div
-        className="absolute left-[3%] top-0 w-px h-full hidden 2xl:block pointer-events-none"
-        style={{ background: "var(--color-border)", opacity: 0.3, transformOrigin: "top" }}
-        initial={{ scaleY: 0 }}
-        animate={isInView ? { scaleY: 1 } : {}}
-        transition={{ duration: 1.5 }}
-      >
-        <span className="absolute top-1/2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]" />
-      </motion.div>
     </section>
   );
 }
