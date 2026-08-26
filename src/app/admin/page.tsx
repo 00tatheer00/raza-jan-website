@@ -16,7 +16,6 @@ import {
   Edit2,
   Trash2,
   Star,
-  ExternalLink,
   Search,
   LayoutGrid,
   List,
@@ -29,7 +28,6 @@ import {
   Layers,
   Bell,
   Check,
-  Filter,
   BarChart3,
   Image as ImageIcon,
   Users,
@@ -294,7 +292,7 @@ export default function AdminDashboard() {
         selectedCategory === "All Categories" ||
         selectedCategory === "All" ||
         p.category.toUpperCase() === selectedCategory.toUpperCase();
-      
+
       const statusMatches =
         selectedStatus === "All" ||
         p.status?.toUpperCase() === selectedStatus.toUpperCase();
@@ -336,15 +334,15 @@ export default function AdminDashboard() {
       </div>
 
       {/* ══════════════════════════════════════════════════════════
-          1. FIXED LEFT SIDEBAR (EXACT MATCH TO REFERENCE IMAGE)
+          1. STICKY LEFT SIDEBAR (NON-OVERLAPPING FLEX CHILD)
           ══════════════════════════════════════════════════════════ */}
-      <aside className="w-[275px] bg-[#07080A] border-r border-[#16171D] hidden lg:flex flex-col justify-between fixed top-0 left-0 h-screen z-40 p-6 select-none">
+      <aside className="w-[260px] shrink-0 bg-[#07080A] border-r border-[#16171D] sticky top-0 h-screen hidden md:flex flex-col justify-between p-5 z-20 select-none overflow-y-auto">
         
-        <div className="space-y-7">
+        <div className="space-y-6">
           
           {/* Top Logo: EEST Architecture Studio Monogram */}
-          <div className="flex items-center gap-3.5 pt-1">
-            <svg width="42" height="42" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+          <div className="flex items-center gap-3 pt-1">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
               <rect x="2" y="2" width="36" height="36" rx="4" stroke="#DFB75C" strokeWidth="2.5" />
               <path d="M12 12H28V20H20V28H12V12Z" stroke="#DFB75C" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
               <path d="M20 20H28V28H20V20Z" stroke="#DFB75C" strokeWidth="2.5" fill="#DFB75C"/>
@@ -361,7 +359,7 @@ export default function AdminDashboard() {
           </div>
 
           {/* Navigation Items */}
-          <div className="space-y-6 pt-2">
+          <div className="space-y-5 pt-1">
             
             {/* Group 1: STUDIO MANAGEMENT */}
             <div className="space-y-2">
@@ -369,7 +367,7 @@ export default function AdminDashboard() {
                 STUDIO MANAGEMENT
               </div>
 
-              <div className="space-y-1.5">
+              <div className="space-y-1">
                 {/* Active Projects Portfolio Button (Solid Gold) */}
                 <button
                   onClick={() => setActiveNav("projects")}
@@ -437,10 +435,10 @@ export default function AdminDashboard() {
         </div>
 
         {/* Bottom Profile Section */}
-        <div className="space-y-4 pt-4 border-t border-[#14151B]">
+        <div className="space-y-3 pt-4 border-t border-[#14151B]">
           <div className="flex items-center gap-3 px-1">
             {/* Circular SRJ Badge */}
-            <div className="w-10 h-10 rounded-full border-2 border-[#DFB75C]/60 bg-[#12131A] flex items-center justify-center font-display font-bold text-xs text-[#DFB75C] shrink-0">
+            <div className="w-9 h-9 rounded-full border-2 border-[#DFB75C]/60 bg-[#12131A] flex items-center justify-center font-display font-bold text-xs text-[#DFB75C] shrink-0">
               SRJ
             </div>
             <div className="truncate">
@@ -455,7 +453,7 @@ export default function AdminDashboard() {
 
           <Link
             href="/"
-            className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-[#6B7280] hover:text-red-400 transition-colors cursor-pointer"
+            className="w-full flex items-center gap-2 px-2 py-1 text-xs text-[#6B7280] hover:text-red-400 transition-colors cursor-pointer"
           >
             <LogOut className="w-3.5 h-3.5" />
             <span>Log out</span>
@@ -465,452 +463,449 @@ export default function AdminDashboard() {
       </aside>
 
       {/* ══════════════════════════════════════════════════════════
-          2. MAIN DASHBOARD CONTENT AREA
+          2. MAIN DASHBOARD CONTENT AREA (NEVER OVERLAPPED)
           ══════════════════════════════════════════════════════════ */}
-      <div className="flex-1 lg:ml-[275px] min-w-0 flex flex-col">
+      <div className="flex-1 min-w-0 flex flex-col p-6 sm:p-8 lg:p-10 space-y-7">
         
-        <main className="max-w-[1440px] w-full mx-auto px-6 sm:px-10 lg:px-12 py-8 sm:py-10 space-y-7">
+        {/* ── MAIN HEADER ── */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div className="text-xs text-[#7F8494]">Welcome back,</div>
+            <h1 className="font-display text-2xl sm:text-3xl font-bold text-white tracking-tight mt-0.5">
+              Syed Raza Jan
+            </h1>
+            <p className="text-xs sm:text-sm text-[#73798C] mt-1">
+              Here&apos;s what&apos;s happening with your studio today.
+            </p>
+          </div>
+
+          {/* Right Header Buttons: + Create Project & Notification */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={openCreateForm}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[#DFB75C] hover:bg-[#C9A247] text-[#000000] font-bold text-xs rounded-lg transition-all shadow-sm cursor-pointer"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Create Project</span>
+            </button>
+
+            {/* Notification Icon */}
+            <div className="relative">
+              <button
+                onClick={() => setIsNotifDropdownOpen(!isNotifDropdownOpen)}
+                className="p-2 rounded-lg bg-[#111217] hover:bg-[#1A1C24] border border-[#1C1E26] text-[#8A8F9E] hover:text-white transition-colors cursor-pointer relative"
+                title="Notifications"
+              >
+                <Bell className="w-4 h-4" />
+                <span className="absolute -top-1 -right-1 text-[0.6rem] font-bold bg-transparent text-[#7F8494]">
+                  0
+                </span>
+              </button>
+
+              <AnimatePresence>
+                {isNotifDropdownOpen && (
+                  <motion.div
+                    className="absolute right-0 mt-3 w-80 bg-[#161922] border border-[#2B2F3E] rounded-2xl shadow-2xl p-4 z-50 space-y-3"
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  >
+                    <div className="flex items-center justify-between pb-2 border-b border-[#222632]">
+                      <span className="font-display font-bold text-xs uppercase tracking-wider text-white">
+                        Studio Notifications
+                      </span>
+                      <span className="text-[0.65rem] text-[#DFB75C]">Active</span>
+                    </div>
+                    <div className="space-y-2 max-h-60 overflow-y-auto">
+                      {notifications.map((n) => (
+                        <div key={n.id} className="p-2.5 rounded-xl bg-[#11131A] border border-[#20232E] text-xs">
+                          <div className="font-bold text-white">{n.title}</div>
+                          <div className="text-[0.7rem] text-[#8A8F9E] mt-0.5">{n.desc}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+        </div>
+
+        {/* ── 4 LARGE STATISTICS CARDS ── */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5">
           
-          {/* ── MAIN HEADER ── */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+          {/* Card 1: TOTAL COMMISSIONS */}
+          <div className="bg-[#111217] border border-[#1C1E26] rounded-2xl p-5 flex items-center gap-4.5">
+            <div className="w-12 h-12 rounded-full border border-[#DFB75C]/40 bg-[#161720] flex items-center justify-center text-[#DFB75C] shrink-0">
+              <Building2 className="w-5 h-5" />
+            </div>
             <div>
-              <div className="text-xs text-[#7F8494]">Welcome back,</div>
-              <h1 className="font-display text-2xl sm:text-3xl font-bold text-white tracking-tight mt-0.5">
-                Syed Raza Jan
-              </h1>
-              <p className="text-xs sm:text-sm text-[#73798C] mt-1">
-                Here&apos;s what&apos;s happening with your studio today.
-              </p>
+              <div className="text-[0.65rem] font-bold uppercase tracking-wider text-[#7F8494]">
+                TOTAL COMMISSIONS
+              </div>
+              <div className="font-display text-2xl font-bold text-white mt-0.5">
+                {totalCommissions}
+              </div>
+              <div className="text-[0.7rem] text-[#656A7A]">All time projects</div>
+            </div>
+          </div>
+
+          {/* Card 2: FEATURED SHOWCASE */}
+          <div className="bg-[#111217] border border-[#1C1E26] rounded-2xl p-5 flex items-center gap-4.5">
+            <div className="w-12 h-12 rounded-full border border-[#DFB75C]/40 bg-[#161720] flex items-center justify-center text-[#DFB75C] shrink-0">
+              <Star className="w-5 h-5 fill-current" />
+            </div>
+            <div>
+              <div className="text-[0.65rem] font-bold uppercase tracking-wider text-[#DFB75C]">
+                FEATURED SHOWCASE
+              </div>
+              <div className="font-display text-2xl font-bold text-white mt-0.5">
+                {featuredCount}
+              </div>
+              <div className="text-[0.7rem] text-[#656A7A]">Highlighted projects</div>
+            </div>
+          </div>
+
+          {/* Card 3: ACTIVE EXECUTION */}
+          <div className="bg-[#111217] border border-[#1C1E26] rounded-2xl p-5 flex items-center gap-4.5">
+            <div className="w-12 h-12 rounded-full border border-[#059669]/40 bg-[#161720] flex items-center justify-center text-[#34D399] shrink-0">
+              <Compass className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="text-[0.65rem] font-bold uppercase tracking-wider text-[#7F8494]">
+                ACTIVE EXECUTION
+              </div>
+              <div className="font-display text-2xl font-bold text-white mt-0.5">
+                {activeExecutionCount}
+              </div>
+              <div className="text-[0.7rem] text-[#656A7A] flex items-center gap-1.5">
+                <span>Currently in progress</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] inline-block animate-pulse" />
+              </div>
+            </div>
+          </div>
+
+          {/* Card 4: COMPLETED WORKS */}
+          <div className="bg-[#111217] border border-[#1C1E26] rounded-2xl p-5 flex items-center gap-4.5">
+            <div className="w-12 h-12 rounded-full border border-[#2563EB]/40 bg-[#161720] flex items-center justify-center text-[#60A5FA] shrink-0">
+              <Check className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="text-[0.65rem] font-bold uppercase tracking-wider text-[#7F8494]">
+                COMPLETED WORKS
+              </div>
+              <div className="font-display text-2xl font-bold text-white mt-0.5">
+                {completedCount}
+              </div>
+              <div className="text-[0.7rem] text-[#656A7A]">Successfully delivered</div>
+            </div>
+          </div>
+
+        </div>
+
+        {/* ── FILTER & CONTROL BAR (MATCHING REFERENCE IMAGE) ── */}
+        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 pt-1">
+          
+          {/* Category Pills (Left) */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 max-w-full">
+            {[
+              "All Categories",
+              "Architecture",
+              "Interior",
+              "3D Visualization",
+              "Master Planning",
+              "Residential",
+              "Commercial",
+            ].map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer whitespace-nowrap border ${
+                  selectedCategory === cat
+                    ? "border-[#DFB75C] bg-[#1C1A14] text-[#DFB75C] shadow-sm"
+                    : "border-[#1C1E26] bg-[#111217] text-[#8A8F9E] hover:text-white hover:border-[#2E3344]"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {/* Right Controls */}
+          <div className="flex items-center gap-3 shrink-0">
+            
+            {/* Status Filter */}
+            <div className="relative">
+              <select
+                value={selectedStatus}
+                onChange={(e) => setSelectedStatus(e.target.value)}
+                className="appearance-none px-4 py-2 pr-8 bg-[#111217] border border-[#1C1E26] rounded-xl text-xs text-[#8A8F9E] focus:outline-none focus:border-[#DFB75C] cursor-pointer"
+              >
+                <option value="All">/ All Status</option>
+                <option value="IN PROGRESS">In Progress</option>
+                <option value="COMPLETED">Completed</option>
+              </select>
+              <ChevronDown className="w-3.5 h-3.5 text-[#656A7A] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
 
-            {/* Right Header Buttons: + Create Project & Notification */}
-            <div className="flex items-center gap-3">
-              <button
-                onClick={openCreateForm}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-[#DFB75C] hover:bg-[#C9A247] text-[#000000] font-bold text-xs rounded-lg transition-all shadow-sm cursor-pointer"
+            {/* Sort By */}
+            <div className="relative">
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as any)}
+                className="appearance-none px-4 py-2 pr-8 bg-[#111217] border border-[#1C1E26] rounded-xl text-xs text-[#8A8F9E] focus:outline-none focus:border-[#DFB75C] cursor-pointer"
               >
-                <Plus className="w-4 h-4" />
-                <span>Create Project</span>
+                <option value="newest">Sort: Newest</option>
+                <option value="oldest">Sort: Oldest</option>
+                <option value="title">Sort: A–Z</option>
+              </select>
+              <ChevronDown className="w-3.5 h-3.5 text-[#656A7A] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            </div>
+
+            {/* Grid / Table view toggle */}
+            <div className="flex items-center bg-[#111217] border border-[#1C1E26] rounded-xl p-1">
+              <button
+                onClick={() => setViewMode("grid")}
+                className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                  viewMode === "grid" ? "bg-[#1C1E26] text-white" : "text-[#656A7A]"
+                }`}
+                title="Grid View"
+              >
+                <LayoutGrid className="w-4 h-4" />
               </button>
+              <button
+                onClick={() => setViewMode("table")}
+                className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                  viewMode === "table" ? "bg-[#1C1E26] text-white" : "text-[#656A7A]"
+                }`}
+                title="List View"
+              >
+                <List className="w-4 h-4" />
+              </button>
+            </div>
 
-              {/* Notification Icon */}
-              <div className="relative">
-                <button
-                  onClick={() => setIsNotifDropdownOpen(!isNotifDropdownOpen)}
-                  className="p-2.5 rounded-lg bg-[#111217] hover:bg-[#1A1C24] border border-[#1C1E26] text-[#8A8F9E] hover:text-white transition-colors cursor-pointer relative"
-                  title="Notifications"
-                >
-                  <Bell className="w-4 h-4" />
-                  <span className="absolute -top-1 -right-1 text-[0.6rem] font-bold bg-transparent text-[#7F8494]">
-                    0
-                  </span>
-                </button>
+          </div>
 
-                <AnimatePresence>
-                  {isNotifDropdownOpen && (
-                    <motion.div
-                      className="absolute right-0 mt-3 w-80 bg-[#161922] border border-[#2B2F3E] rounded-2xl shadow-2xl p-4 z-50 space-y-3"
-                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+        </div>
+
+        {/* ══════════════════════════════════════════════════════════
+            3. THREE-COLUMN ARCHITECTURE PROJECT CARDS GRID
+            ══════════════════════════════════════════════════════════ */}
+        {isLoading ? (
+          <div className="py-24 text-center text-[#656A7A] text-xs">
+            Loading studio projects...
+          </div>
+        ) : filteredProjects.length === 0 ? (
+          <div className="py-20 text-center space-y-3 bg-[#111217] border border-[#1C1E26] rounded-2xl">
+            <Building2 className="w-10 h-10 text-[#555A6B] mx-auto" />
+            <p className="font-display text-white font-bold text-base">No Projects Found</p>
+            <p className="text-xs text-[#8A8F9E]">Try changing your category filter.</p>
+            <button
+              onClick={openCreateForm}
+              className="mt-2 inline-flex items-center gap-2 px-4 py-2 bg-[#DFB75C] text-[#000000] font-bold text-xs rounded-xl"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Add First Project</span>
+            </button>
+          </div>
+        ) : viewMode === "grid" ? (
+          
+          /* ── 3-COLUMN PROJECT GRID ── */
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {filteredProjects.map((project) => (
+              <motion.div
+                key={project.id}
+                layout
+                className="group bg-[#111217] border border-[#1C1E26] hover:border-[#2D3240] rounded-[16px] overflow-hidden transition-all duration-300 flex flex-col justify-between"
+              >
+                <div>
+                  {/* ── CARD IMAGE WITH BADGES ── */}
+                  <div className="relative aspect-[16/10] bg-[#161720] overflow-hidden">
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      fill
+                      unoptimized
+                      className="object-cover group-hover:scale-103 transition-transform duration-500 ease-out"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                    />
+
+                    {/* Top Badges (Left) */}
+                    <div className="absolute top-3 left-3 flex items-center gap-1.5">
+                      {/* Category Badge */}
+                      <span className="px-2.5 py-1 rounded-md bg-[#07080A]/90 backdrop-blur-md text-[0.62rem] font-bold tracking-wider uppercase text-[#DFB75C] border border-[#DFB75C]/30">
+                        {project.category.toUpperCase()}
+                      </span>
+
+                      {/* Status Badge */}
+                      <span
+                        className={`px-2.5 py-1 rounded-md backdrop-blur-md text-[0.62rem] font-bold tracking-wider uppercase border ${
+                          project.status?.toUpperCase() === "IN PROGRESS" || project.status === "In Progress"
+                            ? "bg-[#0E281E]/90 text-[#34D399] border-[#059669]/40"
+                            : "bg-[#13233D]/90 text-[#60A5FA] border-[#2563EB]/40"
+                        }`}
+                      >
+                        {project.status?.toUpperCase() || "COMPLETED"}
+                      </span>
+                    </div>
+
+                    {/* Top Star (Right) */}
+                    <button
+                      onClick={() => handleToggleFeatured(project.id)}
+                      className={`absolute top-3 right-3 w-8 h-8 rounded-lg backdrop-blur-md flex items-center justify-center transition-colors cursor-pointer ${
+                        project.featured
+                          ? "bg-[#DFB75C] text-[#000000] shadow-md"
+                          : "bg-[#07080A]/80 text-[#DFB75C] hover:bg-[#07080A]"
+                      }`}
+                      title={project.featured ? "Featured showcase" : "Mark as featured"}
                     >
-                      <div className="flex items-center justify-between pb-2 border-b border-[#222632]">
-                        <span className="font-display font-bold text-xs uppercase tracking-wider text-white">
-                          Studio Notifications
-                        </span>
-                        <span className="text-[0.65rem] text-[#DFB75C]">Active</span>
+                      <Star className={`w-3.5 h-3.5 ${project.featured ? "fill-current" : ""}`} />
+                    </button>
+                  </div>
+
+                  {/* ── CARD BODY ── */}
+                  <div className="p-5 space-y-2.5">
+                    
+                    {/* Location & Year */}
+                    <div className="flex items-center justify-between text-xs text-[#8A8F9E]">
+                      <span className="flex items-center gap-1 text-[#DFB75C]">
+                        <MapPin className="w-3.5 h-3.5" />
+                        <span>{project.location}</span>
+                      </span>
+                      <span className="text-[#656A7A] font-medium">{project.year}</span>
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="font-display font-bold text-[1.12rem] text-white group-hover:text-[#DFB75C] transition-colors leading-snug">
+                      {project.title}
+                    </h3>
+
+                    {/* Client */}
+                    {project.client && (
+                      <div className="text-xs text-[#8A8F9E]">
+                        <span className="text-[#DFB75C] font-medium">Client:</span> {project.client}
                       </div>
-                      <div className="space-y-2 max-h-60 overflow-y-auto">
-                        {notifications.map((n) => (
-                          <div key={n.id} className="p-2.5 rounded-xl bg-[#11131A] border border-[#20232E] text-xs">
-                            <div className="font-bold text-white">{n.title}</div>
-                            <div className="text-[0.7rem] text-[#8A8F9E] mt-0.5">{n.desc}</div>
-                          </div>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
+                    )}
+
+                    {/* Short Description */}
+                    <p className="text-xs text-[#73798C] line-clamp-2 leading-relaxed pt-0.5">
+                      {project.description}
+                    </p>
+                  </div>
+                </div>
+
+                {/* ── CARD FOOTER: TAGS & ACTIONS ── */}
+                <div className="p-5 pt-0 mt-1 flex items-center justify-between gap-2 border-t border-[#181920] pt-3">
+                  <div className="flex flex-wrap gap-1.5 max-w-[70%]">
+                    {project.tags.slice(0, 2).map((tag, i) => (
+                      <span
+                        key={i}
+                        className="px-2.5 py-0.5 bg-[#161720] text-[#8A8F9E] text-[0.65rem] rounded-md font-medium"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Action buttons */}
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <button
+                      onClick={() => openEditForm(project)}
+                      className="p-1.5 bg-[#161720] hover:bg-[#DFB75C] hover:text-[#000000] text-[#8A8F9E] rounded-lg transition-colors cursor-pointer"
+                      title="Edit Project"
+                    >
+                      <Edit2 className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => setDeleteTarget(project)}
+                      className="p-1.5 bg-[#161720] hover:bg-red-600 hover:text-white text-[#8A8F9E] rounded-lg transition-colors cursor-pointer"
+                      title="Delete Project"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+
+              </motion.div>
+            ))}
           </div>
-
-          {/* ── 4 LARGE STATISTICS CARDS ── */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5">
-            
-            {/* Card 1: TOTAL COMMISSIONS */}
-            <div className="bg-[#111217] border border-[#1C1E26] rounded-2xl p-5 flex items-center gap-4.5">
-              <div className="w-12 h-12 rounded-full border border-[#DFB75C]/40 bg-[#161720] flex items-center justify-center text-[#DFB75C] shrink-0">
-                <Building2 className="w-5 h-5" />
-              </div>
-              <div>
-                <div className="text-[0.65rem] font-bold uppercase tracking-wider text-[#7F8494]">
-                  TOTAL COMMISSIONS
-                </div>
-                <div className="font-display text-2xl font-bold text-white mt-0.5">
-                  {totalCommissions}
-                </div>
-                <div className="text-[0.7rem] text-[#656A7A]">All time projects</div>
-              </div>
-            </div>
-
-            {/* Card 2: FEATURED SHOWCASE */}
-            <div className="bg-[#111217] border border-[#1C1E26] rounded-2xl p-5 flex items-center gap-4.5">
-              <div className="w-12 h-12 rounded-full border border-[#DFB75C]/40 bg-[#161720] flex items-center justify-center text-[#DFB75C] shrink-0">
-                <Star className="w-5 h-5 fill-current" />
-              </div>
-              <div>
-                <div className="text-[0.65rem] font-bold uppercase tracking-wider text-[#DFB75C]">
-                  FEATURED SHOWCASE
-                </div>
-                <div className="font-display text-2xl font-bold text-white mt-0.5">
-                  {featuredCount}
-                </div>
-                <div className="text-[0.7rem] text-[#656A7A]">Highlighted projects</div>
-              </div>
-            </div>
-
-            {/* Card 3: ACTIVE EXECUTION */}
-            <div className="bg-[#111217] border border-[#1C1E26] rounded-2xl p-5 flex items-center gap-4.5">
-              <div className="w-12 h-12 rounded-full border border-[#059669]/40 bg-[#161720] flex items-center justify-center text-[#34D399] shrink-0">
-                <Compass className="w-5 h-5" />
-              </div>
-              <div>
-                <div className="text-[0.65rem] font-bold uppercase tracking-wider text-[#7F8494]">
-                  ACTIVE EXECUTION
-                </div>
-                <div className="font-display text-2xl font-bold text-white mt-0.5">
-                  {activeExecutionCount}
-                </div>
-                <div className="text-[0.7rem] text-[#656A7A] flex items-center gap-1.5">
-                  <span>Currently in progress</span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] inline-block animate-pulse" />
-                </div>
-              </div>
-            </div>
-
-            {/* Card 4: COMPLETED WORKS */}
-            <div className="bg-[#111217] border border-[#1C1E26] rounded-2xl p-5 flex items-center gap-4.5">
-              <div className="w-12 h-12 rounded-full border border-[#2563EB]/40 bg-[#161720] flex items-center justify-center text-[#60A5FA] shrink-0">
-                <Check className="w-5 h-5" />
-              </div>
-              <div>
-                <div className="text-[0.65rem] font-bold uppercase tracking-wider text-[#7F8494]">
-                  COMPLETED WORKS
-                </div>
-                <div className="font-display text-2xl font-bold text-white mt-0.5">
-                  {completedCount}
-                </div>
-                <div className="text-[0.7rem] text-[#656A7A]">Successfully delivered</div>
-              </div>
-            </div>
-
-          </div>
-
-          {/* ── FILTER & CONTROL BAR (MATCHING REFERENCE IMAGE) ── */}
-          <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 pt-1">
-            
-            {/* Category Pills (Left) */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 max-w-full">
-              {[
-                "All Categories",
-                "Architecture",
-                "Interior",
-                "3D Visualization",
-                "Master Planning",
-                "Residential",
-                "Commercial",
-              ].map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer whitespace-nowrap border ${
-                    selectedCategory === cat
-                      ? "border-[#DFB75C] bg-[#1C1A14] text-[#DFB75C] shadow-sm"
-                      : "border-[#1C1E26] bg-[#111217] text-[#8A8F9E] hover:text-white hover:border-[#2E3344]"
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-
-            {/* Right Controls */}
-            <div className="flex items-center gap-3 shrink-0">
-              
-              {/* Status Filter */}
-              <div className="relative">
-                <select
-                  value={selectedStatus}
-                  onChange={(e) => setSelectedStatus(e.target.value)}
-                  className="appearance-none px-4 py-2 pr-8 bg-[#111217] border border-[#1C1E26] rounded-xl text-xs text-[#8A8F9E] focus:outline-none focus:border-[#DFB75C] cursor-pointer"
-                >
-                  <option value="All">/ All Status</option>
-                  <option value="IN PROGRESS">In Progress</option>
-                  <option value="COMPLETED">Completed</option>
-                </select>
-                <ChevronDown className="w-3.5 h-3.5 text-[#656A7A] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-              </div>
-
-              {/* Sort By */}
-              <div className="relative">
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as any)}
-                  className="appearance-none px-4 py-2 pr-8 bg-[#111217] border border-[#1C1E26] rounded-xl text-xs text-[#8A8F9E] focus:outline-none focus:border-[#DFB75C] cursor-pointer"
-                >
-                  <option value="newest">Sort: Newest</option>
-                  <option value="oldest">Sort: Oldest</option>
-                  <option value="title">Sort: A–Z</option>
-                </select>
-                <ChevronDown className="w-3.5 h-3.5 text-[#656A7A] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-              </div>
-
-              {/* Grid / Table view toggle */}
-              <div className="flex items-center bg-[#111217] border border-[#1C1E26] rounded-xl p-1">
-                <button
-                  onClick={() => setViewMode("grid")}
-                  className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
-                    viewMode === "grid" ? "bg-[#1C1E26] text-white" : "text-[#656A7A]"
-                  }`}
-                  title="Grid View"
-                >
-                  <LayoutGrid className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => setViewMode("table")}
-                  className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
-                    viewMode === "table" ? "bg-[#1C1E26] text-white" : "text-[#656A7A]"
-                  }`}
-                  title="List View"
-                >
-                  <List className="w-4 h-4" />
-                </button>
-              </div>
-
-            </div>
-
-          </div>
-
-          {/* ══════════════════════════════════════════════════════════
-              3. THREE-COLUMN ARCHITECTURE PROJECT CARDS GRID
-              ══════════════════════════════════════════════════════════ */}
-          {isLoading ? (
-            <div className="py-24 text-center text-[#656A7A] text-xs">
-              Loading studio projects...
-            </div>
-          ) : filteredProjects.length === 0 ? (
-            <div className="py-20 text-center space-y-3 bg-[#111217] border border-[#1C1E26] rounded-2xl">
-              <Building2 className="w-10 h-10 text-[#555A6B] mx-auto" />
-              <p className="font-display text-white font-bold text-base">No Projects Found</p>
-              <p className="text-xs text-[#8A8F9E]">Try changing your category filter.</p>
-              <button
-                onClick={openCreateForm}
-                className="mt-2 inline-flex items-center gap-2 px-4 py-2 bg-[#DFB75C] text-[#000000] font-bold text-xs rounded-xl"
-              >
-                <Plus className="w-4 h-4" />
-                <span>Add First Project</span>
-              </button>
-            </div>
-          ) : viewMode === "grid" ? (
-            
-            /* ── 3-COLUMN PROJECT GRID ── */
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filteredProjects.map((project) => (
-                <motion.div
-                  key={project.id}
-                  layout
-                  className="group bg-[#111217] border border-[#1C1E26] hover:border-[#2D3240] rounded-[16px] overflow-hidden transition-all duration-300 flex flex-col justify-between"
-                >
-                  <div>
-                    {/* ── CARD IMAGE WITH BADGES ── */}
-                    <div className="relative aspect-[16/10] bg-[#161720] overflow-hidden">
-                      <Image
-                        src={project.image}
-                        alt={project.title}
-                        fill
-                        unoptimized
-                        className="object-cover group-hover:scale-103 transition-transform duration-500 ease-out"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-                      />
-
-                      {/* Top Badges (Left) */}
-                      <div className="absolute top-3 left-3 flex items-center gap-1.5">
-                        {/* Category Badge */}
-                        <span className="px-2.5 py-1 rounded-md bg-[#07080A]/90 backdrop-blur-md text-[0.62rem] font-bold tracking-wider uppercase text-[#DFB75C] border border-[#DFB75C]/30">
-                          {project.category.toUpperCase()}
-                        </span>
-
-                        {/* Status Badge */}
+        ) : (
+          
+          /* ── TABLE VIEW ── */
+          <div className="bg-[#111217] border border-[#1C1E26] rounded-2xl overflow-hidden shadow-xl">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-[#161720] text-[#8A8F9E] uppercase tracking-wider font-semibold border-b border-[#1C1E26]">
+                  <tr>
+                    <th className="py-4 px-5">Project</th>
+                    <th className="py-4 px-5">Category</th>
+                    <th className="py-4 px-5">Location</th>
+                    <th className="py-4 px-5">Year</th>
+                    <th className="py-4 px-5">Status</th>
+                    <th className="py-4 px-5 text-center">Featured</th>
+                    <th className="py-4 px-5 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#181920]">
+                  {filteredProjects.map((project) => (
+                    <tr key={project.id} className="hover:bg-[#161720]/60 transition-colors">
+                      <td className="py-4 px-5 flex items-center gap-3.5">
+                        <div className="relative w-12 h-12 rounded-xl bg-[#1C1E26] overflow-hidden shrink-0">
+                          <Image src={project.image} alt={project.title} fill unoptimized className="object-cover" />
+                        </div>
+                        <div>
+                          <div className="font-bold text-white text-sm">{project.title}</div>
+                          {project.client && <div className="text-xs text-[#73798C]">Client: {project.client}</div>}
+                        </div>
+                      </td>
+                      <td className="py-4 px-5 text-[#DFB75C] font-medium">
+                        {project.category}
+                      </td>
+                      <td className="py-4 px-5 text-[#8A8F9E]">{project.location}</td>
+                      <td className="py-4 px-5 text-[#8A8F9E]">{project.year}</td>
+                      <td className="py-4 px-5">
                         <span
-                          className={`px-2.5 py-1 rounded-md backdrop-blur-md text-[0.62rem] font-bold tracking-wider uppercase border ${
+                          className={`px-2.5 py-1 rounded text-[0.65rem] font-bold ${
                             project.status?.toUpperCase() === "IN PROGRESS" || project.status === "In Progress"
-                              ? "bg-[#0E281E]/90 text-[#34D399] border-[#059669]/40"
-                              : "bg-[#13233D]/90 text-[#60A5FA] border-[#2563EB]/40"
+                              ? "bg-[#0E281E]/80 text-[#34D399] border border-[#059669]/40"
+                              : "bg-[#13233D]/80 text-[#60A5FA] border border-[#2563EB]/40"
                           }`}
                         >
                           {project.status?.toUpperCase() || "COMPLETED"}
                         </span>
-                      </div>
-
-                      {/* Top Star (Right) */}
-                      <button
-                        onClick={() => handleToggleFeatured(project.id)}
-                        className={`absolute top-3 right-3 w-8 h-8 rounded-lg backdrop-blur-md flex items-center justify-center transition-colors cursor-pointer ${
-                          project.featured
-                            ? "bg-[#DFB75C] text-[#000000] shadow-md"
-                            : "bg-[#07080A]/80 text-[#DFB75C] hover:bg-[#07080A]"
-                        }`}
-                        title={project.featured ? "Featured showcase" : "Mark as featured"}
-                      >
-                        <Star className={`w-3.5 h-3.5 ${project.featured ? "fill-current" : ""}`} />
-                      </button>
-                    </div>
-
-                    {/* ── CARD BODY ── */}
-                    <div className="p-5 space-y-2.5">
-                      
-                      {/* Location & Year */}
-                      <div className="flex items-center justify-between text-xs text-[#8A8F9E]">
-                        <span className="flex items-center gap-1 text-[#DFB75C]">
-                          <MapPin className="w-3.5 h-3.5" />
-                          <span>{project.location}</span>
-                        </span>
-                        <span className="text-[#656A7A] font-medium">{project.year}</span>
-                      </div>
-
-                      {/* Title */}
-                      <h3 className="font-display font-bold text-[1.12rem] text-white group-hover:text-[#DFB75C] transition-colors leading-snug">
-                        {project.title}
-                      </h3>
-
-                      {/* Client */}
-                      {project.client && (
-                        <div className="text-xs text-[#8A8F9E]">
-                          <span className="text-[#DFB75C] font-medium">Client:</span> {project.client}
-                        </div>
-                      )}
-
-                      {/* Short Description */}
-                      <p className="text-xs text-[#73798C] line-clamp-2 leading-relaxed pt-0.5">
-                        {project.description}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* ── CARD FOOTER: TAGS & ACTIONS ── */}
-                  <div className="p-5 pt-0 mt-1 flex items-center justify-between gap-2 border-t border-[#181920] pt-3">
-                    <div className="flex flex-wrap gap-1.5 max-w-[70%]">
-                      {project.tags.slice(0, 2).map((tag, i) => (
-                        <span
-                          key={i}
-                          className="px-2.5 py-0.5 bg-[#161720] text-[#8A8F9E] text-[0.65rem] rounded-md font-medium"
+                      </td>
+                      <td className="py-4 px-5 text-center">
+                        <button
+                          onClick={() => handleToggleFeatured(project.id)}
+                          className={`p-1.5 rounded cursor-pointer ${
+                            project.featured ? "text-[#DFB75C]" : "text-[#555A6B] hover:text-white"
+                          }`}
                         >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Action buttons */}
-                    <div className="flex items-center gap-1.5 shrink-0">
-                      <button
-                        onClick={() => openEditForm(project)}
-                        className="p-1.5 bg-[#161720] hover:bg-[#DFB75C] hover:text-[#000000] text-[#8A8F9E] rounded-lg transition-colors cursor-pointer"
-                        title="Edit Project"
-                      >
-                        <Edit2 className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => setDeleteTarget(project)}
-                        className="p-1.5 bg-[#161720] hover:bg-red-600 hover:text-white text-[#8A8F9E] rounded-lg transition-colors cursor-pointer"
-                        title="Delete Project"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </div>
-
-                </motion.div>
-              ))}
-            </div>
-          ) : (
-            
-            /* ── TABLE VIEW ── */
-            <div className="bg-[#111217] border border-[#1C1E26] rounded-2xl overflow-hidden shadow-xl">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-[#161720] text-[#8A8F9E] uppercase tracking-wider font-semibold border-b border-[#1C1E26]">
-                    <tr>
-                      <th className="py-4 px-5">Project</th>
-                      <th className="py-4 px-5">Category</th>
-                      <th className="py-4 px-5">Location</th>
-                      <th className="py-4 px-5">Year</th>
-                      <th className="py-4 px-5">Status</th>
-                      <th className="py-4 px-5 text-center">Featured</th>
-                      <th className="py-4 px-5 text-right">Actions</th>
+                          <Star className={`w-4 h-4 ${project.featured ? "fill-current" : ""}`} />
+                        </button>
+                      </td>
+                      <td className="py-4 px-5 text-right space-x-2">
+                        <button
+                          onClick={() => openEditForm(project)}
+                          className="p-1.5 bg-[#161720] hover:bg-[#DFB75C] hover:text-[#000000] rounded-lg text-[#8A8F9E] transition-colors cursor-pointer"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => setDeleteTarget(project)}
+                          className="p-1.5 bg-[#161720] hover:bg-red-600 hover:text-white rounded-lg text-[#8A8F9E] transition-colors cursor-pointer"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[#181920]">
-                    {filteredProjects.map((project) => (
-                      <tr key={project.id} className="hover:bg-[#161720]/60 transition-colors">
-                        <td className="py-4 px-5 flex items-center gap-3.5">
-                          <div className="relative w-12 h-12 rounded-xl bg-[#1C1E26] overflow-hidden shrink-0">
-                            <Image src={project.image} alt={project.title} fill unoptimized className="object-cover" />
-                          </div>
-                          <div>
-                            <div className="font-bold text-white text-sm">{project.title}</div>
-                            {project.client && <div className="text-xs text-[#73798C]">Client: {project.client}</div>}
-                          </div>
-                        </td>
-                        <td className="py-4 px-5 text-[#DFB75C] font-medium">
-                          {project.category}
-                        </td>
-                        <td className="py-4 px-5 text-[#8A8F9E]">{project.location}</td>
-                        <td className="py-4 px-5 text-[#8A8F9E]">{project.year}</td>
-                        <td className="py-4 px-5">
-                          <span
-                            className={`px-2.5 py-1 rounded text-[0.65rem] font-bold ${
-                              project.status?.toUpperCase() === "IN PROGRESS" || project.status === "In Progress"
-                                ? "bg-[#0E281E]/80 text-[#34D399] border border-[#059669]/40"
-                                : "bg-[#13233D]/80 text-[#60A5FA] border border-[#2563EB]/40"
-                            }`}
-                          >
-                            {project.status?.toUpperCase() || "COMPLETED"}
-                          </span>
-                        </td>
-                        <td className="py-4 px-5 text-center">
-                          <button
-                            onClick={() => handleToggleFeatured(project.id)}
-                            className={`p-1.5 rounded cursor-pointer ${
-                              project.featured ? "text-[#DFB75C]" : "text-[#555A6B] hover:text-white"
-                            }`}
-                          >
-                            <Star className={`w-4 h-4 ${project.featured ? "fill-current" : ""}`} />
-                          </button>
-                        </td>
-                        <td className="py-4 px-5 text-right space-x-2">
-                          <button
-                            onClick={() => openEditForm(project)}
-                            className="p-1.5 bg-[#161720] hover:bg-[#DFB75C] hover:text-[#000000] rounded-lg text-[#8A8F9E] transition-colors cursor-pointer"
-                          >
-                            <Edit2 className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            onClick={() => setDeleteTarget(project)}
-                            className="p-1.5 bg-[#161720] hover:bg-red-600 hover:text-white rounded-lg text-[#8A8F9E] transition-colors cursor-pointer"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                  ))}
+                </tbody>
+              </table>
             </div>
-          )}
+          </div>
+        )}
 
-        </main>
       </div>
 
       {/* ══════════════════════════════════════════════════════════
