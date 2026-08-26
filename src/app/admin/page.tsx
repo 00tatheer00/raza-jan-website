@@ -749,6 +749,7 @@ export default function AdminDashboard() {
                         src={project.image}
                         alt={project.title}
                         fill
+                        unoptimized
                         className="object-cover group-hover:scale-103 transition-transform duration-500 ease-out"
                         sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
                       />
@@ -874,7 +875,7 @@ export default function AdminDashboard() {
                       <tr key={project.id} className="hover:bg-[#181C26]/60 transition-colors">
                         <td className="py-4 px-5 flex items-center gap-3.5">
                           <div className="relative w-12 h-12 rounded-xl bg-[#20242F] overflow-hidden shrink-0">
-                            <Image src={project.image} alt={project.title} fill className="object-cover" />
+                            <Image src={project.image} alt={project.title} fill unoptimized className="object-cover" />
                           </div>
                           <div>
                             <div className="font-bold text-white text-sm">{project.title}</div>
@@ -1096,7 +1097,7 @@ export default function AdminDashboard() {
                   {/* Live preview */}
                   {formData.image && (
                     <div className="relative aspect-[16/9] w-full rounded-xl overflow-hidden border border-[#262A38] bg-black mt-2">
-                      <Image src={formData.image} alt="Preview" fill className="object-cover" />
+                      <Image src={formData.image} alt="Preview" fill unoptimized className="object-cover" />
                     </div>
                   )}
                 </div>
