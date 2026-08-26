@@ -1,5 +1,6 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Outfit, Space_Grotesk } from "next/font/google";
+import PWARegister from "@/components/PWARegister";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -16,10 +17,18 @@ const spaceGrotesk = Space_Grotesk({
   display: "swap",
 });
 
+export const viewport: Viewport = {
+  themeColor: "#111111",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export const metadata: Metadata = {
   title: "Syed Raza Jan — Architect | Interior Designer | 3D Visualization Specialist",
   description:
     "Syed Raza Jan is an architect, interior designer and 3D visualization specialist with 9+ years of professional experience in architectural design, interior design, planning, visualization and site execution.",
+  applicationName: "Syed Raza Jan Portfolio",
   keywords: [
     "architect",
     "interior designer",
@@ -33,6 +42,22 @@ export const metadata: Metadata = {
     "portfolio",
   ],
   authors: [{ name: "Syed Raza Jan" }],
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Raza Jan",
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/icons/icon-192x192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
   openGraph: {
     title: "Syed Raza Jan — Architect | Interior Designer | 3D Visualization Specialist",
     description:
@@ -53,13 +78,20 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html
       lang="en"
       className={`${outfit.variable} ${spaceGrotesk.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <PWARegister />
+        {children}
+      </body>
     </html>
   );
 }

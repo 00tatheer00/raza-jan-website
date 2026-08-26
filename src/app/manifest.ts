@@ -1,0 +1,37 @@
+import type { MetadataRoute } from "next";
+
+export default function manifest(): MetadataRoute.Manifest {
+  return {
+    name: "Syed Raza Jan — Architect & 3D Visualization Specialist",
+    short_name: "Raza Jan",
+    description:
+      "Portfolio of Syed Raza Jan, Architect, Interior Designer, and 3D Visualization Specialist with 9+ years of professional experience.",
+    start_url: "/",
+    display: "standalone",
+    background_color: "#FAFAF8",
+    theme_color: "#111111",
+    orientation: "portrait-primary",
+    scope: "/",
+    icons: [
+      {
+        src: "/icons/icon-192x192.png",
+        sizes: "192x192",
+        type: "image/png",
+        purpose: "any",
+      },
+      {
+        src: "/icons/icon-512x512.png",
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "any",
+      },
+      {
+        src: "/icons/maskable-icon-512x512.png",
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "maskable",
+      },
+    ],
+    categories: ["architecture", "design", "portfolio", "business"],
+  };
+}
