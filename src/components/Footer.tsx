@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { useInView } from "@/hooks/useInView";
 import { siteData } from "@/data/siteData";
 import { ArrowUp } from "lucide-react";
@@ -61,6 +62,14 @@ export default function Footer() {
               {item.label}
             </a>
           ))}
+
+          <Link
+            href="/admin"
+            className="text-[var(--color-text-muted)] hover:text-[var(--color-accent)] transition-colors flex items-center gap-1 opacity-70 hover:opacity-100"
+            title="Studio Admin Portal"
+          >
+            <span>CMS</span>
+          </Link>
 
           <span className="text-[var(--color-border)] hidden sm:inline">|</span>
 
