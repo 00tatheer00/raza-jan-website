@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { useInView } from "@/hooks/useInView";
 import { siteData } from "@/data/siteData";
-import { Mail, Phone, MapPin, ArrowUpRight } from "lucide-react";
+import { Mail, Phone, MapPin, ArrowUpRight, Clock, Globe } from "lucide-react";
 
 export default function Contact() {
   const { ref, isInView } = useInView({ threshold: 0.1 });
@@ -101,88 +101,110 @@ export default function Contact() {
             </motion.div>
           </div>
 
-          {/* ── Right Column: Architectural Contact Cards ── */}
-          <div className="lg:col-span-6 space-y-4 lg:pt-2">
+          {/* ── Right Column: Premium Architectural Contact Blocks ── */}
+          <div className="lg:col-span-6 space-y-6 lg:pt-2">
             
-            {/* Email Card */}
+            {/* Card 01: Direct Email */}
             <motion.a
               href={`mailto:${siteData.personal.email}`}
-              className="group block p-6 md:p-8 border border-[var(--color-border)] bg-white hover:border-[var(--color-accent)] transition-all duration-300 relative overflow-hidden"
+              className="group block p-7 sm:p-9 bg-white border border-[#E8E6E1] hover:border-[var(--color-accent)] transition-all duration-400 relative overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_32px_rgba(200,168,78,0.08)] hover:-translate-y-1"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.3 }}
             >
-              <div className="absolute top-0 left-0 w-1 h-full bg-[var(--color-accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <div className="flex items-start justify-between">
-                <div>
-                  <div className="flex items-center gap-2 text-micro text-[var(--color-accent)] font-semibold mb-2">
-                    <Mail className="w-3.5 h-3.5" />
-                    <span>DIRECT EMAIL</span>
-                  </div>
-                  <h3 className="font-display text-lg md:text-xl font-bold text-[var(--color-text)] group-hover:text-[var(--color-accent)] transition-colors">
-                    {siteData.personal.email}
-                  </h3>
-                  <p className="text-xs text-[var(--color-text-muted)] mt-1">
-                    Typical response within 24 hours
-                  </p>
+              {/* Gold Top Slide Line */}
+              <div className="absolute top-0 left-0 w-0 h-[2px] bg-[var(--color-accent)] group-hover:w-full transition-all duration-500 ease-out" />
+
+              <div className="flex items-center justify-between gap-4 mb-4">
+                <div className="flex items-center gap-3">
+                  <span className="font-display font-bold text-xs text-[var(--color-accent)] tracking-widest">
+                    01
+                  </span>
+                  <span className="w-1 h-1 rounded-full bg-[var(--color-accent)]" />
+                  <span className="text-micro text-[var(--color-text-muted)] font-semibold tracking-wider">
+                    DIRECT INQUIRY
+                  </span>
                 </div>
-                <div className="w-9 h-9 border border-[var(--color-border)] group-hover:border-[var(--color-accent)] group-hover:bg-[var(--color-accent)] flex items-center justify-center transition-all duration-300">
-                  <ArrowUpRight className="w-4 h-4 text-[var(--color-text-secondary)] group-hover:text-white transition-colors" />
+                <div className="w-8 h-8 rounded-xs border border-[#E8E6E1] group-hover:border-[var(--color-accent)] group-hover:bg-[var(--color-accent)] flex items-center justify-center transition-all duration-300">
+                  <ArrowUpRight className="w-3.5 h-3.5 text-[#555555] group-hover:text-white transition-colors" />
                 </div>
+              </div>
+
+              <h3 className="font-display text-xl sm:text-2xl font-bold text-[#111111] group-hover:text-[var(--color-accent)] transition-colors mb-2">
+                {siteData.personal.email}
+              </h3>
+
+              <div className="flex items-center gap-2 text-xs text-[#8A8882]">
+                <Clock className="w-3.5 h-3.5 text-[var(--color-accent)] shrink-0" />
+                <span>Typical response time within 24 hours</span>
               </div>
             </motion.a>
 
-            {/* Phone Card */}
+            {/* Card 02: Telephone & WhatsApp */}
             <motion.a
               href={`tel:${siteData.personal.phone}`}
-              className="group block p-6 md:p-8 border border-[var(--color-border)] bg-white hover:border-[var(--color-accent)] transition-all duration-300 relative overflow-hidden"
+              className="group block p-7 sm:p-9 bg-white border border-[#E8E6E1] hover:border-[var(--color-accent)] transition-all duration-400 relative overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_32px_rgba(200,168,78,0.08)] hover:-translate-y-1"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
-              <div className="absolute top-0 left-0 w-1 h-full bg-[var(--color-accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <div className="flex items-start justify-between">
-                <div>
-                  <div className="flex items-center gap-2 text-micro text-[var(--color-accent)] font-semibold mb-2">
-                    <Phone className="w-3.5 h-3.5" />
-                    <span>PHONE &amp; WHATSAPP</span>
-                  </div>
-                  <h3 className="font-display text-lg md:text-xl font-bold text-[var(--color-text)] group-hover:text-[var(--color-accent)] transition-colors">
-                    {siteData.personal.phone}
-                  </h3>
-                  <p className="text-xs text-[var(--color-text-muted)] mt-1">
-                    Available Mon – Sat, 9:00 AM – 7:00 PM PKT
-                  </p>
+              {/* Gold Top Slide Line */}
+              <div className="absolute top-0 left-0 w-0 h-[2px] bg-[var(--color-accent)] group-hover:w-full transition-all duration-500 ease-out" />
+
+              <div className="flex items-center justify-between gap-4 mb-4">
+                <div className="flex items-center gap-3">
+                  <span className="font-display font-bold text-xs text-[var(--color-accent)] tracking-widest">
+                    02
+                  </span>
+                  <span className="w-1 h-1 rounded-full bg-[var(--color-accent)]" />
+                  <span className="text-micro text-[var(--color-text-muted)] font-semibold tracking-wider">
+                    VOICE &amp; WHATSAPP
+                  </span>
                 </div>
-                <div className="w-9 h-9 border border-[var(--color-border)] group-hover:border-[var(--color-accent)] group-hover:bg-[var(--color-accent)] flex items-center justify-center transition-all duration-300">
-                  <ArrowUpRight className="w-4 h-4 text-[var(--color-text-secondary)] group-hover:text-white transition-colors" />
+                <div className="w-8 h-8 rounded-xs border border-[#E8E6E1] group-hover:border-[var(--color-accent)] group-hover:bg-[var(--color-accent)] flex items-center justify-center transition-all duration-300">
+                  <ArrowUpRight className="w-3.5 h-3.5 text-[#555555] group-hover:text-white transition-colors" />
                 </div>
+              </div>
+
+              <h3 className="font-display text-xl sm:text-2xl font-bold text-[#111111] group-hover:text-[var(--color-accent)] transition-colors mb-2">
+                {siteData.personal.phone}
+              </h3>
+
+              <div className="flex items-center gap-2 text-xs text-[#8A8882]">
+                <Clock className="w-3.5 h-3.5 text-[var(--color-accent)] shrink-0" />
+                <span>Mon – Sat, 9:00 AM – 7:00 PM PKT</span>
               </div>
             </motion.a>
 
-            {/* Location Card */}
+            {/* Card 03: Studio Base & Global Reach */}
             <motion.div
-              className="p-6 md:p-8 border border-[var(--color-border)] bg-white relative overflow-hidden"
+              className="p-7 sm:p-9 bg-white border border-[#E8E6E1] relative overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.02)]"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.5 }}
             >
-              <div className="flex items-start justify-between">
-                <div>
-                  <div className="flex items-center gap-2 text-micro text-[var(--color-accent)] font-semibold mb-2">
-                    <MapPin className="w-3.5 h-3.5" />
-                    <span>LOCATION</span>
-                  </div>
-                  <h3 className="font-display text-lg md:text-xl font-bold text-[var(--color-text)]">
-                    {siteData.personal.location}
-                  </h3>
-                  <p className="text-xs text-[var(--color-text-muted)] mt-1">
-                    Pakistan &amp; International Projects (Guyana, UAE, UK)
-                  </p>
+              <div className="flex items-center justify-between gap-4 mb-4">
+                <div className="flex items-center gap-3">
+                  <span className="font-display font-bold text-xs text-[var(--color-accent)] tracking-widest">
+                    03
+                  </span>
+                  <span className="w-1 h-1 rounded-full bg-[var(--color-accent)]" />
+                  <span className="text-micro text-[var(--color-text-muted)] font-semibold tracking-wider">
+                    STUDIO BASE &amp; REACH
+                  </span>
                 </div>
-                <div className="w-9 h-9 border border-[var(--color-border)] flex items-center justify-center">
-                  <span className="w-2 h-2 rounded-full bg-[var(--color-accent)]" />
+                <div className="w-8 h-8 rounded-xs border border-[#E8E6E1] flex items-center justify-center">
+                  <MapPin className="w-3.5 h-3.5 text-[var(--color-accent)]" />
                 </div>
+              </div>
+
+              <h3 className="font-display text-xl sm:text-2xl font-bold text-[#111111] mb-2">
+                {siteData.personal.location}
+              </h3>
+
+              <div className="flex items-center gap-2 text-xs text-[#8A8882]">
+                <Globe className="w-3.5 h-3.5 text-[var(--color-accent)] shrink-0" />
+                <span>Serving Pakistan &amp; International Clients (Guyana, UAE, UK)</span>
               </div>
             </motion.div>
 
