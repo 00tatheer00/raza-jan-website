@@ -306,7 +306,7 @@ export default function AdminDashboard() {
     });
 
   return (
-    <div className="min-h-screen bg-[#0A0B0E] text-[#E0DFDC] font-sans flex antialiased">
+    <div className="min-h-screen bg-[#090A0D] text-[#E0DFDC] font-sans flex antialiased">
       
       {/* ── TOAST NOTIFICATIONS ── */}
       <div className="fixed top-6 right-6 z-50 flex flex-col gap-2.5 max-w-sm pointer-events-none">
@@ -320,7 +320,7 @@ export default function AdminDashboard() {
               exit={{ opacity: 0, x: 40 }}
             >
               <div className="mt-0.5 shrink-0">
-                {toast.type === "success" && <CheckCircle2 className="w-4 h-4 text-[#DFB75C]" />}
+                {toast.type === "success" && <CheckCircle2 className="w-4 h-4 text-[#D4AF37]" />}
                 {toast.type === "error" && <AlertTriangle className="w-4 h-4 text-red-400" />}
                 {toast.type === "info" && <Sparkles className="w-4 h-4 text-blue-400" />}
               </div>
@@ -334,47 +334,47 @@ export default function AdminDashboard() {
       </div>
 
       {/* ══════════════════════════════════════════════════════════
-          1. STICKY LEFT SIDEBAR (NON-OVERLAPPING FLEX CHILD)
+          1. FIXED/STICKY LEFT SIDEBAR (EXACT PIXEL SPACING)
           ══════════════════════════════════════════════════════════ */}
-      <aside className="w-[260px] shrink-0 bg-[#07080A] border-r border-[#16171D] sticky top-0 h-screen hidden md:flex flex-col justify-between p-5 z-20 select-none overflow-y-auto">
+      <aside className="w-[260px] shrink-0 bg-[#07080B] border-r border-[#15171E] sticky top-0 h-screen hidden md:flex flex-col justify-between p-6 z-20 select-none overflow-y-auto">
         
-        <div className="space-y-6">
+        <div className="space-y-7">
           
           {/* Top Logo: EEST Architecture Studio Monogram */}
           <div className="flex items-center gap-3 pt-1">
             <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-              <rect x="2" y="2" width="36" height="36" rx="4" stroke="#DFB75C" strokeWidth="2.5" />
-              <path d="M12 12H28V20H20V28H12V12Z" stroke="#DFB75C" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M20 20H28V28H20V20Z" stroke="#DFB75C" strokeWidth="2.5" fill="#DFB75C"/>
+              <rect x="2" y="2" width="36" height="36" rx="4" stroke="#D4AF37" strokeWidth="2.5" />
+              <path d="M12 12H28V20H20V28H12V12Z" stroke="#D4AF37" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M20 20H28V28H20V20Z" stroke="#D4AF37" strokeWidth="2.5" fill="#D4AF37"/>
             </svg>
 
             <div>
-              <div className="font-display font-bold text-sm tracking-[0.28em] text-[#DFB75C] leading-none">
+              <div className="font-display font-semibold text-[13px] tracking-[0.25em] text-[#D4AF37] leading-none">
                 E E S T
               </div>
-              <div className="text-[0.52rem] tracking-[0.22em] uppercase text-[#7F8494] mt-1.5 font-medium">
+              <div className="text-[9px] tracking-[0.2em] uppercase text-[#7A7E8D] mt-1.5 font-medium">
                 ARCHITECTURE STUDIO
               </div>
             </div>
           </div>
 
           {/* Navigation Items */}
-          <div className="space-y-5 pt-1">
+          <div className="space-y-6 pt-1">
             
             {/* Group 1: STUDIO MANAGEMENT */}
             <div className="space-y-2">
-              <div className="text-[0.62rem] font-bold uppercase tracking-[0.22em] text-[#555A6B] px-3">
+              <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#555966] px-3 mb-2">
                 STUDIO MANAGEMENT
               </div>
 
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 {/* Active Projects Portfolio Button (Solid Gold) */}
                 <button
                   onClick={() => setActiveNav("projects")}
-                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all cursor-pointer ${
+                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-semibold tracking-wide transition-all cursor-pointer ${
                     activeNav === "projects"
-                      ? "bg-[#DFB75C] text-[#000000] font-bold shadow-sm"
-                      : "text-[#8A8F9E] hover:text-white hover:bg-[#12131A]"
+                      ? "bg-[#D4AF37] text-[#0B0C10] font-bold shadow-sm"
+                      : "text-[#8E93A4] hover:text-white hover:bg-[#14161F]"
                   }`}
                 >
                   <FolderKanban className="w-4 h-4 shrink-0" />
@@ -383,10 +383,10 @@ export default function AdminDashboard() {
 
                 <button
                   onClick={() => setActiveNav("analytics")}
-                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all cursor-pointer ${
+                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-medium tracking-wide transition-all cursor-pointer ${
                     activeNav === "analytics"
-                      ? "bg-[#DFB75C] text-[#000000] font-bold shadow-sm"
-                      : "text-[#8A8F9E] hover:text-white hover:bg-[#12131A]"
+                      ? "bg-[#D4AF37] text-[#0B0C10] font-bold shadow-sm"
+                      : "text-[#8E93A4] hover:text-white hover:bg-[#14161F]"
                   }`}
                 >
                   <BarChart3 className="w-4 h-4 shrink-0" />
@@ -395,10 +395,10 @@ export default function AdminDashboard() {
 
                 <button
                   onClick={() => setActiveNav("media")}
-                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all cursor-pointer ${
+                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-medium tracking-wide transition-all cursor-pointer ${
                     activeNav === "media"
-                      ? "bg-[#DFB75C] text-[#000000] font-bold shadow-sm"
-                      : "text-[#8A8F9E] hover:text-white hover:bg-[#12131A]"
+                      ? "bg-[#D4AF37] text-[#0B0C10] font-bold shadow-sm"
+                      : "text-[#8E93A4] hover:text-white hover:bg-[#14161F]"
                   }`}
                 >
                   <ImageIcon className="w-4 h-4 shrink-0" />
@@ -407,10 +407,10 @@ export default function AdminDashboard() {
 
                 <button
                   onClick={() => setActiveNav("team")}
-                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all cursor-pointer ${
+                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-medium tracking-wide transition-all cursor-pointer ${
                     activeNav === "team"
-                      ? "bg-[#DFB75C] text-[#000000] font-bold shadow-sm"
-                      : "text-[#8A8F9E] hover:text-white hover:bg-[#12131A]"
+                      ? "bg-[#D4AF37] text-[#0B0C10] font-bold shadow-sm"
+                      : "text-[#8E93A4] hover:text-white hover:bg-[#14161F]"
                   }`}
                 >
                   <Users className="w-4 h-4 shrink-0" />
@@ -420,11 +420,11 @@ export default function AdminDashboard() {
             </div>
 
             {/* Group 2: PUBLIC */}
-            <div className="space-y-2 pt-2 border-t border-[#14151B]">
+            <div className="space-y-2 pt-2 border-t border-[#14161D]">
               <Link
                 href="/#projects"
                 target="_blank"
-                className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold tracking-wide text-[#8A8F9E] hover:text-[#DFB75C] hover:bg-[#12131A] transition-all"
+                className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-medium tracking-wide text-[#8E93A4] hover:text-[#D4AF37] hover:bg-[#14161F] transition-all"
               >
                 <Globe className="w-4 h-4 shrink-0" />
                 <span>View Public Portfolio</span>
@@ -435,17 +435,17 @@ export default function AdminDashboard() {
         </div>
 
         {/* Bottom Profile Section */}
-        <div className="space-y-3 pt-4 border-t border-[#14151B]">
+        <div className="space-y-3 pt-4 border-t border-[#14161D]">
           <div className="flex items-center gap-3 px-1">
             {/* Circular SRJ Badge */}
-            <div className="w-9 h-9 rounded-full border-2 border-[#DFB75C]/60 bg-[#12131A] flex items-center justify-center font-display font-bold text-xs text-[#DFB75C] shrink-0">
+            <div className="w-9 h-9 rounded-full border-2 border-[#D4AF37]/60 bg-[#12131A] flex items-center justify-center font-display font-bold text-xs text-[#D4AF37] shrink-0">
               SRJ
             </div>
             <div className="truncate">
-              <div className="font-display font-bold text-xs text-white truncate">
+              <div className="font-display font-medium text-[13px] text-white truncate">
                 Syed Raza Jan
               </div>
-              <div className="text-[0.65rem] text-[#7F8494] truncate">
+              <div className="text-[11px] text-[#7A7E8D] truncate">
                 Principal Architect
               </div>
             </div>
@@ -453,7 +453,7 @@ export default function AdminDashboard() {
 
           <Link
             href="/"
-            className="w-full flex items-center gap-2 px-2 py-1 text-xs text-[#6B7280] hover:text-red-400 transition-colors cursor-pointer"
+            className="w-full flex items-center gap-2 px-2 py-1 text-xs text-[#6A6E7D] hover:text-red-400 transition-colors cursor-pointer"
           >
             <LogOut className="w-3.5 h-3.5" />
             <span>Log out</span>
@@ -463,18 +463,18 @@ export default function AdminDashboard() {
       </aside>
 
       {/* ══════════════════════════════════════════════════════════
-          2. MAIN DASHBOARD CONTENT AREA (NEVER OVERLAPPED)
+          2. MAIN DASHBOARD CONTENT AREA (PERFECT MARGINS & PADDING)
           ══════════════════════════════════════════════════════════ */}
-      <div className="flex-1 min-w-0 flex flex-col p-6 sm:p-8 lg:p-10 space-y-7">
+      <div className="flex-1 min-w-0 flex flex-col p-6 sm:p-8 lg:p-10 space-y-7 bg-[#090A0D]">
         
         {/* ── MAIN HEADER ── */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <div className="text-xs text-[#7F8494]">Welcome back,</div>
+            <div className="text-xs text-[#7A7E8D]">Welcome back,</div>
             <h1 className="font-display text-2xl sm:text-3xl font-bold text-white tracking-tight mt-0.5">
               Syed Raza Jan
             </h1>
-            <p className="text-xs sm:text-sm text-[#73798C] mt-1">
+            <p className="text-xs text-[#7A7E8D] mt-0.5">
               Here&apos;s what&apos;s happening with your studio today.
             </p>
           </div>
@@ -483,7 +483,7 @@ export default function AdminDashboard() {
           <div className="flex items-center gap-3">
             <button
               onClick={openCreateForm}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[#DFB75C] hover:bg-[#C9A247] text-[#000000] font-bold text-xs rounded-lg transition-all shadow-sm cursor-pointer"
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#D4AF37] hover:bg-[#C29F2F] text-[#000000] font-bold text-xs rounded-lg transition-all shadow-sm cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>Create Project</span>
@@ -493,11 +493,11 @@ export default function AdminDashboard() {
             <div className="relative">
               <button
                 onClick={() => setIsNotifDropdownOpen(!isNotifDropdownOpen)}
-                className="p-2 rounded-lg bg-[#111217] hover:bg-[#1A1C24] border border-[#1C1E26] text-[#8A8F9E] hover:text-white transition-colors cursor-pointer relative"
+                className="p-2.5 rounded-lg bg-[#11131A] hover:bg-[#1A1D26] border border-[#1E212A] text-[#8E93A4] hover:text-white transition-colors cursor-pointer relative"
                 title="Notifications"
               >
                 <Bell className="w-4 h-4" />
-                <span className="absolute -top-1 -right-1 text-[0.6rem] font-bold bg-transparent text-[#7F8494]">
+                <span className="absolute -top-1 -right-1 text-[0.6rem] font-bold bg-transparent text-[#7A7E8D]">
                   0
                 </span>
               </button>
@@ -514,7 +514,7 @@ export default function AdminDashboard() {
                       <span className="font-display font-bold text-xs uppercase tracking-wider text-white">
                         Studio Notifications
                       </span>
-                      <span className="text-[0.65rem] text-[#DFB75C]">Active</span>
+                      <span className="text-[0.65rem] text-[#D4AF37]">Active</span>
                     </div>
                     <div className="space-y-2 max-h-60 overflow-y-auto">
                       {notifications.map((n) => (
@@ -535,50 +535,50 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5">
           
           {/* Card 1: TOTAL COMMISSIONS */}
-          <div className="bg-[#111217] border border-[#1C1E26] rounded-2xl p-5 flex items-center gap-4.5">
-            <div className="w-12 h-12 rounded-full border border-[#DFB75C]/40 bg-[#161720] flex items-center justify-center text-[#DFB75C] shrink-0">
+          <div className="bg-[#11131A] border border-[#1E212A] rounded-2xl p-5 flex items-center gap-4.5">
+            <div className="w-12 h-12 rounded-full border border-[#D4AF37]/40 bg-[#181A22] flex items-center justify-center text-[#D4AF37] shrink-0">
               <Building2 className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-[0.65rem] font-bold uppercase tracking-wider text-[#7F8494]">
+              <div className="text-[10px] font-bold uppercase tracking-wider text-[#7A7E8D]">
                 TOTAL COMMISSIONS
               </div>
               <div className="font-display text-2xl font-bold text-white mt-0.5">
                 {totalCommissions}
               </div>
-              <div className="text-[0.7rem] text-[#656A7A]">All time projects</div>
+              <div className="text-[11px] text-[#5D6171]">All time projects</div>
             </div>
           </div>
 
           {/* Card 2: FEATURED SHOWCASE */}
-          <div className="bg-[#111217] border border-[#1C1E26] rounded-2xl p-5 flex items-center gap-4.5">
-            <div className="w-12 h-12 rounded-full border border-[#DFB75C]/40 bg-[#161720] flex items-center justify-center text-[#DFB75C] shrink-0">
+          <div className="bg-[#11131A] border border-[#1E212A] rounded-2xl p-5 flex items-center gap-4.5">
+            <div className="w-12 h-12 rounded-full border border-[#D4AF37]/40 bg-[#181A22] flex items-center justify-center text-[#D4AF37] shrink-0">
               <Star className="w-5 h-5 fill-current" />
             </div>
             <div>
-              <div className="text-[0.65rem] font-bold uppercase tracking-wider text-[#DFB75C]">
+              <div className="text-[10px] font-bold uppercase tracking-wider text-[#D4AF37]">
                 FEATURED SHOWCASE
               </div>
               <div className="font-display text-2xl font-bold text-white mt-0.5">
                 {featuredCount}
               </div>
-              <div className="text-[0.7rem] text-[#656A7A]">Highlighted projects</div>
+              <div className="text-[11px] text-[#5D6171]">Highlighted projects</div>
             </div>
           </div>
 
           {/* Card 3: ACTIVE EXECUTION */}
-          <div className="bg-[#111217] border border-[#1C1E26] rounded-2xl p-5 flex items-center gap-4.5">
-            <div className="w-12 h-12 rounded-full border border-[#059669]/40 bg-[#161720] flex items-center justify-center text-[#34D399] shrink-0">
+          <div className="bg-[#11131A] border border-[#1E212A] rounded-2xl p-5 flex items-center gap-4.5">
+            <div className="w-12 h-12 rounded-full border border-[#059669]/40 bg-[#181A22] flex items-center justify-center text-[#34D399] shrink-0">
               <Compass className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-[0.65rem] font-bold uppercase tracking-wider text-[#7F8494]">
+              <div className="text-[10px] font-bold uppercase tracking-wider text-[#7A7E8D]">
                 ACTIVE EXECUTION
               </div>
               <div className="font-display text-2xl font-bold text-white mt-0.5">
                 {activeExecutionCount}
               </div>
-              <div className="text-[0.7rem] text-[#656A7A] flex items-center gap-1.5">
+              <div className="text-[11px] text-[#5D6171] flex items-center gap-1.5">
                 <span>Currently in progress</span>
                 <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] inline-block animate-pulse" />
               </div>
@@ -586,18 +586,18 @@ export default function AdminDashboard() {
           </div>
 
           {/* Card 4: COMPLETED WORKS */}
-          <div className="bg-[#111217] border border-[#1C1E26] rounded-2xl p-5 flex items-center gap-4.5">
-            <div className="w-12 h-12 rounded-full border border-[#2563EB]/40 bg-[#161720] flex items-center justify-center text-[#60A5FA] shrink-0">
+          <div className="bg-[#11131A] border border-[#1E212A] rounded-2xl p-5 flex items-center gap-4.5">
+            <div className="w-12 h-12 rounded-full border border-[#2563EB]/40 bg-[#181A22] flex items-center justify-center text-[#60A5FA] shrink-0">
               <Check className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-[0.65rem] font-bold uppercase tracking-wider text-[#7F8494]">
+              <div className="text-[10px] font-bold uppercase tracking-wider text-[#7A7E8D]">
                 COMPLETED WORKS
               </div>
               <div className="font-display text-2xl font-bold text-white mt-0.5">
                 {completedCount}
               </div>
-              <div className="text-[0.7rem] text-[#656A7A]">Successfully delivered</div>
+              <div className="text-[11px] text-[#5D6171]">Successfully delivered</div>
             </div>
           </div>
 
@@ -622,8 +622,8 @@ export default function AdminDashboard() {
                 onClick={() => setSelectedCategory(cat)}
                 className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer whitespace-nowrap border ${
                   selectedCategory === cat
-                    ? "border-[#DFB75C] bg-[#1C1A14] text-[#DFB75C] shadow-sm"
-                    : "border-[#1C1E26] bg-[#111217] text-[#8A8F9E] hover:text-white hover:border-[#2E3344]"
+                    ? "border-[#D4AF37] bg-[#1C1A14] text-[#D4AF37] shadow-sm"
+                    : "border-[#1E212A] bg-[#11131A] text-[#8E93A4] hover:text-white hover:border-[#2D3342]"
                 }`}
               >
                 {cat}
@@ -639,13 +639,13 @@ export default function AdminDashboard() {
               <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                className="appearance-none px-4 py-2 pr-8 bg-[#111217] border border-[#1C1E26] rounded-xl text-xs text-[#8A8F9E] focus:outline-none focus:border-[#DFB75C] cursor-pointer"
+                className="appearance-none px-4 py-2 pr-8 bg-[#11131A] border border-[#1E212A] rounded-xl text-xs text-[#8E93A4] focus:outline-none focus:border-[#D4AF37] cursor-pointer"
               >
                 <option value="All">/ All Status</option>
                 <option value="IN PROGRESS">In Progress</option>
                 <option value="COMPLETED">Completed</option>
               </select>
-              <ChevronDown className="w-3.5 h-3.5 text-[#656A7A] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <ChevronDown className="w-3.5 h-3.5 text-[#5D6171] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
 
             {/* Sort By */}
@@ -653,21 +653,21 @@ export default function AdminDashboard() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="appearance-none px-4 py-2 pr-8 bg-[#111217] border border-[#1C1E26] rounded-xl text-xs text-[#8A8F9E] focus:outline-none focus:border-[#DFB75C] cursor-pointer"
+                className="appearance-none px-4 py-2 pr-8 bg-[#11131A] border border-[#1E212A] rounded-xl text-xs text-[#8E93A4] focus:outline-none focus:border-[#D4AF37] cursor-pointer"
               >
                 <option value="newest">Sort: Newest</option>
                 <option value="oldest">Sort: Oldest</option>
                 <option value="title">Sort: A–Z</option>
               </select>
-              <ChevronDown className="w-3.5 h-3.5 text-[#656A7A] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <ChevronDown className="w-3.5 h-3.5 text-[#5D6171] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
 
             {/* Grid / Table view toggle */}
-            <div className="flex items-center bg-[#111217] border border-[#1C1E26] rounded-xl p-1">
+            <div className="flex items-center bg-[#11131A] border border-[#1E212A] rounded-xl p-1">
               <button
                 onClick={() => setViewMode("grid")}
                 className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
-                  viewMode === "grid" ? "bg-[#1C1E26] text-white" : "text-[#656A7A]"
+                  viewMode === "grid" ? "bg-[#1E212A] text-white" : "text-[#5D6171]"
                 }`}
                 title="Grid View"
               >
@@ -676,7 +676,7 @@ export default function AdminDashboard() {
               <button
                 onClick={() => setViewMode("table")}
                 className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
-                  viewMode === "table" ? "bg-[#1C1E26] text-white" : "text-[#656A7A]"
+                  viewMode === "table" ? "bg-[#1E212A] text-white" : "text-[#5D6171]"
                 }`}
                 title="List View"
               >
@@ -692,17 +692,17 @@ export default function AdminDashboard() {
             3. THREE-COLUMN ARCHITECTURE PROJECT CARDS GRID
             ══════════════════════════════════════════════════════════ */}
         {isLoading ? (
-          <div className="py-24 text-center text-[#656A7A] text-xs">
+          <div className="py-24 text-center text-[#5D6171] text-xs">
             Loading studio projects...
           </div>
         ) : filteredProjects.length === 0 ? (
-          <div className="py-20 text-center space-y-3 bg-[#111217] border border-[#1C1E26] rounded-2xl">
-            <Building2 className="w-10 h-10 text-[#555A6B] mx-auto" />
+          <div className="py-20 text-center space-y-3 bg-[#11131A] border border-[#1E212A] rounded-2xl">
+            <Building2 className="w-10 h-10 text-[#555966] mx-auto" />
             <p className="font-display text-white font-bold text-base">No Projects Found</p>
-            <p className="text-xs text-[#8A8F9E]">Try changing your category filter.</p>
+            <p className="text-xs text-[#8E93A4]">Try changing your category filter.</p>
             <button
               onClick={openCreateForm}
-              className="mt-2 inline-flex items-center gap-2 px-4 py-2 bg-[#DFB75C] text-[#000000] font-bold text-xs rounded-xl"
+              className="mt-2 inline-flex items-center gap-2 px-4 py-2 bg-[#D4AF37] text-[#000000] font-bold text-xs rounded-xl"
             >
               <Plus className="w-4 h-4" />
               <span>Add First Project</span>
@@ -716,11 +716,11 @@ export default function AdminDashboard() {
               <motion.div
                 key={project.id}
                 layout
-                className="group bg-[#111217] border border-[#1C1E26] hover:border-[#2D3240] rounded-[16px] overflow-hidden transition-all duration-300 flex flex-col justify-between"
+                className="group bg-[#11131A] border border-[#1E212A] hover:border-[#2D3342] rounded-[16px] overflow-hidden transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
                   {/* ── CARD IMAGE WITH BADGES ── */}
-                  <div className="relative aspect-[16/10] bg-[#161720] overflow-hidden">
+                  <div className="relative aspect-[16/10] bg-[#181A22] overflow-hidden">
                     <Image
                       src={project.image}
                       alt={project.title}
@@ -733,13 +733,13 @@ export default function AdminDashboard() {
                     {/* Top Badges (Left) */}
                     <div className="absolute top-3 left-3 flex items-center gap-1.5">
                       {/* Category Badge */}
-                      <span className="px-2.5 py-1 rounded-md bg-[#07080A]/90 backdrop-blur-md text-[0.62rem] font-bold tracking-wider uppercase text-[#DFB75C] border border-[#DFB75C]/30">
+                      <span className="px-2.5 py-1 rounded-md bg-[#07080B]/90 backdrop-blur-md text-[10px] font-bold tracking-wider uppercase text-[#D4AF37] border border-[#D4AF37]/30">
                         {project.category.toUpperCase()}
                       </span>
 
                       {/* Status Badge */}
                       <span
-                        className={`px-2.5 py-1 rounded-md backdrop-blur-md text-[0.62rem] font-bold tracking-wider uppercase border ${
+                        className={`px-2.5 py-1 rounded-md backdrop-blur-md text-[10px] font-bold tracking-wider uppercase border ${
                           project.status?.toUpperCase() === "IN PROGRESS" || project.status === "In Progress"
                             ? "bg-[#0E281E]/90 text-[#34D399] border-[#059669]/40"
                             : "bg-[#13233D]/90 text-[#60A5FA] border-[#2563EB]/40"
@@ -754,8 +754,8 @@ export default function AdminDashboard() {
                       onClick={() => handleToggleFeatured(project.id)}
                       className={`absolute top-3 right-3 w-8 h-8 rounded-lg backdrop-blur-md flex items-center justify-center transition-colors cursor-pointer ${
                         project.featured
-                          ? "bg-[#DFB75C] text-[#000000] shadow-md"
-                          : "bg-[#07080A]/80 text-[#DFB75C] hover:bg-[#07080A]"
+                          ? "bg-[#D4AF37] text-[#000000] shadow-md"
+                          : "bg-[#07080B]/80 text-[#D4AF37] hover:bg-[#07080B]"
                       }`}
                       title={project.featured ? "Featured showcase" : "Mark as featured"}
                     >
@@ -767,40 +767,40 @@ export default function AdminDashboard() {
                   <div className="p-5 space-y-2.5">
                     
                     {/* Location & Year */}
-                    <div className="flex items-center justify-between text-xs text-[#8A8F9E]">
-                      <span className="flex items-center gap-1 text-[#DFB75C]">
+                    <div className="flex items-center justify-between text-xs text-[#8E93A4]">
+                      <span className="flex items-center gap-1 text-[#D4AF37]">
                         <MapPin className="w-3.5 h-3.5" />
                         <span>{project.location}</span>
                       </span>
-                      <span className="text-[#656A7A] font-medium">{project.year}</span>
+                      <span className="text-[#5D6171] font-medium">{project.year}</span>
                     </div>
 
                     {/* Title */}
-                    <h3 className="font-display font-bold text-[1.12rem] text-white group-hover:text-[#DFB75C] transition-colors leading-snug">
+                    <h3 className="font-display font-bold text-[1.12rem] text-white group-hover:text-[#D4AF37] transition-colors leading-snug">
                       {project.title}
                     </h3>
 
                     {/* Client */}
                     {project.client && (
-                      <div className="text-xs text-[#8A8F9E]">
-                        <span className="text-[#DFB75C] font-medium">Client:</span> {project.client}
+                      <div className="text-xs text-[#8E93A4]">
+                        <span className="text-[#D4AF37] font-medium">Client:</span> {project.client}
                       </div>
                     )}
 
                     {/* Short Description */}
-                    <p className="text-xs text-[#73798C] line-clamp-2 leading-relaxed pt-0.5">
+                    <p className="text-xs text-[#7A7E8D] line-clamp-2 leading-relaxed pt-0.5">
                       {project.description}
                     </p>
                   </div>
                 </div>
 
                 {/* ── CARD FOOTER: TAGS & ACTIONS ── */}
-                <div className="p-5 pt-0 mt-1 flex items-center justify-between gap-2 border-t border-[#181920] pt-3">
+                <div className="p-5 pt-0 mt-1 flex items-center justify-between gap-2 border-t border-[#181A22] pt-3">
                   <div className="flex flex-wrap gap-1.5 max-w-[70%]">
                     {project.tags.slice(0, 2).map((tag, i) => (
                       <span
                         key={i}
-                        className="px-2.5 py-0.5 bg-[#161720] text-[#8A8F9E] text-[0.65rem] rounded-md font-medium"
+                        className="px-2.5 py-0.5 bg-[#181A22] text-[#8E93A4] text-[10px] rounded-md font-medium"
                       >
                         {tag}
                       </span>
@@ -811,14 +811,14 @@ export default function AdminDashboard() {
                   <div className="flex items-center gap-1.5 shrink-0">
                     <button
                       onClick={() => openEditForm(project)}
-                      className="p-1.5 bg-[#161720] hover:bg-[#DFB75C] hover:text-[#000000] text-[#8A8F9E] rounded-lg transition-colors cursor-pointer"
+                      className="p-1.5 bg-[#181A22] hover:bg-[#D4AF37] hover:text-[#000000] text-[#8E93A4] rounded-lg transition-colors cursor-pointer"
                       title="Edit Project"
                     >
                       <Edit2 className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={() => setDeleteTarget(project)}
-                      className="p-1.5 bg-[#161720] hover:bg-red-600 hover:text-white text-[#8A8F9E] rounded-lg transition-colors cursor-pointer"
+                      className="p-1.5 bg-[#181A22] hover:bg-red-600 hover:text-white text-[#8E93A4] rounded-lg transition-colors cursor-pointer"
                       title="Delete Project"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -832,10 +832,10 @@ export default function AdminDashboard() {
         ) : (
           
           /* ── TABLE VIEW ── */
-          <div className="bg-[#111217] border border-[#1C1E26] rounded-2xl overflow-hidden shadow-xl">
+          <div className="bg-[#11131A] border border-[#1E212A] rounded-2xl overflow-hidden shadow-xl">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-[#161720] text-[#8A8F9E] uppercase tracking-wider font-semibold border-b border-[#1C1E26]">
+                <thead className="bg-[#181A22] text-[#8E93A4] uppercase tracking-wider font-semibold border-b border-[#1E212A]">
                   <tr>
                     <th className="py-4 px-5">Project</th>
                     <th className="py-4 px-5">Category</th>
@@ -846,23 +846,23 @@ export default function AdminDashboard() {
                     <th className="py-4 px-5 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#181920]">
+                <tbody className="divide-y divide-[#181A22]">
                   {filteredProjects.map((project) => (
-                    <tr key={project.id} className="hover:bg-[#161720]/60 transition-colors">
+                    <tr key={project.id} className="hover:bg-[#181A22]/60 transition-colors">
                       <td className="py-4 px-5 flex items-center gap-3.5">
-                        <div className="relative w-12 h-12 rounded-xl bg-[#1C1E26] overflow-hidden shrink-0">
+                        <div className="relative w-12 h-12 rounded-xl bg-[#1E212A] overflow-hidden shrink-0">
                           <Image src={project.image} alt={project.title} fill unoptimized className="object-cover" />
                         </div>
                         <div>
                           <div className="font-bold text-white text-sm">{project.title}</div>
-                          {project.client && <div className="text-xs text-[#73798C]">Client: {project.client}</div>}
+                          {project.client && <div className="text-xs text-[#7A7E8D]">Client: {project.client}</div>}
                         </div>
                       </td>
-                      <td className="py-4 px-5 text-[#DFB75C] font-medium">
+                      <td className="py-4 px-5 text-[#D4AF37] font-medium">
                         {project.category}
                       </td>
-                      <td className="py-4 px-5 text-[#8A8F9E]">{project.location}</td>
-                      <td className="py-4 px-5 text-[#8A8F9E]">{project.year}</td>
+                      <td className="py-4 px-5 text-[#8E93A4]">{project.location}</td>
+                      <td className="py-4 px-5 text-[#8E93A4]">{project.year}</td>
                       <td className="py-4 px-5">
                         <span
                           className={`px-2.5 py-1 rounded text-[0.65rem] font-bold ${
@@ -878,7 +878,7 @@ export default function AdminDashboard() {
                         <button
                           onClick={() => handleToggleFeatured(project.id)}
                           className={`p-1.5 rounded cursor-pointer ${
-                            project.featured ? "text-[#DFB75C]" : "text-[#555A6B] hover:text-white"
+                            project.featured ? "text-[#D4AF37]" : "text-[#555966] hover:text-white"
                           }`}
                         >
                           <Star className={`w-4 h-4 ${project.featured ? "fill-current" : ""}`} />
@@ -887,13 +887,13 @@ export default function AdminDashboard() {
                       <td className="py-4 px-5 text-right space-x-2">
                         <button
                           onClick={() => openEditForm(project)}
-                          className="p-1.5 bg-[#161720] hover:bg-[#DFB75C] hover:text-[#000000] rounded-lg text-[#8A8F9E] transition-colors cursor-pointer"
+                          className="p-1.5 bg-[#181A22] hover:bg-[#D4AF37] hover:text-[#000000] rounded-lg text-[#8E93A4] transition-colors cursor-pointer"
                         >
                           <Edit2 className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => setDeleteTarget(project)}
-                          className="p-1.5 bg-[#161720] hover:bg-red-600 hover:text-white rounded-lg text-[#8A8F9E] transition-colors cursor-pointer"
+                          className="p-1.5 bg-[#181A22] hover:bg-red-600 hover:text-white rounded-lg text-[#8E93A4] transition-colors cursor-pointer"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -915,23 +915,23 @@ export default function AdminDashboard() {
         {isFormOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
             <motion.div
-              className="w-full max-w-2xl bg-[#111217] border border-[#2B2F3E] rounded-2xl shadow-2xl overflow-hidden my-8"
+              className="w-full max-w-2xl bg-[#11131A] border border-[#2B2F3E] rounded-2xl shadow-2xl overflow-hidden my-8"
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
             >
-              <div className="px-6 py-4 border-b border-[#1C1E26] flex items-center justify-between bg-[#161720]">
+              <div className="px-6 py-4 border-b border-[#1E212A] flex items-center justify-between bg-[#181A22]">
                 <div>
                   <h2 className="font-display font-bold text-lg text-white">
                     {editingProject ? "Edit Project Details" : "Create Architecture Project"}
                   </h2>
-                  <p className="text-xs text-[#DFB75C] font-medium">
+                  <p className="text-xs text-[#D4AF37] font-medium">
                     {editingProject ? "Update portfolio showcase entry" : "Publish new project to portfolio"}
                   </p>
                 </div>
                 <button
                   onClick={() => setIsFormOpen(false)}
-                  className="w-8 h-8 rounded-lg bg-[#1C1E26] text-[#8A8F9E] hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                  className="w-8 h-8 rounded-lg bg-[#1E212A] text-[#8E93A4] hover:text-white flex items-center justify-center transition-colors cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -941,7 +941,7 @@ export default function AdminDashboard() {
                 
                 {/* Title */}
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#8A8F9E] mb-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#8E93A4] mb-1.5">
                     Project Title *
                   </label>
                   <input
@@ -950,20 +950,20 @@ export default function AdminDashboard() {
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                     placeholder="e.g. Cecil Resort & Luxury Villas"
-                    className="w-full px-4 py-2.5 bg-[#07080A] border border-[#262A38] rounded-xl text-sm text-white focus:outline-none focus:border-[#DFB75C]"
+                    className="w-full px-4 py-2.5 bg-[#07080B] border border-[#262A38] rounded-xl text-sm text-white focus:outline-none focus:border-[#D4AF37]"
                   />
                 </div>
 
                 {/* Category & Status */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-[#8A8F9E] mb-1.5">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[#8E93A4] mb-1.5">
                       Category *
                     </label>
                     <select
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                      className="w-full px-3 py-2.5 bg-[#07080A] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#DFB75C]"
+                      className="w-full px-3 py-2.5 bg-[#07080B] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#D4AF37]"
                     >
                       {["ARCHITECTURE", "INTERIOR", "3D VISUALIZATION", "MASTER PLANNING", "RESIDENTIAL", "COMMERCIAL"].map((cat) => (
                         <option key={cat} value={cat}>
@@ -974,13 +974,13 @@ export default function AdminDashboard() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-[#8A8F9E] mb-1.5">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[#8E93A4] mb-1.5">
                       Status
                     </label>
                     <select
                       value={formData.status}
                       onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
-                      className="w-full px-3 py-2.5 bg-[#07080A] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#DFB75C]"
+                      className="w-full px-3 py-2.5 bg-[#07080B] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#D4AF37]"
                     >
                       <option value="IN PROGRESS">IN PROGRESS</option>
                       <option value="COMPLETED">COMPLETED</option>
@@ -991,7 +991,7 @@ export default function AdminDashboard() {
                 {/* Location & Year */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-[#8A8F9E] mb-1.5">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[#8E93A4] mb-1.5">
                       Location
                     </label>
                     <input
@@ -999,12 +999,12 @@ export default function AdminDashboard() {
                       value={formData.location}
                       onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                       placeholder="e.g. Murree Hills, Pakistan"
-                      className="w-full px-4 py-2.5 bg-[#07080A] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#DFB75C]"
+                      className="w-full px-4 py-2.5 bg-[#07080B] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#D4AF37]"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-[#8A8F9E] mb-1.5">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[#8E93A4] mb-1.5">
                       Year
                     </label>
                     <input
@@ -1012,14 +1012,14 @@ export default function AdminDashboard() {
                       value={formData.year}
                       onChange={(e) => setFormData({ ...formData, year: e.target.value })}
                       placeholder="e.g. 2025 – 2026"
-                      className="w-full px-4 py-2.5 bg-[#07080A] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#DFB75C]"
+                      className="w-full px-4 py-2.5 bg-[#07080B] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#D4AF37]"
                     />
                   </div>
                 </div>
 
                 {/* Client */}
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#8A8F9E] mb-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#8E93A4] mb-1.5">
                     Client / Organization
                   </label>
                   <input
@@ -1027,13 +1027,13 @@ export default function AdminDashboard() {
                     value={formData.client}
                     onChange={(e) => setFormData({ ...formData, client: e.target.value })}
                     placeholder="e.g. Lahore Group & Canopy Resorts"
-                    className="w-full px-4 py-2.5 bg-[#07080A] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#DFB75C]"
+                    className="w-full px-4 py-2.5 bg-[#07080B] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#D4AF37]"
                   />
                 </div>
 
                 {/* Image URL & Upload */}
                 <div className="space-y-2">
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#8A8F9E]">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#8E93A4]">
                     Image URL &amp; File Upload
                   </label>
                   <div className="flex gap-2">
@@ -1042,10 +1042,10 @@ export default function AdminDashboard() {
                       value={formData.image}
                       onChange={(e) => setFormData({ ...formData, image: e.target.value })}
                       placeholder="Paste Image URL..."
-                      className="flex-1 px-4 py-2.5 bg-[#07080A] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#DFB75C]"
+                      className="flex-1 px-4 py-2.5 bg-[#07080B] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#D4AF37]"
                     />
-                    <label className="inline-flex items-center gap-1.5 px-3 py-2 bg-[#1C1E26] hover:bg-[#2A303F] border border-[#32384A] text-xs text-white rounded-xl cursor-pointer transition-colors shrink-0">
-                      <Upload className="w-3.5 h-3.5 text-[#DFB75C]" />
+                    <label className="inline-flex items-center gap-1.5 px-3 py-2 bg-[#1E212A] hover:bg-[#2A303F] border border-[#32384A] text-xs text-white rounded-xl cursor-pointer transition-colors shrink-0">
+                      <Upload className="w-3.5 h-3.5 text-[#D4AF37]" />
                       <span>Upload</span>
                       <input type="file" accept="image/*" onChange={handleImageFileUpload} className="hidden" />
                     </label>
@@ -1053,13 +1053,13 @@ export default function AdminDashboard() {
 
                   {/* Presets */}
                   <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                    <span className="text-[0.65rem] text-[#656A7A]">Presets:</span>
+                    <span className="text-[0.65rem] text-[#5D6171]">Presets:</span>
                     {SAMPLE_IMAGE_PRESETS.map((pr) => (
                       <button
                         type="button"
                         key={pr.label}
                         onClick={() => setFormData({ ...formData, image: pr.url })}
-                        className="px-2.5 py-1 bg-[#161720] hover:bg-[#1C1E26] text-[0.65rem] text-[#8A8F9E] rounded-md border border-[#1C1E26] cursor-pointer"
+                        className="px-2.5 py-1 bg-[#181A22] hover:bg-[#1E212A] text-[0.65rem] text-[#8E93A4] rounded-md border border-[#1E212A] cursor-pointer"
                       >
                         {pr.label}
                       </button>
@@ -1075,7 +1075,7 @@ export default function AdminDashboard() {
 
                 {/* Description */}
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#8A8F9E] mb-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#8E93A4] mb-1.5">
                     Description *
                   </label>
                   <textarea
@@ -1084,14 +1084,14 @@ export default function AdminDashboard() {
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     placeholder="Comprehensive architectural overview..."
-                    className="w-full px-4 py-2.5 bg-[#07080A] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#DFB75C] leading-relaxed"
+                    className="w-full px-4 py-2.5 bg-[#07080B] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#D4AF37] leading-relaxed"
                   />
                 </div>
 
                 {/* Tags & Featured */}
                 <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
                   <div className="sm:col-span-8">
-                    <label className="block text-xs font-bold uppercase tracking-wider text-[#8A8F9E] mb-1.5">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[#8E93A4] mb-1.5">
                       Tags (Comma separated)
                     </label>
                     <input
@@ -1099,7 +1099,7 @@ export default function AdminDashboard() {
                       value={formData.tags}
                       onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
                       placeholder="e.g. Hospitality, Site Planning"
-                      className="w-full px-4 py-2 bg-[#07080A] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#DFB75C]"
+                      className="w-full px-4 py-2 bg-[#07080B] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#D4AF37]"
                     />
                   </div>
 
@@ -1109,7 +1109,7 @@ export default function AdminDashboard() {
                       id="featCheck"
                       checked={formData.featured}
                       onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                      className="w-4 h-4 accent-[#DFB75C] rounded cursor-pointer"
+                      className="w-4 h-4 accent-[#D4AF37] rounded cursor-pointer"
                     />
                     <label htmlFor="featCheck" className="text-xs font-bold text-white cursor-pointer select-none">
                       Featured Showcase ⭐
@@ -1118,17 +1118,17 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Modal actions */}
-                <div className="pt-4 border-t border-[#1C1E26] flex items-center justify-end gap-3">
+                <div className="pt-4 border-t border-[#1E212A] flex items-center justify-end gap-3">
                   <button
                     type="button"
                     onClick={() => setIsFormOpen(false)}
-                    className="px-5 py-2.5 bg-[#1C1E26] hover:bg-[#262835] text-[#8A8F9E] hover:text-white text-xs font-semibold rounded-xl cursor-pointer"
+                    className="px-5 py-2.5 bg-[#1E212A] hover:bg-[#262835] text-[#8E93A4] hover:text-white text-xs font-semibold rounded-xl cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-6 py-2.5 bg-[#DFB75C] hover:bg-[#C9A247] text-[#000000] font-bold text-xs rounded-xl cursor-pointer shadow-md"
+                    className="px-6 py-2.5 bg-[#D4AF37] hover:bg-[#C29F2F] text-[#000000] font-bold text-xs rounded-xl cursor-pointer shadow-md"
                   >
                     {editingProject ? "Save Changes" : "Publish Project"}
                   </button>
@@ -1145,7 +1145,7 @@ export default function AdminDashboard() {
         {deleteTarget && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
             <motion.div
-              className="w-full max-w-sm bg-[#111217] border border-[#2B2F3E] rounded-2xl p-6 shadow-2xl text-center space-y-4"
+              className="w-full max-w-sm bg-[#11131A] border border-[#2B2F3E] rounded-2xl p-6 shadow-2xl text-center space-y-4"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
@@ -1154,13 +1154,13 @@ export default function AdminDashboard() {
                 <Trash2 className="w-5 h-5" />
               </div>
               <h4 className="font-display font-bold text-lg text-white">Delete Project?</h4>
-              <p className="text-xs text-[#8A8F9E]">
+              <p className="text-xs text-[#8E93A4]">
                 Are you sure you want to delete &ldquo;{deleteTarget.title}&rdquo;?
               </p>
               <div className="flex items-center justify-center gap-3 pt-2">
                 <button
                   onClick={() => setDeleteTarget(null)}
-                  className="px-4 py-2 bg-[#1C1E26] text-white text-xs font-semibold rounded-xl cursor-pointer"
+                  className="px-4 py-2 bg-[#1E212A] text-white text-xs font-semibold rounded-xl cursor-pointer"
                 >
                   Cancel
                 </button>
