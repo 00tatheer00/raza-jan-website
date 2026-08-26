@@ -27,7 +27,7 @@ export default function Experience() {
         </motion.div>
 
         {/* Section Title & Intro */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-end mb-16 md:mb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-end mb-20 md:mb-28">
           <div className="lg:col-span-7">
             <motion.h2
               className="text-display font-display font-bold tracking-[-0.02em]"
@@ -42,7 +42,7 @@ export default function Experience() {
           </div>
           <div className="lg:col-span-5">
             <motion.p
-              className="text-[var(--color-text-secondary)] leading-relaxed text-sm md:text-base border-l border-[var(--color-accent)]/40 pl-5"
+              className="text-[var(--color-text-secondary)] leading-relaxed text-sm md:text-base border-l-2 border-[var(--color-accent)] pl-6"
               initial={{ opacity: 0 }}
               animate={isInView ? { opacity: 1 } : {}}
               transition={{ duration: 0.6, delay: 0.3 }}
@@ -53,93 +53,159 @@ export default function Experience() {
           </div>
         </div>
 
-        {/* Architectural Timeline Grid */}
-        <div className="border-t border-[var(--color-border)]">
-          {siteData.experience.map((exp, index) => {
-            const isHovered = hoveredIndex === index;
-
-            return (
-              <motion.div
-                key={exp.number}
-                className="group relative border-b border-[var(--color-border)] py-10 md:py-14 lg:py-16 px-2 md:px-6 -mx-2 md:-mx-6 transition-all duration-400 hover:bg-[var(--color-bg-alt)]/60"
-                initial={{ opacity: 0, y: 25 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{
-                  duration: 0.5,
-                  delay: 0.1 + index * 0.07,
-                  ease: [0.16, 1, 0.3, 1],
+        {/* Experience Cards */}
+        <div className="space-y-6 md:space-y-8">
+          {siteData.experience.map((exp, index) => (
+            <motion.div
+              key={exp.number}
+              className="group relative"
+              initial={{ opacity: 0, y: 30 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{
+                duration: 0.5,
+                delay: 0.1 + index * 0.07,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
+            >
+              {/* Card Container */}
+              <div
+                className="relative border border-[var(--color-border)] transition-all duration-500 ease-out overflow-hidden"
+                style={{
+                  padding: "clamp(1.75rem, 4vw, 3rem) clamp(1.5rem, 3.5vw, 2.5rem)",
+                  borderColor: hoveredIndex === index ? "var(--color-accent)" : undefined,
+                  boxShadow: hoveredIndex === index
+                    ? "0 8px 40px rgba(200, 168, 78, 0.08), 0 2px 12px rgba(0,0,0,0.04)"
+                    : "none",
+                  transform: hoveredIndex === index ? "translateY(-3px)" : "translateY(0)",
                 }}
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(null)}
               >
-                {/* Gold left border highlight on hover */}
-                <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-[var(--color-accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                {/* Top gold accent bar — slides in on hover */}
+                <div
+                  className="absolute top-0 left-0 h-[3px] bg-[var(--color-accent)] transition-all duration-500 ease-out"
+                  style={{ width: hoveredIndex === index ? "100%" : "0%" }}
+                />
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start">
-                  
-                  {/* Left Column: Number + Year Range (Col 1 to 4) */}
-                  <div className="lg:col-span-4 flex flex-row lg:flex-col justify-between lg:justify-start items-center lg:items-start gap-4">
-                    <div className="flex items-center gap-4">
-                      <span className="font-display text-3xl md:text-4xl font-bold text-[var(--color-text-muted)]/40 group-hover:text-[var(--color-accent)] transition-colors duration-400">
-                        {exp.number}
-                      </span>
-                      {exp.isCurrent && (
-                        <span className="px-2.5 py-1 text-[0.65rem] font-bold tracking-[0.18em] uppercase bg-[var(--color-accent)] text-[var(--color-white)]">
-                          CURRENT ROLE
+                {/* Subtle background glow on hover */}
+                <div
+                  className="absolute inset-0 transition-opacity duration-500 pointer-events-none"
+                  style={{
+                    background: "linear-gradient(135deg, rgba(200,168,78,0.03) 0%, transparent 60%)",
+                    opacity: hoveredIndex === index ? 1 : 0,
+                  }}
+                />
+
+                <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+
+                  {/* Left: Number + Year (3 cols) */}
+                  <div className="lg:col-span-3">
+                    <div className="flex lg:flex-col items-center lg:items-start justify-between lg:justify-start gap-4 lg:gap-5">
+                      {/* Number + Badge */}
+                      <div className="flex items-center gap-3">
+                        <span
+                          className="font-display text-4xl md:text-5xl font-bold transition-colors duration-400"
+                          style={{
+                            color: hoveredIndex === index
+                              ? "var(--color-accent)"
+                              : "var(--color-border)",
+                          }}
+                        >
+                          {exp.number}
                         </span>
-                      )}
-                    </div>
+                        {exp.isCurrent && (
+                          <span className="px-3 py-1 text-[0.6rem] font-bold tracking-[0.18em] uppercase bg-[var(--color-accent)] text-white">
+                            CURRENT
+                          </span>
+                        )}
+                      </div>
 
-                    <div className="flex items-center gap-2 lg:mt-3">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]" />
-                      <span className="font-display text-sm md:text-base font-semibold tracking-wider text-[var(--color-text-secondary)] group-hover:text-[var(--color-text)] transition-colors duration-300">
-                        {exp.years}
-                      </span>
+                      {/* Year */}
+                      <div className="flex items-center gap-2.5">
+                        <span className="w-2 h-2 rounded-full bg-[var(--color-accent)]" />
+                        <span
+                          className="font-display text-sm md:text-base font-semibold tracking-wider transition-colors duration-300"
+                          style={{
+                            color: hoveredIndex === index
+                              ? "var(--color-text)"
+                              : "var(--color-text-secondary)",
+                          }}
+                        >
+                          {exp.years}
+                        </span>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Right Column: Company, Position, Description (Col 5 to 12) */}
-                  <div className="lg:col-span-8 space-y-4">
-                    {/* Company Name & Subtitle */}
+                  {/* Right: Company + Role + Description (9 cols) */}
+                  <div className="lg:col-span-9 space-y-5">
+                    {/* Company Row */}
                     <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1.5">
-                      <h3 className="font-display text-2xl md:text-3xl font-bold text-[var(--color-text)] group-hover:text-[var(--color-accent)] transition-colors duration-300">
+                      <h3
+                        className="font-display text-xl sm:text-2xl md:text-[1.7rem] font-bold transition-colors duration-300"
+                        style={{
+                          color: hoveredIndex === index
+                            ? "var(--color-text)"
+                            : "var(--color-text)",
+                        }}
+                      >
                         {exp.company}
                       </h3>
                       {exp.subtitle && (
-                        <span className="text-xs md:text-sm text-[var(--color-text-muted)] font-normal tracking-wide italic">
+                        <span className="text-xs md:text-sm text-[var(--color-text-muted)] italic tracking-wide shrink-0">
                           {exp.subtitle}
                         </span>
                       )}
                     </div>
 
-                    {/* Role / Position */}
-                    <div className="flex items-center gap-3 pt-1">
-                      <span className="w-6 h-px bg-[var(--color-accent)]" />
+                    {/* Position */}
+                    <div className="flex items-center gap-3">
+                      <span
+                        className="w-8 h-px transition-all duration-300"
+                        style={{
+                          backgroundColor: "var(--color-accent)",
+                          width: hoveredIndex === index ? "2.5rem" : "1.5rem",
+                        }}
+                      />
                       <span className="text-xs md:text-sm font-semibold uppercase tracking-[0.2em] text-[var(--color-accent)]">
                         {exp.position}
                       </span>
                     </div>
 
-                    {/* Description List */}
-                    <div className="pt-3">
-                      <ul className="space-y-3">
-                        {exp.description.map((item, i) => (
-                          <li
-                            key={i}
-                            className="flex items-start gap-3.5 text-sm md:text-[0.95rem] text-[var(--color-text-secondary)] leading-relaxed"
-                          >
-                            <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)] mt-2 shrink-0 opacity-80 group-hover:opacity-100 transition-opacity" />
-                            <span>{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                    {/* Description */}
+                    <ul className="space-y-3.5 pt-1">
+                      {exp.description.map((item, i) => (
+                        <li
+                          key={i}
+                          className="flex items-start gap-4 text-[0.9rem] md:text-[0.95rem] leading-[1.75] text-[var(--color-text-secondary)]"
+                        >
+                          <span
+                            className="w-1.5 h-1.5 rounded-full mt-[0.55rem] shrink-0 transition-all duration-300"
+                            style={{
+                              backgroundColor: "var(--color-accent)",
+                              opacity: hoveredIndex === index ? 1 : 0.5,
+                              transform: hoveredIndex === index ? "scale(1.3)" : "scale(1)",
+                            }}
+                          />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
 
                 </div>
-              </motion.div>
-            );
-          })}
+
+                {/* Bottom-right corner accent on hover */}
+                <div
+                  className="absolute bottom-3 right-3 w-5 h-5 transition-opacity duration-400 pointer-events-none"
+                  style={{ opacity: hoveredIndex === index ? 1 : 0 }}
+                >
+                  <div className="absolute bottom-0 right-0 w-full h-px bg-[var(--color-accent)]" />
+                  <div className="absolute bottom-0 right-0 h-full w-px bg-[var(--color-accent)]" />
+                </div>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
 
