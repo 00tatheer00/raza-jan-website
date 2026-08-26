@@ -20,7 +20,6 @@ import {
   Search,
   LayoutGrid,
   List,
-  Lock,
   LogOut,
   Upload,
   CheckCircle2,
@@ -40,12 +39,8 @@ import {
   Sparkles,
   ChevronDown,
   Globe,
-  Briefcase,
   FolderKanban,
 } from "lucide-react";
-
-const ADMIN_PASSCODE = "raza2026";
-const AUTH_STORAGE_KEY = "raza_jan_admin_auth_v1";
 
 interface ToastItem {
   id: string;
@@ -64,10 +59,8 @@ const SAMPLE_IMAGE_PRESETS = [
 ];
 
 export default function AdminDashboard() {
-  // Authentication
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [passcode, setPasscode] = useState("");
-  const [authError, setAuthError] = useState("");
+  // Direct open by default
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
 
   // Projects & Navigation
   const [projects, setProjects] = useState<Project[]>([]);
@@ -87,7 +80,7 @@ export default function AdminDashboard() {
     { id: "n2", title: "PWA Active", desc: "Offline service worker installed.", time: "1h ago", read: true },
   ]);
 
-  // Modal / Drawer state
+  // Modal state
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Project | null>(null);
@@ -107,8 +100,6 @@ export default function AdminDashboard() {
   });
 
   useEffect(() => {
-    const isAuth = localStorage.getItem(AUTH_STORAGE_KEY) === "true";
-    setIsAuthenticated(isAuth);
     loadProjects();
   }, []);
 
@@ -139,25 +130,6 @@ export default function AdminDashboard() {
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
     }, 4000);
-  };
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (passcode.trim() === ADMIN_PASSCODE) {
-      setIsAuthenticated(true);
-      localStorage.setItem(AUTH_STORAGE_KEY, "true");
-      setAuthError("");
-      addToast("Welcome back", "Syed Raza Jan Studio CMS is ready.");
-    } else {
-      setAuthError("Invalid Passcode. Enter 'raza2026'");
-    }
-  };
-
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    localStorage.removeItem(AUTH_STORAGE_KEY);
-    setPasscode("");
-    addToast("Logged Out", "Session ended securely.", "info");
   };
 
   const openCreateForm = () => {
@@ -337,97 +309,8 @@ export default function AdminDashboard() {
       return b.year.localeCompare(a.year); // default newest
     });
 
-  // ══════════════════════════════════════════════════════════════
-  // AUTHENTICATION SCREEN
-  // ══════════════════════════════════════════════════════════════
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-[#0C0D11] text-white flex items-center justify-center p-6 relative overflow-hidden font-sans">
-        <div className="absolute inset-0 bg-[radial-gradient(#C8A84E_1px,transparent_1px)] [background-size:32px_32px] opacity-10 pointer-events-none" />
-        
-        <motion.div
-          className="w-full max-w-md bg-[#13151D] border border-[#20232E] rounded-2xl p-8 sm:p-10 shadow-2xl relative z-10 space-y-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="text-center space-y-3">
-            {/* EEST Architectural Monogram */}
-            <div className="flex items-center justify-center gap-3 mb-2">
-              <div className="w-10 h-10 border-2 border-[#C8A84E] rounded-md flex items-center justify-center text-[#C8A84E]">
-                <div className="grid grid-cols-2 gap-0.5 w-5 h-5">
-                  <div className="border border-[#C8A84E]" />
-                  <div className="border border-[#C8A84E]" />
-                  <div className="border border-[#C8A84E]" />
-                  <div className="border border-[#C8A84E] bg-[#C8A84E]" />
-                </div>
-              </div>
-              <div className="text-left">
-                <div className="font-display font-bold text-base tracking-[0.25em] text-[#C8A84E]">
-                  E E S T
-                </div>
-                <div className="text-[0.55rem] tracking-[0.25em] uppercase text-[#8A8F9E]">
-                  ARCHITECTURE STUDIO
-                </div>
-              </div>
-            </div>
-
-            <h1 className="font-display text-xl font-bold text-white tracking-tight">
-              Studio Management Portal
-            </h1>
-            <p className="text-xs text-[#8A8F9E]">
-              Internal CMS for Syed Raza Jan&apos;s architectural portfolio.
-            </p>
-          </div>
-
-          <form onSubmit={handleLogin} className="space-y-4 pt-2">
-            <div>
-              <label className="block text-[0.7rem] font-bold uppercase tracking-widest text-[#8A8F9E] mb-2">
-                Studio Passcode
-              </label>
-              <input
-                type="password"
-                value={passcode}
-                onChange={(e) => setPasscode(e.target.value)}
-                placeholder="Enter passcode (raza2026)"
-                className="w-full px-4 py-3 bg-[#0A0B0F] border border-[#262A38] rounded-xl text-white placeholder-[#555A6B] focus:outline-none focus:border-[#C8A84E] transition-colors text-sm"
-                autoFocus
-              />
-              {authError && (
-                <p className="text-xs text-red-400 mt-2 flex items-center gap-1.5 font-medium">
-                  <AlertTriangle className="w-3.5 h-3.5" />
-                  <span>{authError}</span>
-                </p>
-              )}
-            </div>
-
-            <button
-              type="submit"
-              className="w-full py-3.5 bg-[#C8A84E] text-[#0C0D11] font-bold text-xs tracking-widest uppercase rounded-xl hover:bg-[#B8962E] transition-all shadow-md cursor-pointer"
-            >
-              Enter Dashboard
-            </button>
-          </form>
-
-          <div className="pt-4 border-t border-[#1C1F2B] text-center">
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 text-xs text-[#8A8F9E] hover:text-white transition-colors"
-            >
-              <span>Return to Public Portfolio</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-        </motion.div>
-      </div>
-    );
-  }
-
-  // ══════════════════════════════════════════════════════════════
-  // TARGET REDESIGNED ARCHITECTURAL DASHBOARD
-  // ══════════════════════════════════════════════════════════
   return (
-    <div className="min-h-screen bg-[#0D0E12] text-[#E0DFDC] font-sans flex">
+    <div className="min-h-screen bg-[#0E0F14] text-[#E0DFDC] font-sans flex">
       
       {/* ── TOAST NOTIFICATION STACK ── */}
       <div className="fixed top-6 right-6 z-50 flex flex-col gap-2.5 max-w-sm pointer-events-none">
@@ -455,14 +338,14 @@ export default function AdminDashboard() {
       </div>
 
       {/* ══════════════════════════════════════════════════════════
-          1. FIXED LEFT SIDEBAR (260px–280px)
+          1. FIXED LEFT SIDEBAR (EXACT MATCH TO REFERENCE IMAGE)
           ══════════════════════════════════════════════════════════ */}
-      <aside className="w-[270px] bg-[#0A0B0E] border-r border-[#1B1D24] hidden lg:flex flex-col justify-between fixed top-0 left-0 h-screen z-40 p-6 select-none">
+      <aside className="w-[270px] bg-[#0A0B0E] border-r border-[#1C1E26] hidden lg:flex flex-col justify-between fixed top-0 left-0 h-screen z-40 p-6 select-none">
         
         {/* Top: EEST Architecture Studio Brand Logo */}
         <div className="space-y-8">
           <div className="flex items-center gap-3.5 pb-2">
-            {/* Geometric Gold Logo Icon */}
+            {/* Geometric Gold Logo Box */}
             <div className="w-10 h-10 border-2 border-[#C8A84E] rounded-md flex items-center justify-center text-[#C8A84E] shrink-0">
               <div className="grid grid-cols-2 gap-0.5 w-5 h-5">
                 <div className="border border-[#C8A84E]" />
@@ -578,13 +461,13 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          <button
-            onClick={handleLogout}
+          <Link
+            href="/"
             className="w-full flex items-center gap-2 px-3 py-2 text-xs text-[#6B7280] hover:text-red-400 transition-colors cursor-pointer"
           >
             <LogOut className="w-3.5 h-3.5" />
             <span>Log out</span>
-          </button>
+          </Link>
         </div>
 
       </aside>
@@ -594,10 +477,10 @@ export default function AdminDashboard() {
           ══════════════════════════════════════════════════════════ */}
       <div className="flex-1 lg:ml-[270px] min-w-0 flex flex-col">
         
-        {/* Main Content Container with Spacious Padding */}
+        {/* Main Content Container */}
         <main className="max-w-[1440px] w-full mx-auto px-6 sm:px-10 lg:px-12 py-8 sm:py-10 space-y-8">
           
-          {/* ── MAIN HEADER ── */}
+          {/* ── MAIN HEADER (MATCHING REFERENCE IMAGE) ── */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 pb-2">
             <div>
               <div className="text-xs text-[#8A8F9E]">Welcome back,</div>
@@ -732,7 +615,7 @@ export default function AdminDashboard() {
 
           </div>
 
-          {/* ── FILTER & CONTROL BAR (MATCHING REFERENCE IMAGE) ── */}
+          {/* ── FILTER & CONTROL BAR (EXACT REFERENCE DESIGN) ── */}
           <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 pt-1">
             
             {/* Category Pills (Left Side) */}
@@ -830,7 +713,7 @@ export default function AdminDashboard() {
           </div>
 
           {/* ══════════════════════════════════════════════════════════
-              7. PROJECT GRID (3-COLUMN RESPONSIVE ARCHITECTURAL CARDS)
+              7. PROJECT GRID (3-COLUMN EXACT MATCH TO REFERENCE IMAGE)
               ══════════════════════════════════════════════════════════ */}
           {isLoading ? (
             <div className="py-24 text-center text-[#656A7A] text-xs">
@@ -1288,7 +1171,7 @@ export default function AdminDashboard() {
       {/* ── DELETE CONFIRMATION MODAL ── */}
       <AnimatePresence>
         {deleteTarget && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
             <motion.div
               className="w-full max-w-sm bg-[#14171E] border border-[#2B2F3E] rounded-2xl p-6 shadow-2xl text-center space-y-4"
               initial={{ opacity: 0, scale: 0.9 }}
