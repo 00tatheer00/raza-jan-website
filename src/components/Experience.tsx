@@ -7,7 +7,7 @@ import { siteData } from "@/data/siteData";
 
 export default function Experience() {
   const { ref, isInView } = useInView({ threshold: 0.05 });
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
     <section id="experience" className="section-padding relative" ref={ref}>
@@ -47,153 +47,96 @@ export default function Experience() {
           </motion.p>
         </div>
 
-        {/* Timeline */}
-        <div className="relative">
-          {/* Central timeline line — Desktop */}
-          <motion.div
-            className="absolute left-8 lg:left-[120px] top-0 bottom-0 w-px bg-[var(--color-border)]"
-            initial={{ scaleY: 0 }}
-            animate={isInView ? { scaleY: 1 } : {}}
-            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-            style={{ transformOrigin: "top" }}
-          />
+        {/* Structured Architectural Timeline */}
+        <div className="space-y-0">
+          {siteData.experience.map((exp, index) => {
+            const isHovered = hoveredIndex === index;
 
-          {/* Timeline entries */}
-          {siteData.experience.map((exp, index) => (
-            <motion.div
-              key={exp.number}
-              className={`relative pl-16 lg:pl-[180px] pb-12 md:pb-16 last:pb-0 cursor-pointer group`}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{
-                duration: 0.6,
-                delay: 0.3 + index * 0.1,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              onClick={() =>
-                setActiveIndex(activeIndex === index ? null : index)
-              }
-              onMouseEnter={() => setActiveIndex(index)}
-            >
-              {/* Timeline point */}
-              <div
-                className={`absolute left-[26px] lg:left-[114px] top-1 w-[9px] h-[9px] rounded-full border-2 transition-all duration-400 ${
-                  activeIndex === index || exp.isCurrent
-                    ? "bg-[var(--color-accent)] border-[var(--color-accent)] scale-125"
-                    : "bg-[var(--color-bg)] border-[var(--color-text-muted)] group-hover:border-[var(--color-accent)]"
-                }`}
-              />
+            return (
+              <motion.div
+                key={exp.number}
+                className="group relative border-b border-[var(--color-border)] py-8 md:py-10 transition-colors duration-300 hover:border-[var(--color-accent)]/50"
+                initial={{ opacity: 0, y: 25 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{
+                  duration: 0.5,
+                  delay: 0.15 + index * 0.08,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                onMouseEnter={() => setHoveredIndex(index)}
+                onMouseLeave={() => setHoveredIndex(null)}
+              >
+                {/* Accent line on hover */}
+                <div className="absolute top-0 left-0 w-0 h-px bg-[var(--color-accent)] group-hover:w-full transition-all duration-500" />
 
-              {/* Year — positioned left of timeline on desktop */}
-              <div className="absolute left-0 lg:left-0 top-0 w-[60px] lg:w-[100px] text-right hidden lg:block">
-                <span
-                  className={`font-display text-xs font-medium transition-colors duration-300 ${
-                    activeIndex === index
-                      ? "text-[var(--color-accent)]"
-                      : "text-[var(--color-text-muted)]"
-                  }`}
-                  style={{ letterSpacing: "0.05em" }}
-                >
-                  {exp.years.split(" – ")[0]}
-                </span>
-              </div>
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-start">
+                  {/* Column 1: Index Number & Period (Col span 3 on desktop) */}
+                  <div className="md:col-span-3 flex md:flex-col items-baseline md:items-start justify-between gap-2">
+                    <div className="flex items-center gap-3">
+                      <span className="font-display text-2xl md:text-3xl font-bold text-[var(--color-border)] group-hover:text-[var(--color-accent)] transition-colors duration-300">
+                        {exp.number}
+                      </span>
+                      {exp.isCurrent && (
+                        <span className="px-2 py-0.5 text-[0.6rem] font-bold tracking-widest uppercase bg-[var(--color-accent-light)] text-[var(--color-accent)] border border-[var(--color-accent)]/30 rounded-xs">
+                          CURRENT
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]" />
+                      <span className="font-display text-xs md:text-sm font-semibold tracking-wider text-[var(--color-text-secondary)] group-hover:text-[var(--color-accent)] transition-colors duration-300">
+                        {exp.years}
+                      </span>
+                    </div>
+                  </div>
 
-              {/* Content */}
-              <div className="border-b border-[var(--color-border)] pb-8 md:pb-12 group-hover:border-[var(--color-accent)] transition-colors duration-500">
-                {/* Top row */}
-                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
-                  <div className="flex items-center gap-3">
-                    <span
-                      className={`font-display text-2xl md:text-3xl font-bold transition-colors duration-300 ${
-                        activeIndex === index
-                          ? "text-[var(--color-accent)]"
-                          : "text-[var(--color-border)] group-hover:text-[var(--color-accent)]"
-                      }`}
-                    >
-                      {exp.number}
-                    </span>
-                    <div>
-                      <h3
-                        className={`font-display text-lg md:text-xl font-semibold transition-colors duration-300 ${
-                          activeIndex === index
-                            ? "text-[var(--color-text)]"
-                            : "text-[var(--color-text)]"
-                        }`}
-                      >
+                  {/* Column 2: Company, Position & Description (Col span 9 on desktop) */}
+                  <div className="md:col-span-9 space-y-3">
+                    {/* Company Header */}
+                    <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 sm:gap-4">
+                      <h3 className="font-display text-xl md:text-2xl font-bold text-[var(--color-text)] group-hover:text-[var(--color-accent)] transition-colors duration-300">
                         {exp.company}
                       </h3>
                       {exp.subtitle && (
-                        <span className="text-[var(--color-text-muted)] italic" style={{ fontSize: "var(--text-small)" }}>
+                        <span className="text-xs md:text-sm text-[var(--color-text-muted)] italic font-normal">
                           {exp.subtitle}
                         </span>
                       )}
                     </div>
-                  </div>
 
-                  <div className="flex items-center gap-2 sm:text-right ml-12 sm:ml-0">
-                    {exp.isCurrent && (
-                      <span className="px-2 py-0.5 text-[0.6rem] font-medium tracking-[0.1em] uppercase bg-[var(--color-accent-light)] text-[var(--color-accent)] rounded-sm">
-                        CURRENT
+                    {/* Role / Position */}
+                    <div className="flex items-center gap-2">
+                      <span className="w-4 h-px bg-[var(--color-accent)]" />
+                      <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--color-accent)]">
+                        {exp.position}
                       </span>
-                    )}
-                    <span
-                      className="text-[var(--color-text-muted)] font-display font-medium whitespace-nowrap"
-                      style={{ fontSize: "var(--text-small)" }}
-                    >
-                      {exp.years}
-                    </span>
-                  </div>
-                </div>
+                    </div>
 
-                {/* Position */}
-                <p
-                  className="text-[var(--color-accent)] font-medium mb-4 ml-12 sm:ml-[calc(2rem+0.75rem)]"
-                  style={{
-                    fontSize: "var(--text-small)",
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  {exp.position}
-                </p>
-
-                {/* Description — reveal on active */}
-                <AnimatePresence>
-                  {(activeIndex === index || exp.isCurrent) && (
-                    <motion.div
-                      className="ml-0 sm:ml-[calc(2rem+0.75rem)]"
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                    >
+                    {/* Responsibilities & Achievements */}
+                    <div className="pt-2">
                       <ul className="space-y-2">
-                        {exp.description.map((desc, i) => (
+                        {exp.description.map((item, i) => (
                           <li
                             key={i}
-                            className="flex items-start gap-3 leading-relaxed"
-                            style={{
-                              fontSize: "var(--text-small)",
-                              color: "var(--color-text-secondary)",
-                            }}
+                            className="flex items-start gap-3 text-sm text-[var(--color-text-secondary)] leading-relaxed"
                           >
-                            <span className="w-1 h-1 rounded-full bg-[var(--color-accent)] mt-2 shrink-0" />
-                            {desc}
+                            <span className="w-1 h-1 rounded-full bg-[var(--color-accent)] mt-2 shrink-0 opacity-70 group-hover:opacity-100" />
+                            <span>{item}</span>
                           </li>
                         ))}
                       </ul>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </motion.div>
-          ))}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
 
-      {/* Right architectural line */}
+      {/* Decorative vertical line */}
       <motion.div
-        className="absolute right-[4%] top-0 w-px h-full hidden xl:block"
+        className="absolute right-[4%] top-0 w-px h-full hidden xl:block pointer-events-none"
         initial={{ scaleY: 0 }}
         animate={isInView ? { scaleY: 1 } : {}}
         transition={{ duration: 1.5, delay: 0.5 }}

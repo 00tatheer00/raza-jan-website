@@ -48,7 +48,7 @@ export default function Education() {
                 <motion.div
                   className="absolute top-1/2 -translate-y-1/2 left-0 h-px bg-[var(--color-accent)]"
                   initial={{ width: 0 }}
-                  animate={isInView ? { width: "120%" } : {}}
+                  animate={isInView ? { width: "100%" } : {}}
                   transition={{ duration: 1, delay: 0.6 }}
                 />
 
