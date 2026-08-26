@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -13,7 +13,7 @@ import {
 } from "@/lib/projects";
 import {
   Plus,
-  Edit2,
+  Edit3,
   Trash2,
   Star,
   ExternalLink,
@@ -23,8 +23,7 @@ import {
   Lock,
   LogOut,
   Upload,
-  Sparkles,
-  CheckCircle,
+  CheckCircle2,
   Building2,
   Eye,
   MapPin,
@@ -34,36 +33,110 @@ import {
   AlertTriangle,
   X,
   Layers,
+  Bell,
+  Check,
+  Filter,
+  ArrowUpDown,
+  Compass,
+  FolderPlus,
+  RefreshCw,
+  SlidersHorizontal,
+  Home,
+  ShieldCheck,
+  TrendingUp,
+  Image as ImageIcon,
+  Sparkles,
+  Info,
+  ChevronRight,
+  Menu,
 } from "lucide-react";
 
 const ADMIN_PASSCODE = "raza2026";
 const AUTH_STORAGE_KEY = "raza_jan_admin_auth_v1";
 
+interface NotificationItem {
+  id: string;
+  title: string;
+  message: string;
+  time: string;
+  read: boolean;
+  type: "success" | "info" | "warning";
+}
+
+interface ToastItem {
+  id: string;
+  title: string;
+  message?: string;
+  type: "success" | "info" | "error";
+}
+
 const SAMPLE_IMAGE_PRESETS = [
-  { label: "Luxury Villa", url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop" },
-  { label: "Modern Interior", url: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1200&auto=format&fit=crop" },
-  { label: "Urban Plaza", url: "https://images.unsplash.com/photo-1577495508048-b635879837f1?q=80&w=1200&auto=format&fit=crop" },
-  { label: "3D Penthouse", url: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1200&auto=format&fit=crop" },
-  { label: "Commercial Hub", url: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200&auto=format&fit=crop" },
+  { label: "Hillside Resort", url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop" },
+  { label: "Luxury Interior", url: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1200&auto=format&fit=crop" },
+  { label: "Urban Masterplan", url: "https://images.unsplash.com/photo-1577495508048-b635879837f1?q=80&w=1200&auto=format&fit=crop" },
+  { label: "Modern Penthouse", url: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1200&auto=format&fit=crop" },
+  { label: "Commercial Center", url: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200&auto=format&fit=crop" },
   { label: "Civic Facade", url: "https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?q=80&w=1200&auto=format&fit=crop" },
 ];
 
+const POPULAR_TAGS = [
+  "3ds Max + Corona",
+  "Lumion",
+  "Master Planning",
+  "Luxury Interior",
+  "Hospitality",
+  "Site Execution",
+  "Commercial",
+  "Residential",
+  "AutoCAD",
+];
+
 export default function AdminDashboard() {
+  // Auth state
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passcode, setPasscode] = useState("");
   const [authError, setAuthError] = useState("");
 
+  // Navigation & View State
+  const [activeTab, setActiveTab] = useState<"projects" | "overview" | "media">("projects");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Projects State
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedStatus, setSelectedStatus] = useState<string>("All");
+  const [sortBy, setSortBy] = useState<"newest" | "title" | "year">("newest");
   const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
 
-  // Modal State
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // Notifications & Toasts
+  const [toasts, setToasts] = useState<ToastItem[]>([]);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [notifications, setNotifications] = useState<NotificationItem[]>([
+    {
+      id: "notif-1",
+      title: "PWA Sync Active",
+      message: "Portfolio offline capabilities & service worker active.",
+      time: "Just now",
+      read: false,
+      type: "info",
+    },
+    {
+      id: "notif-2",
+      title: "Portfolio Ready",
+      message: "Admin CMS synchronized with live website.",
+      time: "10m ago",
+      read: false,
+      type: "success",
+    },
+  ]);
+
+  // Modal / Drawer state
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
-  const [deleteConfirmationId, setDeleteConfirmationId] = useState<string | null>(null);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [deleteModalProject, setDeleteModalProject] = useState<Project | null>(null);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -75,11 +148,13 @@ export default function AdminDashboard() {
     description: "",
     image: SAMPLE_IMAGE_PRESETS[0].url,
     featured: false,
-    tags: "Architecture, 3D Visualization",
+    tags: ["Architecture", "3ds Max + Corona"],
     status: "Completed" as Project["status"],
   });
 
-  // Check Auth on mount
+  const [tagInput, setTagInput] = useState("");
+
+  // Load Auth & Projects on mount
   useEffect(() => {
     const isAuth = localStorage.getItem(AUTH_STORAGE_KEY) === "true";
     setIsAuthenticated(isAuth);
@@ -89,7 +164,6 @@ export default function AdminDashboard() {
   const loadProjects = async () => {
     setIsLoading(true);
     try {
-      // First try API
       const res = await fetch("/api/projects");
       if (res.ok) {
         const data = await res.json();
@@ -101,18 +175,31 @@ export default function AdminDashboard() {
         }
       }
     } catch (e) {
-      console.warn("API fetch failed, falling back to local projects", e);
+      console.warn("API fetch error, fallback to local storage", e);
     }
-
-    // Fallback to local
     const local = getLocalProjects();
     setProjects(local);
     setIsLoading(false);
   };
 
-  const showToast = (msg: string) => {
-    setToastMessage(msg);
-    setTimeout(() => setToastMessage(null), 3500);
+  const addToast = (title: string, message?: string, type: ToastItem["type"] = "success") => {
+    const id = `toast-${Date.now()}`;
+    setToasts((prev) => [...prev, { id, title, message, type }]);
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, 4000);
+  };
+
+  const addNotification = (title: string, message: string, type: NotificationItem["type"] = "info") => {
+    const newNotif: NotificationItem = {
+      id: `notif-${Date.now()}`,
+      title,
+      message,
+      time: "Just now",
+      read: false,
+      type,
+    };
+    setNotifications((prev) => [newNotif, ...prev]);
   };
 
   const handleLogin = (e: React.FormEvent) => {
@@ -121,9 +208,10 @@ export default function AdminDashboard() {
       setIsAuthenticated(true);
       localStorage.setItem(AUTH_STORAGE_KEY, "true");
       setAuthError("");
-      showToast("Welcome back, Raza Jan!");
+      addToast("Authenticated Successfully", "Welcome to Syed Raza Jan Studio CMS");
+      addNotification("Admin Session Started", "Logged in as Principal Architect", "success");
     } else {
-      setAuthError("Incorrect Passcode. Try 'raza2026'");
+      setAuthError("Invalid Passcode. Enter 'raza2026'");
     }
   };
 
@@ -131,9 +219,10 @@ export default function AdminDashboard() {
     setIsAuthenticated(false);
     localStorage.removeItem(AUTH_STORAGE_KEY);
     setPasscode("");
+    addToast("Logged Out", "Session ended securely", "info");
   };
 
-  const openAddModal = () => {
+  const openNewProjectForm = () => {
     setEditingProject(null);
     setFormData({
       title: "",
@@ -144,13 +233,14 @@ export default function AdminDashboard() {
       description: "",
       image: SAMPLE_IMAGE_PRESETS[0].url,
       featured: false,
-      tags: "Architecture, 3D Visualization",
+      tags: ["Architecture", "3D Visualization"],
       status: "Completed",
     });
-    setIsModalOpen(true);
+    setTagInput("");
+    setIsFormOpen(true);
   };
 
-  const openEditModal = (proj: Project) => {
+  const openEditProjectForm = (proj: Project) => {
     setEditingProject(proj);
     setFormData({
       title: proj.title,
@@ -161,19 +251,36 @@ export default function AdminDashboard() {
       description: proj.description,
       image: proj.image,
       featured: proj.featured,
-      tags: proj.tags.join(", "),
+      tags: [...proj.tags],
       status: proj.status,
     });
-    setIsModalOpen(true);
+    setTagInput("");
+    setIsFormOpen(true);
   };
 
-  const handleImageFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAddTag = (tagToAdd?: string) => {
+    const val = (tagToAdd || tagInput).trim();
+    if (val && !formData.tags.includes(val)) {
+      setFormData((prev) => ({ ...prev, tags: [...prev.tags, val] }));
+      setTagInput("");
+    }
+  };
+
+  const handleRemoveTag = (tagToRemove: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      tags: prev.tags.filter((t) => t !== tagToRemove),
+    }));
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
         if (typeof reader.result === "string") {
           setFormData((prev) => ({ ...prev, image: reader.result as string }));
+          addToast("Photo Uploaded", `${file.name} ready for preview`);
         }
       };
       reader.readAsDataURL(file);
@@ -183,25 +290,17 @@ export default function AdminDashboard() {
   const handleSaveProject = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const tagArray = formData.tags
-      .split(",")
-      .map((t) => t.trim())
-      .filter(Boolean);
+    if (!formData.title.trim()) {
+      addToast("Title required", "Please enter a project title", "error");
+      return;
+    }
 
     if (editingProject) {
       // UPDATE
       const updatedItem: Project = {
         ...editingProject,
-        title: formData.title,
-        category: formData.category,
-        location: formData.location,
-        year: formData.year,
-        client: formData.client,
-        description: formData.description,
-        image: formData.image,
-        featured: formData.featured,
-        tags: tagArray.length > 0 ? tagArray : ["Architecture"],
-        status: formData.status,
+        ...formData,
+        tags: formData.tags.length > 0 ? formData.tags : ["Architecture"],
       };
 
       const updatedList = projects.map((p) => (p.id === editingProject.id ? updatedItem : p));
@@ -215,25 +314,18 @@ export default function AdminDashboard() {
           body: JSON.stringify(updatedItem),
         });
       } catch (err) {
-        console.warn("Server sync error", err);
+        console.warn("API sync fallback", err);
       }
 
-      showToast(`Updated "${formData.title}"`);
+      addToast("Project Updated", `Saved changes for "${formData.title}"`);
+      addNotification("Project Updated", `"${formData.title}" was modified in the showcase.`, "info");
     } else {
       // CREATE
       const newItem: Project = {
         id: `proj-${Date.now()}`,
         number: String(projects.length + 1).padStart(2, "0"),
-        title: formData.title,
-        category: formData.category,
-        location: formData.location,
-        year: formData.year,
-        client: formData.client,
-        description: formData.description,
-        image: formData.image,
-        featured: formData.featured,
-        tags: tagArray.length > 0 ? tagArray : ["Architecture"],
-        status: formData.status,
+        ...formData,
+        tags: formData.tags.length > 0 ? formData.tags : ["Architecture"],
       };
 
       const updatedList = [newItem, ...projects];
@@ -247,23 +339,18 @@ export default function AdminDashboard() {
           body: JSON.stringify(newItem),
         });
       } catch (err) {
-        console.warn("Server sync error", err);
+        console.warn("API sync fallback", err);
       }
 
-      showToast(`Created project "${formData.title}"`);
+      addToast("Project Created", `Published "${formData.title}" to portfolio`);
+      addNotification("New Project Added", `"${formData.title}" is now live in the portfolio.`, "success");
     }
 
-    setIsModalOpen(false);
+    setIsFormOpen(false);
   };
 
   const handleToggleFeatured = async (id: string) => {
-    const updatedList = projects.map((p) => {
-      if (p.id === id) {
-        return { ...p, featured: !p.featured };
-      }
-      return p;
-    });
-
+    const updatedList = projects.map((p) => (p.id === id ? { ...p, featured: !p.featured } : p));
     setProjects(updatedList);
     saveLocalProjects(updatedList);
 
@@ -278,11 +365,15 @@ export default function AdminDashboard() {
       } catch (e) {
         console.warn(e);
       }
-      showToast(changed.featured ? "Marked as Featured" : "Removed from Featured");
+      addToast(
+        changed.featured ? "Featured Showcase" : "Removed from Featured",
+        `"${changed.title}" status updated`
+      );
     }
   };
 
   const handleDeleteProject = async (id: string) => {
+    const deleted = projects.find((p) => p.id === id);
     const filtered = projects.filter((p) => p.id !== id);
     setProjects(filtered);
     saveLocalProjects(filtered);
@@ -290,73 +381,93 @@ export default function AdminDashboard() {
     try {
       await fetch(`/api/projects?id=${id}`, { method: "DELETE" });
     } catch (err) {
-      console.warn("Server delete error", err);
+      console.warn(err);
     }
 
-    setDeleteConfirmationId(null);
-    showToast("Project deleted successfully");
+    setDeleteModalProject(null);
+    addToast("Project Deleted", `"${deleted?.title || "Project"}" removed`, "info");
+    addNotification("Project Removed", `A project was deleted from your portfolio.`, "warning");
   };
 
-  // Filter projects
-  const filteredProjects = projects.filter((p) => {
-    const matchesCategory = selectedCategory === "All" || p.category === selectedCategory;
-    const matchesSearch =
-      p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.client.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
-    return matchesCategory && matchesSearch;
-  });
+  // Filter & Sort
+  const filteredProjects = projects
+    .filter((p) => {
+      const matchCat = selectedCategory === "All" || p.category === selectedCategory;
+      const matchStatus = selectedStatus === "All" || p.status === selectedStatus;
+      const q = searchQuery.toLowerCase();
+      const matchSearch =
+        p.title.toLowerCase().includes(q) ||
+        p.location.toLowerCase().includes(q) ||
+        p.client.toLowerCase().includes(q) ||
+        p.tags.some((t) => t.toLowerCase().includes(q));
+      return matchCat && matchStatus && matchSearch;
+    })
+    .sort((a, b) => {
+      if (sortBy === "title") return a.title.localeCompare(b.title);
+      if (sortBy === "year") return b.year.localeCompare(a.year);
+      return 0; // default newest
+    });
 
-  // Calculate Metrics
+  // Metrics
   const totalCount = projects.length;
   const featuredCount = projects.filter((p) => p.featured).length;
   const inProgressCount = projects.filter((p) => p.status === "In Progress").length;
-  const categoriesCount = new Set(projects.map((p) => p.category)).size;
+  const completedCount = projects.filter((p) => p.status === "Completed").length;
+  const unreadNotifs = notifications.filter((n) => !n.read).length;
 
   // ══════════════════════════════════════════════════════════════
-  // AUTHENTICATION LOGIN SCREEN
+  // AUTHENTICATION SCREEN
   // ══════════════════════════════════════════════════════════════
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-[#0E0E0E] text-white flex items-center justify-center p-6 relative overflow-hidden">
-        {/* Background architectural grid */}
-        <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#C8A84E_1px,transparent_1px)] [background-size:24px_24px]" />
+      <div className="min-h-screen bg-[#090909] text-white flex items-center justify-center p-6 relative overflow-hidden font-sans">
+        {/* Subtle grid background */}
+        <div className="absolute inset-0 bg-[radial-gradient(#C8A84E_1px,transparent_1px)] [background-size:32px_32px] opacity-10 pointer-events-none" />
+        
+        {/* Ambient lighting */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-radial from-[rgba(200,168,78,0.12)] via-transparent to-transparent rounded-full blur-3xl pointer-events-none" />
 
         <motion.div
-          className="w-full max-w-md bg-[#161616] border border-[#2B2B2B] p-8 sm:p-10 rounded-2xl shadow-2xl relative z-10 space-y-6"
-          initial={{ opacity: 0, y: 20 }}
+          className="w-full max-w-md bg-[#121212] border border-[#262626] rounded-3xl p-8 sm:p-10 shadow-[0_20px_70px_rgba(0,0,0,0.8)] relative z-10 space-y-7"
+          initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.6 }}
         >
-          {/* Logo / Header */}
-          <div className="text-center space-y-2">
-            <div className="w-12 h-12 rounded-xl bg-[#222222] border border-[var(--color-accent)]/30 flex items-center justify-center mx-auto text-[var(--color-accent)]">
-              <Lock className="w-5 h-5" />
+          {/* Header */}
+          <div className="text-center space-y-3">
+            <div className="w-14 h-14 rounded-2xl bg-[#1A1A1A] border border-[var(--color-accent)]/40 flex items-center justify-center mx-auto text-[var(--color-accent)] shadow-inner">
+              <Lock className="w-6 h-6" />
             </div>
-            <h1 className="font-display text-2xl font-bold tracking-tight text-white">
-              Studio Admin Portal
-            </h1>
-            <p className="text-xs uppercase tracking-widest text-[#9C9A94]">
-              Syed Raza Jan &middot; Portfolio CMS
+            <div>
+              <h1 className="font-display text-2xl font-bold tracking-tight text-white">
+                Studio Management Portal
+              </h1>
+              <p className="text-xs uppercase tracking-[0.2em] text-[var(--color-accent)] font-semibold mt-1">
+                Syed Raza Jan &middot; Architectural CMS
+              </p>
+            </div>
+            <p className="text-xs text-[#8A8882] leading-relaxed">
+              Enterprise administration for live portfolio projects, 3D visualization assets, and case studies.
             </p>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-4 pt-2">
+          <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-[#A09E96] mb-2">
-                Admin Passcode
+              <label className="block text-[0.7rem] font-bold uppercase tracking-widest text-[#A09E96] mb-2">
+                Security Passcode
               </label>
-              <input
-                type="password"
-                value={passcode}
-                onChange={(e) => setPasscode(e.target.value)}
-                placeholder="Enter passcode (e.g. raza2026)"
-                className="w-full px-4 py-3 bg-[#0A0A0A] border border-[#333333] rounded-lg text-white placeholder-[#666666] focus:outline-none focus:border-[var(--color-accent)] transition-colors text-sm"
-                autoFocus
-              />
+              <div className="relative">
+                <input
+                  type="password"
+                  value={passcode}
+                  onChange={(e) => setPasscode(e.target.value)}
+                  placeholder="Enter passcode (e.g. raza2026)"
+                  className="w-full px-4 py-3.5 bg-[#080808] border border-[#2B2B2B] rounded-xl text-white placeholder-[#555555] focus:outline-none focus:border-[var(--color-accent)] transition-colors text-sm font-medium"
+                  autoFocus
+                />
+              </div>
               {authError && (
-                <p className="text-xs text-red-400 mt-2 flex items-center gap-1.5">
+                <p className="text-xs text-red-400 mt-2 flex items-center gap-1.5 font-medium">
                   <AlertTriangle className="w-3.5 h-3.5" />
                   <span>{authError}</span>
                 </p>
@@ -365,18 +476,18 @@ export default function AdminDashboard() {
 
             <button
               type="submit"
-              className="w-full py-3.5 bg-[var(--color-accent)] text-[#0A0A0A] font-bold text-xs tracking-widest uppercase rounded-lg hover:bg-[#B8962E] transition-all shadow-md cursor-pointer"
+              className="w-full py-3.5 bg-[var(--color-accent)] text-black font-bold text-xs tracking-widest uppercase rounded-xl hover:bg-[#B8962E] transition-all shadow-lg hover:shadow-[0_0_24px_rgba(200,168,78,0.3)] cursor-pointer"
             >
-              Access Dashboard
+              Sign In to Studio CMS
             </button>
           </form>
 
-          <div className="pt-4 border-t border-[#262626] text-center">
+          <div className="pt-4 border-t border-[#222222] text-center">
             <Link
               href="/"
               className="inline-flex items-center gap-2 text-xs text-[#8A8882] hover:text-white transition-colors"
             >
-              <span>Return to Public Portfolio</span>
+              <span>Return to Public Website</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -386,412 +497,770 @@ export default function AdminDashboard() {
   }
 
   // ══════════════════════════════════════════════════════════════
-  // AUTHENTICATED ADMIN DASHBOARD
+  // ENTERPRISE DASHBOARD LAYOUT
   // ══════════════════════════════════════════════════════════════
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-[#E0DFDC] font-sans">
+    <div className="min-h-screen bg-[#090909] text-[#E0DFDC] font-sans flex flex-col md:flex-row">
       
-      {/* ── Toast Notification ── */}
-      <AnimatePresence>
-        {toastMessage && (
-          <motion.div
-            className="fixed bottom-6 right-6 z-50 px-5 py-3 bg-[#1C1C1C] border border-[var(--color-accent)] text-white text-xs font-semibold tracking-wide rounded-xl shadow-2xl flex items-center gap-3"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-          >
-            <CheckCircle className="w-4 h-4 text-[var(--color-accent)]" />
-            <span>{toastMessage}</span>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* ── STACKED TOAST NOTIFICATIONS (TOP-RIGHT) ── */}
+      <div className="fixed top-6 right-6 z-50 flex flex-col gap-2.5 max-w-sm pointer-events-none">
+        <AnimatePresence>
+          {toasts.map((toast) => (
+            <motion.div
+              key={toast.id}
+              className={`p-4 rounded-xl shadow-2xl backdrop-blur-md border pointer-events-auto flex items-start gap-3 text-xs ${
+                toast.type === "success"
+                  ? "bg-[#141414]/95 border-emerald-500/50 text-white"
+                  : toast.type === "error"
+                  ? "bg-[#141414]/95 border-red-500/50 text-white"
+                  : "bg-[#141414]/95 border-[var(--color-accent)]/50 text-white"
+              }`}
+              initial={{ opacity: 0, x: 50, scale: 0.95 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: 50, scale: 0.95 }}
+            >
+              <div className="mt-0.5 shrink-0">
+                {toast.type === "success" && <CheckCircle2 className="w-4 h-4 text-emerald-400" />}
+                {toast.type === "error" && <AlertTriangle className="w-4 h-4 text-red-400" />}
+                {toast.type === "info" && <Sparkles className="w-4 h-4 text-[var(--color-accent)]" />}
+              </div>
+              <div className="flex-1">
+                <div className="font-bold text-white tracking-wide">{toast.title}</div>
+                {toast.message && <div className="text-[#999999] mt-0.5">{toast.message}</div>}
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
 
-      {/* ── Top Navigation Bar ── */}
-      <header className="border-b border-[#222222] bg-[#111111]/90 backdrop-blur-md sticky top-0 z-40 px-6 sm:px-10 py-4">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          
-          {/* Studio Brand */}
-          <div className="flex items-center gap-4">
-            <div className="w-9 h-9 rounded-lg bg-[#1F1F1F] border border-[var(--color-accent)]/40 flex items-center justify-center font-display font-bold text-xs text-[var(--color-accent)]">
-              SRJ
+      {/* ══════════════════════════════════════════════════════════
+          ENTERPRISE SIDEBAR PANEL
+          ══════════════════════════════════════════════════════════ */}
+      <aside
+        className={`${
+          isSidebarOpen ? "w-64" : "w-20"
+        } hidden md:flex flex-col justify-between border-r border-[#1F1F1F] bg-[#0E0E0E] transition-all duration-300 shrink-0 sticky top-0 h-screen z-30`}
+      >
+        {/* Top Studio Brand */}
+        <div className="p-6 border-b border-[#1A1A1A] space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3 overflow-hidden">
+              <div className="w-10 h-10 rounded-xl bg-[#1C1C1C] border border-[var(--color-accent)]/40 flex items-center justify-center font-display font-bold text-sm text-[var(--color-accent)] shrink-0 shadow-sm">
+                SRJ
+              </div>
+              {isSidebarOpen && (
+                <div className="truncate">
+                  <div className="font-display font-bold text-sm text-white tracking-tight truncate">
+                    Syed Raza Jan
+                  </div>
+                  <div className="text-[0.6rem] uppercase tracking-[0.2em] text-[var(--color-accent)] font-semibold">
+                    Studio Suite
+                  </div>
+                </div>
+              )}
             </div>
-            <div>
-              <h1 className="font-display font-bold text-base text-white tracking-wide">
-                Syed Raza Jan
-              </h1>
-              <p className="text-[0.65rem] tracking-[0.2em] uppercase text-[var(--color-accent)] font-semibold">
-                Architecture Projects CMS
-              </p>
-            </div>
+
+            <button
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="p-1.5 rounded-lg bg-[#181818] text-[#777777] hover:text-white transition-colors cursor-pointer"
+              title="Toggle sidebar"
+            >
+              <ChevronRight className={`w-3.5 h-3.5 transition-transform ${isSidebarOpen ? "rotate-180" : ""}`} />
+            </button>
           </div>
 
-          {/* Action Header Tools */}
-          <div className="flex items-center gap-3">
+          {isSidebarOpen && (
+            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-[#161616] border border-[#262626] text-[0.65rem] text-emerald-400 font-semibold tracking-wider uppercase">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>LIVE PWA SYNC ACTIVE</span>
+            </div>
+          )}
+        </div>
+
+        {/* Sidebar Navigation */}
+        <nav className="p-4 space-y-1.5 flex-1">
+          <button
+            onClick={() => setActiveTab("projects")}
+            className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all cursor-pointer ${
+              activeTab === "projects"
+                ? "bg-[var(--color-accent)] text-black font-bold shadow-md"
+                : "text-[#9E9C96] hover:bg-[#1A1A1A] hover:text-white"
+            }`}
+          >
+            <Building2 className="w-4 h-4 shrink-0" />
+            {isSidebarOpen && (
+              <div className="flex-1 flex items-center justify-between">
+                <span>Projects Portfolio</span>
+                <span className={`px-2 py-0.5 rounded text-[0.65rem] ${activeTab === "projects" ? "bg-black/20 text-black" : "bg-[#222222] text-[#888888]"}`}>
+                  {totalCount}
+                </span>
+              </div>
+            )}
+          </button>
+
+          <button
+            onClick={() => setActiveTab("overview")}
+            className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all cursor-pointer ${
+              activeTab === "overview"
+                ? "bg-[var(--color-accent)] text-black font-bold shadow-md"
+                : "text-[#9E9C96] hover:bg-[#1A1A1A] hover:text-white"
+            }`}
+          >
+            <TrendingUp className="w-4 h-4 shrink-0" />
+            {isSidebarOpen && <span>Metrics &amp; Analytics</span>}
+          </button>
+
+          <button
+            onClick={() => setActiveTab("media")}
+            className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all cursor-pointer ${
+              activeTab === "media"
+                ? "bg-[var(--color-accent)] text-black font-bold shadow-md"
+                : "text-[#9E9C96] hover:bg-[#1A1A1A] hover:text-white"
+            }`}
+          >
+            <ImageIcon className="w-4 h-4 shrink-0" />
+            {isSidebarOpen && <span>Media Presets</span>}
+          </button>
+
+          <div className="pt-4 border-t border-[#1C1C1C] my-3">
+            {isSidebarOpen && (
+              <div className="px-3 pb-2 text-[0.6rem] font-bold tracking-[0.2em] uppercase text-[#666666]">
+                External Links
+              </div>
+            )}
             <Link
               href="/#projects"
               target="_blank"
-              className="inline-flex items-center gap-2 px-3.5 py-2 bg-[#1A1A1A] hover:bg-[#262626] border border-[#333333] text-xs text-[#C8C6C0] rounded-lg transition-colors"
+              className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs text-[#8A8882] hover:bg-[#1A1A1A] hover:text-[var(--color-accent)] transition-colors"
             >
-              <Eye className="w-3.5 h-3.5 text-[var(--color-accent)]" />
-              <span>Live Website</span>
+              <Eye className="w-4 h-4 shrink-0" />
+              {isSidebarOpen && <span>View Public Portfolio</span>}
             </Link>
-
-            <button
-              onClick={openAddModal}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-[#0A0A0A] font-bold text-xs tracking-wider uppercase rounded-lg hover:bg-[#B8962E] transition-all shadow-md cursor-pointer"
-            >
-              <Plus className="w-4 h-4" />
-              <span>New Project</span>
-            </button>
-
-            <button
-              onClick={handleLogout}
-              className="p-2 bg-[#1A1A1A] hover:bg-[#262626] border border-[#333333] text-[#A09E96] hover:text-white rounded-lg transition-colors cursor-pointer"
-              title="Logout"
-            >
-              <LogOut className="w-4 h-4" />
-            </button>
           </div>
+        </nav>
 
+        {/* Bottom Profile & Logout */}
+        <div className="p-4 border-t border-[#1A1A1A] space-y-3">
+          {isSidebarOpen && (
+            <div className="flex items-center gap-3 px-2 py-1">
+              <div className="w-8 h-8 rounded-full bg-[#242424] border border-[var(--color-accent)]/30 flex items-center justify-center text-xs font-bold text-white shrink-0">
+                RJ
+              </div>
+              <div className="truncate">
+                <div className="text-xs font-bold text-white truncate">Syed Raza Jan</div>
+                <div className="text-[0.65rem] text-[#777777]">Principal Architect</div>
+              </div>
+            </div>
+          )}
+
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-2.5 px-3 py-2.5 rounded-xl bg-[#171717] hover:bg-red-950/40 hover:border-red-800/50 border border-[#262626] text-xs font-semibold text-[#A09E96] hover:text-red-400 transition-all cursor-pointer"
+            title="Logout"
+          >
+            <LogOut className="w-4 h-4" />
+            {isSidebarOpen && <span>Secure Logout</span>}
+          </button>
         </div>
-      </header>
+      </aside>
 
-      {/* ── Main Dashboard Content ── */}
-      <main className="max-w-7xl mx-auto px-6 sm:px-10 py-10 space-y-10">
+      {/* ══════════════════════════════════════════════════════════
+          MAIN CONTENT AREA & TOPBAR
+          ══════════════════════════════════════════════════════════ */}
+      <div className="flex-1 flex flex-col min-w-0">
         
-        {/* ── Metric Cards ── */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          <div className="bg-[#141414] border border-[#262626] p-5 rounded-xl space-y-1">
-            <span className="text-[0.65rem] font-bold tracking-[0.2em] uppercase text-[#888888]">
-              Total Projects
-            </span>
-            <div className="font-display text-3xl font-bold text-white">
-              {totalCount}
-            </div>
-          </div>
-
-          <div className="bg-[#141414] border border-[#262626] p-5 rounded-xl space-y-1">
-            <span className="text-[0.65rem] font-bold tracking-[0.2em] uppercase text-[var(--color-accent)] flex items-center gap-1.5">
-              <Star className="w-3 h-3 fill-current" />
-              <span>Featured</span>
-            </span>
-            <div className="font-display text-3xl font-bold text-[var(--color-accent)]">
-              {featuredCount}
-            </div>
-          </div>
-
-          <div className="bg-[#141414] border border-[#262626] p-5 rounded-xl space-y-1">
-            <span className="text-[0.65rem] font-bold tracking-[0.2em] uppercase text-[#888888]">
-              Disciplines
-            </span>
-            <div className="font-display text-3xl font-bold text-white">
-              {categoriesCount}
-            </div>
-          </div>
-
-          <div className="bg-[#141414] border border-[#262626] p-5 rounded-xl space-y-1">
-            <span className="text-[0.65rem] font-bold tracking-[0.2em] uppercase text-emerald-400">
-              In Progress
-            </span>
-            <div className="font-display text-3xl font-bold text-emerald-400">
-              {inProgressCount}
-            </div>
-          </div>
-        </div>
-
-        {/* ── Controls: Search, Categories & View Toggle ── */}
-        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 pb-4 border-b border-[#222222]">
+        {/* ── Top Header Bar ── */}
+        <header className="border-b border-[#1F1F1F] bg-[#0E0E0E]/90 backdrop-blur-md sticky top-0 z-30 px-6 sm:px-10 py-4 flex items-center justify-between gap-4">
           
-          {/* Search Box */}
-          <div className="relative flex-1 max-w-md">
-            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#777777]" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by title, location, client, or tag..."
-              className="w-full pl-10 pr-4 py-2.5 bg-[#141414] border border-[#2B2B2B] rounded-lg text-sm text-white placeholder-[#666666] focus:outline-none focus:border-[var(--color-accent)] transition-colors"
-            />
-          </div>
-
-          {/* Category Filter Pills & View Mode */}
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full">
-              {PROJECT_CATEGORIES.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
-                    selectedCategory === cat
-                      ? "bg-[var(--color-accent)] text-black font-bold"
-                      : "bg-[#141414] text-[#9E9C96] hover:text-white border border-[#262626]"
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-
-            {/* View Mode Toggle */}
-            <div className="flex items-center bg-[#141414] border border-[#2B2B2B] rounded-lg p-1">
-              <button
-                onClick={() => setViewMode("grid")}
-                className={`p-1.5 rounded ${viewMode === "grid" ? "bg-[#282828] text-white" : "text-[#777777]"}`}
-                title="Grid view"
-              >
-                <LayoutGrid className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => setViewMode("table")}
-                className={`p-1.5 rounded ${viewMode === "table" ? "bg-[#282828] text-white" : "text-[#777777]"}`}
-                title="Table view"
-              >
-                <List className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-
-        </div>
-
-        {/* ── Project List / Grid ── */}
-        {isLoading ? (
-          <div className="py-20 text-center text-[#777777] text-sm">
-            Loading architectural portfolio projects...
-          </div>
-        ) : filteredProjects.length === 0 ? (
-          <div className="py-20 text-center space-y-3 bg-[#121212] border border-[#222222] rounded-2xl">
-            <Building2 className="w-8 h-8 text-[#555555] mx-auto" />
-            <p className="text-white font-medium text-base">No projects found</p>
-            <p className="text-xs text-[#777777]">Try adjusting your search query or add a new project.</p>
+          <div className="flex items-center gap-4">
+            {/* Mobile menu button */}
             <button
-              onClick={openAddModal}
-              className="mt-2 inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-black font-bold text-xs rounded-lg"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 rounded-lg bg-[#1C1C1C] text-white"
             >
-              <Plus className="w-4 h-4" />
-              <span>Add First Project</span>
+              <Menu className="w-4 h-4" />
             </button>
+
+            <div>
+              <div className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[var(--color-accent)]">
+                Studio Management
+              </div>
+              <h2 className="font-display font-bold text-lg text-white leading-tight">
+                {activeTab === "projects"
+                  ? "Architectural Projects Showcase"
+                  : activeTab === "overview"
+                  ? "Studio Portfolio Analytics"
+                  : "Curated Media & Visual Presets"}
+              </h2>
+            </div>
           </div>
-        ) : viewMode === "grid" ? (
-          
-          /* ── GRID VIEW ── */
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredProjects.map((project) => (
-              <motion.div
-                key={project.id}
-                layout
-                className="group bg-[#141414] border border-[#262626] hover:border-[var(--color-accent)]/60 rounded-2xl overflow-hidden shadow-lg transition-all flex flex-col"
+
+          {/* Right Header Utilities: Push Notifications & Quick Action */}
+          <div className="flex items-center gap-3 relative">
+            
+            {/* Notification Bell with Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+                className="relative p-2.5 rounded-xl bg-[#161616] hover:bg-[#222222] border border-[#2B2B2B] text-[#A09E96] hover:text-white transition-colors cursor-pointer"
+                title="Notifications"
               >
-                {/* Project Image */}
-                <div className="relative aspect-[16/10] bg-[#1E1E1E] overflow-hidden">
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    sizes="(max-width: 768px) 100vw, 400px"
-                  />
-                  
-                  {/* Overlay Badges */}
-                  <div className="absolute top-3 left-3 flex items-center gap-2">
-                    <span className="px-2.5 py-1 rounded bg-[#0A0A0A]/85 backdrop-blur-md text-[0.65rem] font-bold tracking-wider uppercase text-[var(--color-accent)] border border-[var(--color-accent)]/30">
-                      {project.category}
-                    </span>
-                    {project.status === "In Progress" && (
-                      <span className="px-2 py-0.5 rounded bg-emerald-900/80 text-emerald-300 text-[0.6rem] font-bold uppercase">
-                        In Progress
-                      </span>
-                    )}
-                  </div>
+                <Bell className="w-4 h-4" />
+                {unreadNotifs > 0 && (
+                  <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[var(--color-accent)] animate-pulse" />
+                )}
+              </button>
 
-                  {/* Featured Star Toggle */}
-                  <button
-                    onClick={() => handleToggleFeatured(project.id)}
-                    className={`absolute top-3 right-3 w-8 h-8 rounded-lg backdrop-blur-md flex items-center justify-center transition-colors cursor-pointer ${
-                      project.featured
-                        ? "bg-[var(--color-accent)] text-black shadow-md"
-                        : "bg-[#0A0A0A]/70 text-[#777777] hover:text-white"
-                    }`}
-                    title={project.featured ? "Featured showcase" : "Mark as featured"}
+              {/* Notification Dropdown */}
+              <AnimatePresence>
+                {isNotificationOpen && (
+                  <motion.div
+                    className="absolute right-0 mt-3 w-80 sm:w-96 bg-[#141414] border border-[#2C2C2C] rounded-2xl shadow-2xl p-4 z-50 space-y-3"
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
                   >
-                    <Star className="w-4 h-4 fill-current" />
-                  </button>
-                </div>
-
-                {/* Project Details */}
-                <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-xs text-[#8A8882]">
-                      <span className="flex items-center gap-1.5">
-                        <MapPin className="w-3 h-3 text-[var(--color-accent)]" />
-                        <span>{project.location}</span>
+                    <div className="flex items-center justify-between pb-2 border-b border-[#222222]">
+                      <span className="font-display font-bold text-xs uppercase tracking-wider text-white">
+                        Studio Push Alerts ({notifications.length})
                       </span>
-                      <span className="font-semibold">{project.year}</span>
-                    </div>
-
-                    <h3 className="font-display font-bold text-lg text-white leading-snug">
-                      {project.title}
-                    </h3>
-
-                    {project.client && (
-                      <p className="text-xs text-[var(--color-accent)] font-medium">
-                        Client: {project.client}
-                      </p>
-                    )}
-
-                    <p className="text-xs text-[#8A8882] line-clamp-2 leading-relaxed">
-                      {project.description}
-                    </p>
-                  </div>
-
-                  {/* Tags & Action Buttons */}
-                  <div className="pt-3 border-t border-[#222222] flex items-center justify-between gap-2">
-                    <div className="flex flex-wrap gap-1.5 max-w-[60%]">
-                      {project.tags.slice(0, 2).map((tag, i) => (
-                        <span
-                          key={i}
-                          className="px-2 py-0.5 bg-[#1C1C1C] text-[#9E9C96] text-[0.6rem] rounded"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    <div className="flex items-center gap-1.5 shrink-0">
                       <button
-                        onClick={() => openEditModal(project)}
-                        className="p-2 bg-[#1F1F1F] hover:bg-[var(--color-accent)] hover:text-black text-[#A09E96] rounded-lg transition-colors cursor-pointer"
-                        title="Edit Project"
+                        onClick={() => {
+                          setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+                          addToast("Notifications Cleared", "All alerts marked as read");
+                        }}
+                        className="text-[0.65rem] text-[var(--color-accent)] hover:underline cursor-pointer"
                       >
-                        <Edit2 className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => setDeleteConfirmationId(project.id)}
-                        className="p-2 bg-[#1F1F1F] hover:bg-red-500 hover:text-white text-[#A09E96] rounded-lg transition-colors cursor-pointer"
-                        title="Delete Project"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        Mark all read
                       </button>
                     </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        ) : (
-          
-          /* ── TABLE VIEW ── */
-          <div className="bg-[#141414] border border-[#262626] rounded-2xl overflow-hidden shadow-xl">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-[#1C1C1C] text-[#888888] uppercase tracking-wider font-semibold border-b border-[#262626]">
-                  <tr>
-                    <th className="py-3.5 px-4">Project</th>
-                    <th className="py-3.5 px-4">Category</th>
-                    <th className="py-3.5 px-4">Location</th>
-                    <th className="py-3.5 px-4">Year</th>
-                    <th className="py-3.5 px-4">Status</th>
-                    <th className="py-3.5 px-4 text-center">Featured</th>
-                    <th className="py-3.5 px-4 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#222222]">
-                  {filteredProjects.map((project) => (
-                    <tr key={project.id} className="hover:bg-[#181818] transition-colors">
-                      <td className="py-3.5 px-4 flex items-center gap-3">
-                        <div className="relative w-10 h-10 rounded-lg bg-[#222222] overflow-hidden shrink-0">
-                          <Image src={project.image} alt={project.title} fill className="object-cover" />
-                        </div>
-                        <div>
-                          <div className="font-bold text-white text-sm">{project.title}</div>
-                          {project.client && <div className="text-[#777777]">{project.client}</div>}
-                        </div>
-                      </td>
-                      <td className="py-3.5 px-4 text-[var(--color-accent)] font-medium">
-                        {project.category}
-                      </td>
-                      <td className="py-3.5 px-4 text-[#AAAAAA]">{project.location}</td>
-                      <td className="py-3.5 px-4 text-[#AAAAAA]">{project.year}</td>
-                      <td className="py-3.5 px-4">
-                        <span className={`px-2 py-0.5 rounded text-[0.65rem] font-semibold ${
-                          project.status === "Completed"
-                            ? "bg-blue-900/40 text-blue-300"
-                            : project.status === "In Progress"
-                            ? "bg-emerald-900/40 text-emerald-300"
-                            : "bg-purple-900/40 text-purple-300"
-                        }`}>
-                          {project.status}
-                        </span>
-                      </td>
-                      <td className="py-3.5 px-4 text-center">
-                        <button
-                          onClick={() => handleToggleFeatured(project.id)}
-                          className={`p-1.5 rounded cursor-pointer ${
-                            project.featured ? "text-[var(--color-accent)]" : "text-[#555555] hover:text-white"
+
+                    <div className="max-h-72 overflow-y-auto space-y-2">
+                      {notifications.map((notif) => (
+                        <div
+                          key={notif.id}
+                          className={`p-3 rounded-xl border text-xs space-y-1 ${
+                            notif.read
+                              ? "bg-[#111111] border-[#1F1F1F] text-[#888888]"
+                              : "bg-[#1A1A1A] border-[var(--color-accent)]/30 text-[#E0DFDC]"
                           }`}
                         >
-                          <Star className={`w-4 h-4 ${project.featured ? "fill-current" : ""}`} />
-                        </button>
-                      </td>
-                      <td className="py-3.5 px-4 text-right space-x-1.5">
-                        <button
-                          onClick={() => openEditModal(project)}
-                          className="p-1.5 bg-[#222222] hover:bg-[var(--color-accent)] hover:text-black rounded text-[#AAAAAA] transition-colors cursor-pointer"
-                        >
-                          <Edit2 className="w-3.5 h-3.5" />
-                        </button>
-                        <button
-                          onClick={() => setDeleteConfirmationId(project.id)}
-                          className="p-1.5 bg-[#222222] hover:bg-red-500 hover:text-white rounded text-[#AAAAAA] transition-colors cursor-pointer"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                          <div className="flex items-center justify-between font-bold text-white">
+                            <span>{notif.title}</span>
+                            <span className="text-[0.65rem] text-[#666666] font-normal">{notif.time}</span>
+                          </div>
+                          <p className="text-[0.7rem] text-[#AAAAAA] leading-relaxed">{notif.message}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
+
+            {/* Direct New Project Button */}
+            <button
+              onClick={openNewProjectForm}
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-[var(--color-accent)] text-black font-bold text-xs tracking-wider uppercase rounded-xl hover:bg-[#B8962E] transition-all shadow-lg hover:shadow-[0_0_20px_rgba(200,168,78,0.3)] cursor-pointer"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Create Project</span>
+            </button>
           </div>
-        )}
 
-      </main>
+        </header>
 
-      {/* ══════════════════════════════════════════════════════════════
-          MODAL: ADD / EDIT PROJECT
-          ══════════════════════════════════════════════════════════════ */}
+        {/* ── Main Tab Content ── */}
+        <main className="p-6 sm:p-10 max-w-7xl w-full mx-auto space-y-8 flex-1">
+          
+          {/* ══════════════════════════════════════════════════════════
+              TAB 1: PROJECTS PORTFOLIO (CRUD)
+              ══════════════════════════════════════════════════════════ */}
+          {activeTab === "projects" && (
+            <>
+              {/* Metric Row */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+                <div className="bg-[#121212] border border-[#222222] p-5 rounded-2xl">
+                  <div className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[#888888]">
+                    Total Commissions
+                  </div>
+                  <div className="font-display text-3xl font-bold text-white mt-1">
+                    {totalCount}
+                  </div>
+                </div>
+
+                <div className="bg-[#121212] border border-[#222222] p-5 rounded-2xl">
+                  <div className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[var(--color-accent)] flex items-center gap-1.5">
+                    <Star className="w-3 h-3 fill-current" />
+                    <span>Featured Showcase</span>
+                  </div>
+                  <div className="font-display text-3xl font-bold text-[var(--color-accent)] mt-1">
+                    {featuredCount}
+                  </div>
+                </div>
+
+                <div className="bg-[#121212] border border-[#222222] p-5 rounded-2xl">
+                  <div className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-emerald-400">
+                    Active Execution
+                  </div>
+                  <div className="font-display text-3xl font-bold text-emerald-400 mt-1">
+                    {inProgressCount}
+                  </div>
+                </div>
+
+                <div className="bg-[#121212] border border-[#222222] p-5 rounded-2xl">
+                  <div className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-blue-400">
+                    Completed Works
+                  </div>
+                  <div className="font-display text-3xl font-bold text-blue-400 mt-1">
+                    {completedCount}
+                  </div>
+                </div>
+              </div>
+
+              {/* Filters, Search & Sort Bar */}
+              <div className="bg-[#121212] border border-[#222222] p-4 sm:p-5 rounded-2xl space-y-4">
+                <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+                  
+                  {/* Search Input */}
+                  <div className="relative flex-1 max-w-lg">
+                    <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#777777]" />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search title, location, client, or tag..."
+                      className="w-full pl-10 pr-4 py-2.5 bg-[#090909] border border-[#282828] rounded-xl text-xs text-white placeholder-[#555555] focus:outline-none focus:border-[var(--color-accent)] transition-colors"
+                    />
+                  </div>
+
+                  {/* Status, Sort & View toggles */}
+                  <div className="flex flex-wrap items-center gap-3">
+                    {/* Status filter */}
+                    <select
+                      value={selectedStatus}
+                      onChange={(e) => setSelectedStatus(e.target.value)}
+                      className="px-3 py-2 bg-[#090909] border border-[#282828] rounded-xl text-xs text-[#A09E96] focus:outline-none focus:border-[var(--color-accent)]"
+                    >
+                      <option value="All">All Statuses</option>
+                      <option value="Completed">Completed</option>
+                      <option value="In Progress">In Progress</option>
+                      <option value="Concept">Concept</option>
+                    </select>
+
+                    {/* Sort by */}
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value as any)}
+                      className="px-3 py-2 bg-[#090909] border border-[#282828] rounded-xl text-xs text-[#A09E96] focus:outline-none focus:border-[var(--color-accent)]"
+                    >
+                      <option value="newest">Sort: Newest</option>
+                      <option value="title">Sort: Title</option>
+                      <option value="year">Sort: Year</option>
+                    </select>
+
+                    {/* View mode toggle */}
+                    <div className="flex items-center bg-[#090909] border border-[#282828] rounded-xl p-1">
+                      <button
+                        onClick={() => setViewMode("grid")}
+                        className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                          viewMode === "grid" ? "bg-[#222222] text-white" : "text-[#666666]"
+                        }`}
+                        title="Grid"
+                      >
+                        <LayoutGrid className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => setViewMode("table")}
+                        className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                          viewMode === "table" ? "bg-[#222222] text-white" : "text-[#666666]"
+                        }`}
+                        title="Table"
+                      >
+                        <List className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+
+                </div>
+
+                {/* Category Pills */}
+                <div className="flex items-center gap-2 overflow-x-auto pb-1 border-t border-[#1C1C1C] pt-3">
+                  <span className="text-[0.65rem] uppercase tracking-wider text-[#666666] font-semibold shrink-0">
+                    Category:
+                  </span>
+                  {PROJECT_CATEGORIES.map((cat) => (
+                    <button
+                      key={cat}
+                      onClick={() => setSelectedCategory(cat)}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+                        selectedCategory === cat
+                          ? "bg-[var(--color-accent)] text-black"
+                          : "bg-[#181818] text-[#888888] hover:text-white border border-[#262626]"
+                      }`}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* ── PROJECT LIST / GRID ── */}
+              {isLoading ? (
+                <div className="py-24 text-center text-[#777777] text-xs">
+                  Loading studio showcase portfolio...
+                </div>
+              ) : filteredProjects.length === 0 ? (
+                <div className="py-20 text-center space-y-3 bg-[#121212] border border-[#222222] rounded-3xl">
+                  <Building2 className="w-10 h-10 text-[#555555] mx-auto" />
+                  <p className="font-display text-white font-bold text-lg">No Projects Found</p>
+                  <p className="text-xs text-[#777777]">Try adjusting your search criteria or create a new commission.</p>
+                  <button
+                    onClick={openNewProjectForm}
+                    className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 bg-[var(--color-accent)] text-black font-bold text-xs rounded-xl"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>Add Project</span>
+                  </button>
+                </div>
+              ) : viewMode === "grid" ? (
+                
+                /* ── CARDS GRID ── */
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredProjects.map((project) => (
+                    <motion.div
+                      key={project.id}
+                      layout
+                      className="group bg-[#121212] border border-[#242424] hover:border-[var(--color-accent)]/60 rounded-2xl overflow-hidden shadow-lg transition-all flex flex-col justify-between"
+                    >
+                      <div>
+                        {/* Image Preview */}
+                        <div className="relative aspect-[16/10] bg-[#181818] overflow-hidden">
+                          <Image
+                            src={project.image}
+                            alt={project.title}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                            sizes="(max-width: 768px) 100vw, 400px"
+                          />
+
+                          {/* Category Badge */}
+                          <div className="absolute top-3 left-3 flex items-center gap-1.5">
+                            <span className="px-2.5 py-1 rounded-md bg-black/85 backdrop-blur-md text-[0.65rem] font-bold tracking-wider uppercase text-[var(--color-accent)] border border-[var(--color-accent)]/30">
+                              {project.category}
+                            </span>
+                            <span className={`px-2 py-0.5 rounded text-[0.6rem] font-bold uppercase ${
+                              project.status === "In Progress"
+                                ? "bg-emerald-950/85 text-emerald-400 border border-emerald-800/40"
+                                : project.status === "Completed"
+                                ? "bg-blue-950/85 text-blue-400 border border-blue-800/40"
+                                : "bg-purple-950/85 text-purple-400"
+                            }`}>
+                              {project.status}
+                            </span>
+                          </div>
+
+                          {/* Star Toggle */}
+                          <button
+                            onClick={() => handleToggleFeatured(project.id)}
+                            className={`absolute top-3 right-3 w-8 h-8 rounded-lg backdrop-blur-md flex items-center justify-center transition-all cursor-pointer ${
+                              project.featured
+                                ? "bg-[var(--color-accent)] text-black shadow-lg"
+                                : "bg-black/60 text-[#777777] hover:text-white"
+                            }`}
+                            title={project.featured ? "Featured showcase" : "Mark as featured"}
+                          >
+                            <Star className="w-4 h-4 fill-current" />
+                          </button>
+                        </div>
+
+                        {/* Info */}
+                        <div className="p-6 space-y-3">
+                          <div className="flex items-center justify-between text-xs text-[#8A8882]">
+                            <span className="flex items-center gap-1.5 text-[var(--color-accent)] font-medium">
+                              <MapPin className="w-3.5 h-3.5" />
+                              <span>{project.location}</span>
+                            </span>
+                            <span className="font-semibold">{project.year}</span>
+                          </div>
+
+                          <h3 className="font-display font-bold text-lg text-white group-hover:text-[var(--color-accent)] transition-colors leading-snug">
+                            {project.title}
+                          </h3>
+
+                          {project.client && (
+                            <p className="text-xs text-[var(--color-accent)] font-medium">
+                              Client: {project.client}
+                            </p>
+                          )}
+
+                          <p className="text-xs text-[#8A8882] line-clamp-2 leading-relaxed">
+                            {project.description}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Footer Actions */}
+                      <div className="p-6 pt-0 border-t border-[#1C1C1C] mt-2 flex items-center justify-between gap-2">
+                        <div className="flex flex-wrap gap-1.5 pt-3 max-w-[60%]">
+                          {project.tags.slice(0, 2).map((tag, i) => (
+                            <span
+                              key={i}
+                              className="px-2 py-0.5 bg-[#181818] text-[#888888] text-[0.6rem] rounded"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+
+                        <div className="flex items-center gap-2 pt-3">
+                          <button
+                            onClick={() => openEditProjectForm(project)}
+                            className="p-2 bg-[#1C1C1C] hover:bg-[var(--color-accent)] hover:text-black rounded-lg text-[#A09E96] transition-colors cursor-pointer"
+                            title="Edit Project"
+                          >
+                            <Edit3 className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() => setDeleteModalProject(project)}
+                            className="p-2 bg-[#1C1C1C] hover:bg-red-600 hover:text-white rounded-lg text-[#A09E96] transition-colors cursor-pointer"
+                            title="Delete Project"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+
+                    </motion.div>
+                  ))}
+                </div>
+              ) : (
+                
+                /* ── TABLE VIEW ── */
+                <div className="bg-[#121212] border border-[#222222] rounded-2xl overflow-hidden shadow-xl">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-[#1A1A1A] text-[#888888] uppercase tracking-wider font-semibold border-b border-[#242424]">
+                        <tr>
+                          <th className="py-4 px-5">Project Entry</th>
+                          <th className="py-4 px-5">Category</th>
+                          <th className="py-4 px-5">Location</th>
+                          <th className="py-4 px-5">Year</th>
+                          <th className="py-4 px-5">Status</th>
+                          <th className="py-4 px-5 text-center">Featured</th>
+                          <th className="py-4 px-5 text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-[#1C1C1C]">
+                        {filteredProjects.map((project) => (
+                          <tr key={project.id} className="hover:bg-[#161616] transition-colors">
+                            <td className="py-4 px-5 flex items-center gap-3">
+                              <div className="relative w-12 h-12 rounded-xl bg-[#202020] overflow-hidden shrink-0">
+                                <Image src={project.image} alt={project.title} fill className="object-cover" />
+                              </div>
+                              <div>
+                                <div className="font-bold text-white text-sm">{project.title}</div>
+                                {project.client && <div className="text-xs text-[#777777]">Client: {project.client}</div>}
+                              </div>
+                            </td>
+                            <td className="py-4 px-5 text-[var(--color-accent)] font-medium">
+                              {project.category}
+                            </td>
+                            <td className="py-4 px-5 text-[#AAAAAA]">{project.location}</td>
+                            <td className="py-4 px-5 text-[#AAAAAA]">{project.year}</td>
+                            <td className="py-4 px-5">
+                              <span className={`px-2.5 py-1 rounded text-[0.65rem] font-bold ${
+                                project.status === "Completed"
+                                  ? "bg-blue-950/60 text-blue-400 border border-blue-800/30"
+                                  : project.status === "In Progress"
+                                  ? "bg-emerald-950/60 text-emerald-400 border border-emerald-800/30"
+                                  : "bg-purple-950/60 text-purple-400"
+                              }`}>
+                                {project.status}
+                              </span>
+                            </td>
+                            <td className="py-4 px-5 text-center">
+                              <button
+                                onClick={() => handleToggleFeatured(project.id)}
+                                className={`p-1.5 rounded cursor-pointer ${
+                                  project.featured ? "text-[var(--color-accent)]" : "text-[#555555] hover:text-white"
+                                }`}
+                              >
+                                <Star className={`w-4 h-4 ${project.featured ? "fill-current" : ""}`} />
+                              </button>
+                            </td>
+                            <td className="py-4 px-5 text-right space-x-2">
+                              <button
+                                onClick={() => openEditProjectForm(project)}
+                                className="p-2 bg-[#1E1E1E] hover:bg-[var(--color-accent)] hover:text-black rounded-lg text-[#AAAAAA] transition-colors cursor-pointer"
+                              >
+                                <Edit3 className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                onClick={() => setDeleteModalProject(project)}
+                                className="p-2 bg-[#1E1E1E] hover:bg-red-600 hover:text-white rounded-lg text-[#AAAAAA] transition-colors cursor-pointer"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+
+          {/* ══════════════════════════════════════════════════════════
+              TAB 2: METRICS & ANALYTICS OVERVIEW
+              ══════════════════════════════════════════════════════════ */}
+          {activeTab === "overview" && (
+            <div className="space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-[#121212] border border-[#242424] p-6 rounded-2xl space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#888888]">
+                      Commission Portfolio
+                    </span>
+                    <Building2 className="w-5 h-5 text-[var(--color-accent)]" />
+                  </div>
+                  <div className="font-display text-4xl font-bold text-white">{totalCount} Projects</div>
+                  <p className="text-xs text-[#8A8882]">
+                    High-end residential, luxury resorts, and urban master plans worldwide.
+                  </p>
+                </div>
+
+                <div className="bg-[#121212] border border-[#242424] p-6 rounded-2xl space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[var(--color-accent)]">
+                      Featured Showcases
+                    </span>
+                    <Star className="w-5 h-5 text-[var(--color-accent)] fill-current" />
+                  </div>
+                  <div className="font-display text-4xl font-bold text-[var(--color-accent)]">{featuredCount} Featured</div>
+                  <p className="text-xs text-[#8A8882]">
+                    Spotlight commissions displayed prominently on the home page portfolio.
+                  </p>
+                </div>
+
+                <div className="bg-[#121212] border border-[#242424] p-6 rounded-2xl space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+                      Active Execution
+                    </span>
+                    <Compass className="w-5 h-5 text-emerald-400" />
+                  </div>
+                  <div className="font-display text-4xl font-bold text-emerald-400">{inProgressCount} Underway</div>
+                  <p className="text-xs text-[#8A8882]">
+                    Turnkey architecture and site execution currently in progress.
+                  </p>
+                </div>
+              </div>
+
+              {/* Discipline Breakdown */}
+              <div className="bg-[#121212] border border-[#242424] p-8 rounded-3xl space-y-6">
+                <h3 className="font-display font-bold text-xl text-white">Discipline Distribution</h3>
+                <div className="space-y-4">
+                  {PROJECT_CATEGORIES.filter((c) => c !== "All").map((cat) => {
+                    const count = projects.filter((p) => p.category === cat).length;
+                    const percent = totalCount > 0 ? Math.round((count / totalCount) * 100) : 0;
+                    return (
+                      <div key={cat} className="space-y-1.5">
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="font-semibold text-white">{cat}</span>
+                          <span className="text-[#888888]">{count} projects ({percent}%)</span>
+                        </div>
+                        <div className="h-2 w-full bg-[#1C1C1C] rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-[var(--color-accent)] rounded-full transition-all duration-500"
+                            style={{ width: `${percent}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ══════════════════════════════════════════════════════════
+              TAB 3: MEDIA & PRESET ASSETS
+              ══════════════════════════════════════════════════════════ */}
+          {activeTab === "media" && (
+            <div className="space-y-6">
+              <div className="bg-[#121212] border border-[#242424] p-6 rounded-2xl">
+                <h3 className="font-display font-bold text-lg text-white mb-2">Curated Architectural Presets</h3>
+                <p className="text-xs text-[#8A8882]">
+                  High-definition photography presets for immediate use across portfolio projects.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {SAMPLE_IMAGE_PRESETS.map((preset) => (
+                  <div key={preset.label} className="bg-[#121212] border border-[#242424] rounded-2xl overflow-hidden space-y-3 p-4">
+                    <div className="relative aspect-[16/10] rounded-xl overflow-hidden bg-[#1C1C1C]">
+                      <Image src={preset.url} alt={preset.label} fill className="object-cover" />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-sm text-white">{preset.label}</span>
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(preset.url);
+                          addToast("URL Copied", `Copied image link for ${preset.label}`);
+                        }}
+                        className="px-3 py-1 bg-[#1F1F1F] hover:bg-[var(--color-accent)] hover:text-black text-xs font-semibold rounded-lg transition-colors cursor-pointer"
+                      >
+                        Copy URL
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+        </main>
+      </div>
+
+      {/* ══════════════════════════════════════════════════════════
+          SLIDE-OVER / MODAL: CREATE & EDIT PROJECT FORM
+          ══════════════════════════════════════════════════════════ */}
       <AnimatePresence>
-        {isModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
+        {isFormOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
             <motion.div
-              className="w-full max-w-2xl bg-[#141414] border border-[#2B2B2B] rounded-2xl shadow-2xl overflow-hidden my-8"
+              className="w-full max-w-3xl bg-[#121212] border border-[#2E2E2E] rounded-3xl shadow-2xl overflow-hidden my-8"
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
             >
               {/* Modal Header */}
-              <div className="px-6 py-4 border-b border-[#242424] flex items-center justify-between">
+              <div className="px-8 py-5 border-b border-[#222222] flex items-center justify-between bg-[#161616]">
                 <div>
-                  <h2 className="font-display font-bold text-lg text-white">
-                    {editingProject ? "Edit Project Details" : "Add New Architectural Project"}
-                  </h2>
-                  <p className="text-xs text-[#8A8882]">
-                    {editingProject ? "Update portfolio entry & media" : "Publish new project to live showcase"}
+                  <h3 className="font-display font-bold text-xl text-white">
+                    {editingProject ? "Edit Architectural Commission" : "Create New Portfolio Project"}
+                  </h3>
+                  <p className="text-xs text-[var(--color-accent)] font-semibold uppercase tracking-wider mt-0.5">
+                    {editingProject ? "Update project deliverables" : "Live CMS Publication"}
                   </p>
                 </div>
                 <button
-                  onClick={() => setIsModalOpen(false)}
-                  className="p-1.5 rounded-lg bg-[#222222] text-[#888888] hover:text-white transition-colors cursor-pointer"
+                  onClick={() => setIsFormOpen(false)}
+                  className="w-8 h-8 rounded-full bg-[#242424] text-[#888888] hover:text-white flex items-center justify-center transition-colors cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
               </div>
 
-              {/* Modal Form */}
-              <form onSubmit={handleSaveProject} className="p-6 space-y-5 max-h-[80vh] overflow-y-auto">
+              {/* Form Body */}
+              <form onSubmit={handleSaveProject} className="p-8 space-y-6 max-h-[75vh] overflow-y-auto">
                 
                 {/* Title */}
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#A09E96] mb-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#A09E96] mb-2">
                     Project Title *
                   </label>
                   <input
@@ -799,21 +1268,21 @@ export default function AdminDashboard() {
                     required
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    placeholder="e.g. Cecil Luxury Resort & Villas"
-                    className="w-full px-4 py-2.5 bg-[#0C0C0C] border border-[#2E2E2E] rounded-lg text-sm text-white focus:outline-none focus:border-[var(--color-accent)]"
+                    placeholder="e.g. Cecil Luxury Resort & Hillside Villas"
+                    className="w-full px-4 py-3 bg-[#080808] border border-[#282828] rounded-xl text-sm text-white focus:outline-none focus:border-[var(--color-accent)] font-medium"
                   />
                 </div>
 
                 {/* Category & Status */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#A09E96] mb-1.5">
-                      Category *
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[#A09E96] mb-2">
+                      Discipline / Category *
                     </label>
                     <select
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                      className="w-full px-3 py-2.5 bg-[#0C0C0C] border border-[#2E2E2E] rounded-lg text-sm text-white focus:outline-none focus:border-[var(--color-accent)]"
+                      className="w-full px-4 py-3 bg-[#080808] border border-[#282828] rounded-xl text-xs text-white focus:outline-none focus:border-[var(--color-accent)]"
                     >
                       {PROJECT_CATEGORIES.filter((c) => c !== "All").map((cat) => (
                         <option key={cat} value={cat}>
@@ -824,13 +1293,13 @@ export default function AdminDashboard() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#A09E96] mb-1.5">
-                      Status
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[#A09E96] mb-2">
+                      Execution Status
                     </label>
                     <select
                       value={formData.status}
                       onChange={(e) => setFormData({ ...formData, status: e.target.value as Project["status"] })}
-                      className="w-full px-3 py-2.5 bg-[#0C0C0C] border border-[#2E2E2E] rounded-lg text-sm text-white focus:outline-none focus:border-[var(--color-accent)]"
+                      className="w-full px-4 py-3 bg-[#080808] border border-[#282828] rounded-xl text-xs text-white focus:outline-none focus:border-[var(--color-accent)]"
                     >
                       {PROJECT_STATUSES.map((st) => (
                         <option key={st} value={st}>
@@ -842,37 +1311,37 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Location & Year */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#A09E96] mb-1.5">
-                      Location
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[#A09E96] mb-2">
+                      Location / Region
                     </label>
                     <input
                       type="text"
                       value={formData.location}
                       onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                      placeholder="e.g. Islamabad, Pakistan"
-                      className="w-full px-4 py-2.5 bg-[#0C0C0C] border border-[#2E2E2E] rounded-lg text-sm text-white focus:outline-none focus:border-[var(--color-accent)]"
+                      placeholder="e.g. Murree Hills, Pakistan"
+                      className="w-full px-4 py-3 bg-[#080808] border border-[#282828] rounded-xl text-xs text-white focus:outline-none focus:border-[var(--color-accent)]"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#A09E96] mb-1.5">
-                      Year / Period
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[#A09E96] mb-2">
+                      Year / Commission Period
                     </label>
                     <input
                       type="text"
                       value={formData.year}
                       onChange={(e) => setFormData({ ...formData, year: e.target.value })}
                       placeholder="e.g. 2025 – 2026"
-                      className="w-full px-4 py-2.5 bg-[#0C0C0C] border border-[#2E2E2E] rounded-lg text-sm text-white focus:outline-none focus:border-[var(--color-accent)]"
+                      className="w-full px-4 py-3 bg-[#080808] border border-[#282828] rounded-xl text-xs text-white focus:outline-none focus:border-[var(--color-accent)]"
                     />
                   </div>
                 </div>
 
                 {/* Client */}
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#A09E96] mb-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#A09E96] mb-2">
                     Client / Organization
                   </label>
                   <input
@@ -880,50 +1349,53 @@ export default function AdminDashboard() {
                     value={formData.client}
                     onChange={(e) => setFormData({ ...formData, client: e.target.value })}
                     placeholder="e.g. Lakhani Group & Canopy Resorts"
-                    className="w-full px-4 py-2.5 bg-[#0C0C0C] border border-[#2E2E2E] rounded-lg text-sm text-white focus:outline-none focus:border-[var(--color-accent)]"
+                    className="w-full px-4 py-3 bg-[#080808] border border-[#282828] rounded-xl text-xs text-white focus:outline-none focus:border-[var(--color-accent)]"
                   />
                 </div>
 
-                {/* Image URL & Presets */}
-                <div className="space-y-2">
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#A09E96]">
-                    Project Image (URL or Upload)
+                {/* Image Upload & Presets */}
+                <div className="space-y-3">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#A09E96]">
+                    Hero Photography / 3D Render
                   </label>
-                  <input
-                    type="text"
-                    value={formData.image}
-                    onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                    placeholder="Paste image URL (https://...)"
-                    className="w-full px-4 py-2.5 bg-[#0C0C0C] border border-[#2E2E2E] rounded-lg text-xs text-white focus:outline-none focus:border-[var(--color-accent)]"
-                  />
 
-                  {/* Upload file button & Quick presets */}
-                  <div className="flex flex-wrap items-center gap-2 pt-1">
-                    <label className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#222222] hover:bg-[#2F2F2F] border border-[#3A3A3A] text-xs text-[#D0CEC6] rounded cursor-pointer transition-colors">
-                      <Upload className="w-3.5 h-3.5 text-[var(--color-accent)]" />
-                      <span>Upload Local Photo</span>
-                      <input type="file" accept="image/*" onChange={handleImageFileUpload} className="hidden" />
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={formData.image}
+                      onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                      placeholder="Paste Image URL (https://...)"
+                      className="flex-1 px-4 py-2.5 bg-[#080808] border border-[#282828] rounded-xl text-xs text-white focus:outline-none focus:border-[var(--color-accent)]"
+                    />
+
+                    <label className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#1F1F1F] hover:bg-[#2A2A2A] border border-[#333333] text-xs text-white font-semibold rounded-xl cursor-pointer transition-colors shrink-0">
+                      <Upload className="w-4 h-4 text-[var(--color-accent)]" />
+                      <span>Upload Photo</span>
+                      <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
                     </label>
+                  </div>
 
-                    <span className="text-xs text-[#666666]">or sample preset:</span>
+                  {/* Preset quick buttons */}
+                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                    <span className="text-[0.65rem] text-[#666666] uppercase font-semibold">Presets:</span>
                     {SAMPLE_IMAGE_PRESETS.map((preset) => (
                       <button
                         type="button"
                         key={preset.label}
                         onClick={() => setFormData({ ...formData, image: preset.url })}
-                        className="px-2.5 py-1 bg-[#1A1A1A] hover:bg-[#2A2A2A] text-[0.65rem] text-[#9E9C96] rounded border border-[#2B2B2B] transition-colors cursor-pointer"
+                        className="px-2.5 py-1 bg-[#181818] hover:bg-[#262626] text-[0.65rem] text-[#A09E96] rounded-md border border-[#242424] cursor-pointer"
                       >
                         {preset.label}
                       </button>
                     ))}
                   </div>
 
-                  {/* Image Preview */}
+                  {/* Live preview */}
                   {formData.image && (
-                    <div className="relative aspect-[16/9] w-full rounded-xl overflow-hidden border border-[#2A2A2A] bg-[#1E1E1E] mt-2">
+                    <div className="relative aspect-[16/9] w-full rounded-2xl overflow-hidden border border-[#262626] bg-[#0E0E0E] mt-3">
                       <Image src={formData.image} alt="Preview" fill className="object-cover" />
-                      <div className="absolute bottom-2 left-2 px-2 py-1 rounded bg-black/70 backdrop-blur-md text-[0.6rem] text-white">
-                        Live Preview
+                      <div className="absolute bottom-3 left-3 px-3 py-1 rounded-md bg-black/80 backdrop-blur-md text-[0.65rem] text-[var(--color-accent)] font-bold uppercase">
+                        Active Visual Preview
                       </div>
                     </div>
                   )}
@@ -931,62 +1403,111 @@ export default function AdminDashboard() {
 
                 {/* Description */}
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#A09E96] mb-1.5">
-                    Architectural Overview &amp; Scope *
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#A09E96] mb-2">
+                    Architectural Overview &amp; Execution Scope *
                   </label>
                   <textarea
                     rows={3}
                     required
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    placeholder="Describe the architectural concept, design solutions, and deliverables..."
-                    className="w-full px-4 py-2.5 bg-[#0C0C0C] border border-[#2E2E2E] rounded-lg text-sm text-white focus:outline-none focus:border-[var(--color-accent)] leading-relaxed"
+                    placeholder="Provide architectural narrative, materiality, design challenges, and deliverables..."
+                    className="w-full px-4 py-3 bg-[#080808] border border-[#282828] rounded-xl text-xs text-white focus:outline-none focus:border-[var(--color-accent)] leading-relaxed"
                   />
                 </div>
 
                 {/* Tags & Featured */}
-                <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
-                  <div className="sm:col-span-8">
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#A09E96] mb-1.5">
-                      Tags (Comma separated)
-                    </label>
+                <div className="space-y-3 pt-2">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#A09E96]">
+                    Project Tags
+                  </label>
+
+                  <div className="flex gap-2">
                     <input
                       type="text"
-                      value={formData.tags}
-                      onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                      placeholder="e.g. Master Plan, 3ds Max, Hospitality"
-                      className="w-full px-4 py-2 bg-[#0C0C0C] border border-[#2E2E2E] rounded-lg text-xs text-white focus:outline-none focus:border-[var(--color-accent)]"
+                      value={tagInput}
+                      onChange={(e) => setTagInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          handleAddTag();
+                        }
+                      }}
+                      placeholder="Add tag and press Enter (e.g. Corona Render)"
+                      className="flex-1 px-4 py-2.5 bg-[#080808] border border-[#282828] rounded-xl text-xs text-white focus:outline-none focus:border-[var(--color-accent)]"
                     />
+                    <button
+                      type="button"
+                      onClick={() => handleAddTag()}
+                      className="px-4 py-2.5 bg-[#1F1F1F] hover:bg-[#282828] text-white text-xs font-bold rounded-xl"
+                    >
+                      Add
+                    </button>
                   </div>
 
-                  <div className="sm:col-span-4 pt-4 sm:pt-0 flex items-center gap-2.5">
+                  {/* Active tags */}
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    {formData.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="inline-flex items-center gap-1.5 px-3 py-1 bg-[var(--color-accent)]/15 border border-[var(--color-accent)]/40 text-[var(--color-accent)] text-xs font-semibold rounded-lg"
+                      >
+                        <span>{tag}</span>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveTag(tag)}
+                          className="hover:text-white cursor-pointer"
+                        >
+                          ✕
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Popular tags quick add */}
+                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                    <span className="text-[0.65rem] text-[#666666]">Quick tag:</span>
+                    {POPULAR_TAGS.map((t) => (
+                      <button
+                        type="button"
+                        key={t}
+                        onClick={() => handleAddTag(t)}
+                        className="px-2 py-0.5 bg-[#161616] hover:bg-[#222222] text-[0.65rem] text-[#888888] rounded border border-[#222222] cursor-pointer"
+                      >
+                        + {t}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Featured Toggle */}
+                  <div className="pt-4 border-t border-[#222222] flex items-center gap-3">
                     <input
                       type="checkbox"
-                      id="featuredCheckbox"
+                      id="featuredModalCheckbox"
                       checked={formData.featured}
                       onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                      className="w-4 h-4 accent-[var(--color-accent)] rounded cursor-pointer"
+                      className="w-5 h-5 accent-[var(--color-accent)] rounded cursor-pointer"
                     />
-                    <label htmlFor="featuredCheckbox" className="text-xs font-bold text-white cursor-pointer select-none">
-                      Featured Showcase ⭐
+                    <label htmlFor="featuredModalCheckbox" className="text-xs font-bold text-white cursor-pointer select-none">
+                      Mark as Featured Spotlight Project (Shown prominently on Home)
                     </label>
                   </div>
                 </div>
 
-                {/* Submit Actions */}
-                <div className="pt-4 border-t border-[#242424] flex items-center justify-end gap-3">
+                {/* Form Actions */}
+                <div className="pt-6 border-t border-[#222222] flex items-center justify-end gap-3">
                   <button
                     type="button"
-                    onClick={() => setIsModalOpen(false)}
-                    className="px-5 py-2.5 bg-[#222222] hover:bg-[#2A2A2A] text-[#A09E96] hover:text-white text-xs font-semibold rounded-lg transition-colors cursor-pointer"
+                    onClick={() => setIsFormOpen(false)}
+                    className="px-6 py-3 bg-[#1C1C1C] hover:bg-[#262626] text-[#AAAAAA] hover:text-white text-xs font-semibold rounded-xl transition-colors cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-6 py-2.5 bg-[var(--color-accent)] text-black font-bold text-xs tracking-wider uppercase rounded-lg hover:bg-[#B8962E] transition-all shadow-md cursor-pointer"
+                    className="px-7 py-3 bg-[var(--color-accent)] text-black font-bold text-xs tracking-wider uppercase rounded-xl hover:bg-[#B8962E] transition-all shadow-lg cursor-pointer"
                   >
-                    {editingProject ? "Save Changes" : "Create Project"}
+                    {editingProject ? "Save Changes" : "Publish Project"}
                   </button>
                 </div>
 
@@ -996,37 +1517,42 @@ export default function AdminDashboard() {
         )}
       </AnimatePresence>
 
-      {/* ══════════════════════════════════════════════════════════════
-          CONFIRMATION DIALOG: DELETE
-          ══════════════════════════════════════════════════════════════ */}
+      {/* ══════════════════════════════════════════════════════════
+          CONFIRMATION MODAL: DELETE PROJECT
+          ══════════════════════════════════════════════════════════ */}
       <AnimatePresence>
-        {deleteConfirmationId && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+        {deleteModalProject && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm">
             <motion.div
-              className="w-full max-w-sm bg-[#161616] border border-[#2E2E2E] rounded-2xl p-6 shadow-2xl space-y-4 text-center"
+              className="w-full max-w-md bg-[#141414] border border-[#2C2C2C] rounded-3xl p-8 shadow-2xl text-center space-y-5"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
             >
-              <div className="w-12 h-12 rounded-full bg-red-950/50 border border-red-800/40 flex items-center justify-center mx-auto text-red-400">
-                <Trash2 className="w-5 h-5" />
+              <div className="w-14 h-14 rounded-2xl bg-red-950/60 border border-red-800/40 flex items-center justify-center mx-auto text-red-400">
+                <Trash2 className="w-6 h-6" />
               </div>
-              <h3 className="font-display font-bold text-lg text-white">Delete this project?</h3>
-              <p className="text-xs text-[#8A8882] leading-relaxed">
-                This project will be removed from your active portfolio. You can always re-add it later.
-              </p>
-              <div className="flex items-center justify-center gap-3 pt-2">
+              <div>
+                <h4 className="font-display font-bold text-xl text-white">
+                  Delete &ldquo;{deleteModalProject.title}&rdquo;?
+                </h4>
+                <p className="text-xs text-[#8A8882] mt-1.5 leading-relaxed">
+                  This action will permanently remove this project from your online architectural showcase.
+                </p>
+              </div>
+
+              <div className="flex items-center justify-center gap-3 pt-3">
                 <button
-                  onClick={() => setDeleteConfirmationId(null)}
-                  className="px-4 py-2 bg-[#262626] hover:bg-[#333333] text-white text-xs font-semibold rounded-lg transition-colors cursor-pointer"
+                  onClick={() => setDeleteModalProject(null)}
+                  className="px-5 py-2.5 bg-[#222222] hover:bg-[#2C2C2C] text-white text-xs font-semibold rounded-xl transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
-                  onClick={() => handleDeleteProject(deleteConfirmationId)}
-                  className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg transition-colors cursor-pointer shadow-md"
+                  onClick={() => handleDeleteProject(deleteModalProject.id)}
+                  className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition-colors cursor-pointer shadow-lg"
                 >
-                  Delete Project
+                  Confirm Delete
                 </button>
               </div>
             </motion.div>
