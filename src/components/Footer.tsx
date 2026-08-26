@@ -3,9 +3,14 @@
 import { motion } from "framer-motion";
 import { useInView } from "@/hooks/useInView";
 import { siteData } from "@/data/siteData";
+import { ArrowUp, Send } from "lucide-react";
 
 export default function Footer() {
   const { ref, isInView } = useInView({ threshold: 0.1 });
+
+  const handleScrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const handleNavClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
@@ -21,81 +26,82 @@ export default function Footer() {
   };
 
   return (
-    <section
-      id="contact"
-      className="relative bg-[var(--color-bg)] py-16 md:py-24 lg:py-28 overflow-hidden"
-      ref={ref}
-    >
+    <footer className="relative bg-[var(--color-bg)] pt-12 pb-16 md:pb-24 overflow-hidden" ref={ref}>
+      
       {/* ══════════════════════════════════════════════════════════
-          LARGE CENTERED UNIFIED ARCHITECTURAL CONTAINER (FLOATING CARD)
+          TOP SECTION: Curved Dark Atmospheric CTA
           ══════════════════════════════════════════════════════════ */}
-      <div className="w-[92%] sm:w-[94%] max-w-[1400px] mx-auto bg-white rounded-[22px] md:rounded-[28px] border border-[#E8E6E1] shadow-[0_16px_50px_rgba(0,0,0,0.035)] overflow-hidden relative z-10">
-        
-        {/* ── TOP PART: COMPACT BLACK CTA PANEL ── */}
-        <div className="bg-[#0A0A0A] text-white py-16 sm:py-20 md:py-24 px-6 md:px-12 text-center relative overflow-hidden rounded-t-[22px] md:rounded-t-[28px]">
-          {/* Subtle architectural radial lighting / atmospheric depth */}
+      <div className="w-[92%] sm:w-[94%] max-w-[1400px] mx-auto mb-10 md:mb-14">
+        <motion.div
+          className="bg-[#0A0A0A] text-white py-16 sm:py-20 md:py-24 px-6 md:px-12 text-center rounded-[24px] md:rounded-[32px] relative overflow-hidden shadow-xl"
+          initial={{ opacity: 0, y: 25 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+        >
+          {/* Radial depth lighting */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: "radial-gradient(ellipse at 50% 25%, #222222 0%, #0A0A0A 80%)",
+              background: "radial-gradient(ellipse at 50% 20%, #262626 0%, #0A0A0A 80%)",
             }}
           />
 
-          <div className="relative z-10 max-w-xl mx-auto space-y-3.5">
-            <motion.h3
-              className="font-display text-2xl sm:text-3xl md:text-[2.1rem] font-medium tracking-tight text-white leading-snug"
-              initial={{ opacity: 0, y: 15 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.1 }}
-            >
+          <div className="relative z-10 max-w-xl mx-auto space-y-4">
+            <h3 className="font-display text-2xl sm:text-3xl md:text-4xl font-medium tracking-tight text-white leading-tight">
               Ready to create something exceptional?
-            </motion.h3>
+            </h3>
 
-            <motion.p
-              className="text-xs sm:text-sm text-[#8E8C85] max-w-md mx-auto leading-relaxed font-normal"
-              initial={{ opacity: 0, y: 15 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
+            <p className="text-xs sm:text-sm text-[#8E8C85] max-w-md mx-auto leading-relaxed">
               Let&apos;s bring thoughtful architecture, interior design and visualization together.
-            </motion.p>
+            </p>
 
-            <motion.div
-              className="pt-3"
-              initial={{ opacity: 0, y: 15 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.3 }}
-            >
+            <div className="pt-3">
               <a
                 href={`mailto:${siteData.personal.email}`}
-                className="inline-block px-6 py-2.5 bg-white text-black font-semibold text-xs tracking-wider rounded-md hover:bg-[var(--color-accent)] hover:text-white transition-all duration-300 shadow-sm hover:shadow"
+                className="inline-flex items-center gap-2 px-7 py-3 bg-white text-black font-semibold text-xs tracking-wider rounded-lg hover:bg-[var(--color-accent)] hover:text-white transition-all duration-300 shadow-md"
               >
-                GET IN TOUCH
+                <span>GET IN TOUCH</span>
+                <Send className="w-3.5 h-3.5" />
               </a>
-            </motion.div>
+            </div>
           </div>
-        </div>
+        </motion.div>
+      </div>
 
-        {/* ── LOWER PART: WHITE EDITORIAL FOOTER ── */}
-        <div className="bg-white pt-12 sm:pt-14 md:pt-16 pb-8 md:pb-10 px-6 sm:px-10 md:px-14 lg:px-16">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+      {/* ══════════════════════════════════════════════════════════
+          BOTTOM SECTION: Floating Rounded White Card
+          ══════════════════════════════════════════════════════════ */}
+      <div className="w-[92%] sm:w-[94%] max-w-[1400px] mx-auto relative z-10">
+        <motion.div
+          className="bg-white border border-[#E8E6E1] rounded-[24px] md:rounded-[32px] p-8 sm:p-10 md:p-14 shadow-[0_12px_44px_rgba(0,0,0,0.03)]"
+          initial={{ opacity: 0, y: 25 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.15 }}
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 pb-10 md:pb-12 border-b border-[#EFEFEA]">
             
-            {/* Left Side: Brand Identity + Description + Minimal Socials */}
+            {/* Left Brand Column (Span 5) */}
             <div className="lg:col-span-5 space-y-4">
-              <div>
-                <h4 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-[#111111]">
-                  SYED RAZA JAN
-                </h4>
-                <p className="text-xs text-[var(--color-accent)] font-medium tracking-wide mt-1">
-                  Architect &middot; Interior Designer &middot; 3D Visualization Specialist
-                </p>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-md bg-[#0F0F0F] flex items-center justify-center text-white">
+                  <span className="font-display font-bold text-xs tracking-wider text-[var(--color-accent)]">
+                    SRJ
+                  </span>
+                </div>
+                <span className="font-display font-bold text-xl tracking-tight text-[#111111]">
+                  Syed Raza Jan
+                </span>
               </div>
+
+              <p className="text-xs text-[var(--color-accent)] font-medium tracking-wide">
+                Architect &middot; Interior Designer &middot; 3D Specialist
+              </p>
 
               <p className="text-xs sm:text-sm text-[#666666] leading-relaxed max-w-sm">
                 Creating thoughtful spaces through architecture, design and visualization.
               </p>
 
-              {/* Minimal Social Icons (Clean Crisp SVGs) */}
+              {/* Minimal Social Icons */}
               <div className="flex items-center gap-3 pt-2">
                 {/* LinkedIn */}
                 <a
@@ -140,21 +146,21 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* Right Side: 3 Compact Columns */}
+            {/* Right Side (Span 7: 3 Columns) */}
             <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8">
               
-              {/* Column 01: NAVIGATION */}
+              {/* Col 1: NAVIGATION */}
               <div className="space-y-3">
                 <h5 className="text-[0.7rem] uppercase font-bold tracking-wider text-[#111111]">
                   NAVIGATION
                 </h5>
-                <ul className="space-y-2 text-xs text-[#666666]">
+                <ul className="space-y-2.5 text-xs text-[#666666]">
                   {siteData.navigation.map((item) => (
                     <li key={item.href}>
                       <a
                         href={item.href}
                         onClick={(e) => handleNavClick(e, item.href)}
-                        className="hover:text-black transition-colors inline-block"
+                        className="hover:text-black transition-colors"
                       >
                         {item.label}
                       </a>
@@ -163,12 +169,12 @@ export default function Footer() {
                 </ul>
               </div>
 
-              {/* Column 02: EXPERTISE */}
+              {/* Col 2: EXPERTISE */}
               <div className="space-y-3">
                 <h5 className="text-[0.7rem] uppercase font-bold tracking-wider text-[#111111]">
                   EXPERTISE
                 </h5>
-                <ul className="space-y-2 text-xs text-[#666666]">
+                <ul className="space-y-2.5 text-xs text-[#666666]">
                   <li>Architectural Design</li>
                   <li>Interior Design</li>
                   <li>3D Visualization</li>
@@ -177,29 +183,30 @@ export default function Footer() {
                 </ul>
               </div>
 
-              {/* Column 03: CONTACT */}
+              {/* Col 3: CONNECT */}
               <div className="space-y-3 col-span-2 sm:col-span-1">
                 <h5 className="text-[0.7rem] uppercase font-bold tracking-wider text-[#111111]">
-                  CONTACT
+                  CONNECT
                 </h5>
-                <ul className="space-y-2 text-xs text-[#666666]">
-                  <li>{siteData.personal.location}</li>
-                  <li>
-                    <a
-                      href={`tel:${siteData.personal.phone}`}
-                      className="hover:text-black transition-colors"
-                    >
-                      {siteData.personal.phone}
-                    </a>
-                  </li>
+                <ul className="space-y-2.5 text-xs text-[#666666]">
                   <li>
                     <a
                       href={`mailto:${siteData.personal.email}`}
                       className="hover:text-black transition-colors break-all"
                     >
-                      {siteData.personal.email}
+                      Email Me
                     </a>
                   </li>
+                  <li>
+                    <a
+                      href={`tel:${siteData.personal.phone}`}
+                      className="hover:text-black transition-colors"
+                    >
+                      Call Now
+                    </a>
+                  </li>
+                  <li>Islamabad, PK</li>
+                  <li>Guyana Projects</li>
                 </ul>
               </div>
 
@@ -207,28 +214,32 @@ export default function Footer() {
 
           </div>
 
-          {/* Thin Bottom Divider & Row */}
-          <div className="border-t border-[#EDEDED] mt-12 md:mt-14 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#8E8C85]">
+          {/* Sub-bar */}
+          <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#8E8C85]">
             <p>
-              &copy; {new Date().getFullYear()} Syed Raza Jan
+              &copy; {new Date().getFullYear()} Syed Raza Jan. All rights reserved.
             </p>
-            <p>
-              Islamabad, Pakistan &middot; Available for selected projects
-            </p>
-          </div>
-        </div>
 
+            <button
+              onClick={handleScrollToTop}
+              className="inline-flex items-center gap-1.5 hover:text-[var(--color-accent)] transition-colors font-medium cursor-pointer"
+            >
+              <span>Back to top</span>
+              <ArrowUp className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </motion.div>
       </div>
 
       {/* ══════════════════════════════════════════════════════════
-          GIANT FAINT BACKGROUND TYPOGRAPHY (WATERMARK LIKE REFERENCE)
+          Giant Background Typography Watermark
           ══════════════════════════════════════════════════════════ */}
       <div className="absolute bottom-0 left-0 right-0 flex justify-center pointer-events-none select-none overflow-hidden z-0">
-        <span className="font-display font-bold text-[16vw] leading-none text-[#000000]/[0.035] tracking-tight whitespace-nowrap translate-y-[35%]">
-          SYED RAZA JAN
+        <span className="font-display font-bold text-[15vw] leading-none text-[#000000]/[0.035] tracking-tight whitespace-nowrap translate-y-[30%]">
+          RAZA JAN
         </span>
       </div>
 
-    </section>
+    </footer>
   );
 }
