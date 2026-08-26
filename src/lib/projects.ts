@@ -1,22 +1,20 @@
-import initialProjects from "@/data/projects.json";
-
 export interface Project {
   id: string;
-  number: string;
+  number?: string;
   title: string;
   category: string;
   location: string;
   year: string;
-  client: string;
+  client?: string;
   description: string;
   image: string;
   featured: boolean;
   tags: string[];
-  status: "Completed" | "In Progress" | "Concept";
+  status?: "Completed" | "In Progress" | "Concept" | "COMPLETED" | "IN PROGRESS" | string;
 }
 
 export const PROJECT_CATEGORIES = [
-  "All",
+  "All Categories",
   "Architecture",
   "Interior",
   "3D Visualization",
@@ -25,38 +23,46 @@ export const PROJECT_CATEGORIES = [
   "Commercial",
 ] as const;
 
-export const PROJECT_STATUSES = ["Completed", "In Progress", "Concept"] as const;
+export const PROJECT_STATUSES = ["IN PROGRESS", "COMPLETED", "In Progress", "Completed", "Concept"] as const;
 
-const STORAGE_KEY = "raza_jan_portfolio_projects_v1";
+const LOCAL_STORAGE_KEY = "raza_jan_portfolio_projects_v2";
 
-// Helper to get projects from localStorage (client) or initial JSON (server)
 export function getLocalProjects(): Project[] {
   if (typeof window === "undefined") {
-    return initialProjects as Project[];
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      return require("@/data/projects.json");
+    } catch {
+      return [];
+    }
   }
 
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (stored) {
       const parsed = JSON.parse(stored);
       if (Array.isArray(parsed) && parsed.length > 0) {
         return parsed;
       }
     }
-  } catch (err) {
-    console.error("Failed to read projects from storage", err);
+  } catch (e) {
+    console.error("Failed to read projects from localStorage", e);
   }
 
-  return initialProjects as Project[];
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    return require("@/data/projects.json");
+  } catch {
+    return [];
+  }
 }
 
-// Helper to save projects to localStorage (client)
-export function saveLocalProjects(projects: Project[]) {
+export function saveLocalProjects(projects: Project[]): void {
   if (typeof window === "undefined") return;
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
-    window.dispatchEvent(new Event("portfolio_projects_updated"));
-  } catch (err) {
-    console.error("Failed to save projects to storage", err);
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(projects));
+    window.dispatchEvent(new CustomEvent("portfolio_projects_updated", { detail: projects }));
+  } catch (e) {
+    console.error("Failed to save projects to localStorage", e);
   }
 }

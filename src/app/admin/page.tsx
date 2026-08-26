@@ -51,25 +51,20 @@ interface ToastItem {
 
 const SAMPLE_IMAGE_PRESETS = [
   { label: "Resort Villas", url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop" },
-  { label: "Waterfront Plaza", url: "https://images.unsplash.com/photo-1577495508048-b635879837f1?q=80&w=1200&auto=format&fit=crop" },
+  { label: "Waterfront Plaza", url: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=1200&auto=format&fit=crop" },
   { label: "Luxury Residence", url: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1200&auto=format&fit=crop" },
-  { label: "Healthcare Facility", url: "https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?q=80&w=1200&auto=format&fit=crop" },
-  { label: "3D Penthouse", url: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1200&auto=format&fit=crop" },
-  { label: "Commercial Strip", url: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200&auto=format&fit=crop" },
+  { label: "Healthcare Center", url: "https://images.unsplash.com/photo-1586771107445-d3ca888129ff?q=80&w=1200&auto=format&fit=crop" },
+  { label: "3D Residence", url: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=1200&auto=format&fit=crop" },
+  { label: "Commercial Strip", url: "https://images.unsplash.com/photo-1555636222-cae831e670b3?q=80&w=1200&auto=format&fit=crop" },
 ];
 
 export default function AdminDashboard() {
-  // Direct open by default
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
-
-  // Projects & Navigation
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeNav, setActiveNav] = useState<"projects" | "analytics" | "media" | "team">("projects");
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedCategory, setSelectedCategory] = useState("All Categories");
   const [selectedStatus, setSelectedStatus] = useState("All");
   const [sortBy, setSortBy] = useState<"newest" | "oldest" | "title">("newest");
-  const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
 
   // Notifications & Toast system
@@ -88,15 +83,15 @@ export default function AdminDashboard() {
   // Form inputs
   const [formData, setFormData] = useState({
     title: "",
-    category: "Architecture",
-    location: "Islamabad, Pakistan",
-    year: "2025",
-    client: "",
+    category: "ARCHITECTURE",
+    location: "Murree Hills, Pakistan",
+    year: "2025 – 2026",
+    client: "Lahore Group & Canopy Resorts",
     description: "",
     image: SAMPLE_IMAGE_PRESETS[0].url,
     featured: false,
     tags: "Hospitality, Site Planning",
-    status: "Completed" as Project["status"],
+    status: "IN PROGRESS" as Project["status"],
   });
 
   useEffect(() => {
@@ -117,7 +112,7 @@ export default function AdminDashboard() {
         }
       }
     } catch (e) {
-      console.warn("Using local projects fallback", e);
+      console.warn("Using local fallback", e);
     }
     const local = getLocalProjects();
     setProjects(local);
@@ -136,15 +131,15 @@ export default function AdminDashboard() {
     setEditingProject(null);
     setFormData({
       title: "",
-      category: "Architecture",
+      category: "ARCHITECTURE",
       location: "Islamabad, Pakistan",
       year: new Date().getFullYear().toString(),
       client: "",
       description: "",
       image: SAMPLE_IMAGE_PRESETS[0].url,
       featured: false,
-      tags: "Hospitality, Architecture",
-      status: "In Progress",
+      tags: "Hospitality, Site Planning",
+      status: "IN PROGRESS",
     });
     setIsFormOpen(true);
   };
@@ -153,15 +148,15 @@ export default function AdminDashboard() {
     setEditingProject(proj);
     setFormData({
       title: proj.title,
-      category: proj.category,
+      category: proj.category.toUpperCase(),
       location: proj.location,
       year: proj.year,
-      client: proj.client,
+      client: proj.client || "",
       description: proj.description,
       image: proj.image,
       featured: proj.featured,
       tags: proj.tags.join(", "),
-      status: proj.status,
+      status: (proj.status ? proj.status.toUpperCase() : "COMPLETED") as any,
     });
     setIsFormOpen(true);
   };
@@ -180,11 +175,10 @@ export default function AdminDashboard() {
       .filter(Boolean);
 
     if (editingProject) {
-      // UPDATE
       const updated: Project = {
         ...editingProject,
         ...formData,
-        tags: tagArr.length > 0 ? tagArr : ["Architecture"],
+        tags: tagArr.length > 0 ? tagArr : ["Hospitality", "Site Planning"],
       };
 
       const updatedList = projects.map((p) => (p.id === editingProject.id ? updated : p));
@@ -203,12 +197,11 @@ export default function AdminDashboard() {
 
       addToast("Project Updated", `"${formData.title}" saved.`);
     } else {
-      // CREATE
       const newProj: Project = {
         id: `proj-${Date.now()}`,
         number: String(projects.length + 1).padStart(2, "0"),
         ...formData,
-        tags: tagArr.length > 0 ? tagArr : ["Architecture"],
+        tags: tagArr.length > 0 ? tagArr : ["Hospitality", "Site Planning"],
       };
 
       const updatedList = [newProj, ...projects];
@@ -287,32 +280,37 @@ export default function AdminDashboard() {
   // Metrics
   const totalCommissions = projects.length;
   const featuredCount = projects.filter((p) => p.featured).length;
-  const activeExecutionCount = projects.filter((p) => p.status === "In Progress").length;
-  const completedCount = projects.filter((p) => p.status === "Completed").length;
+  const activeExecutionCount = projects.filter(
+    (p) => p.status?.toUpperCase() === "IN PROGRESS" || p.status === "In Progress"
+  ).length;
+  const completedCount = projects.filter(
+    (p) => p.status?.toUpperCase() === "COMPLETED" || p.status === "Completed"
+  ).length;
 
   // Filter & Sort
   const filteredProjects = projects
     .filter((p) => {
-      const matchCat = selectedCategory === "All" || p.category === selectedCategory;
-      const matchStatus = selectedStatus === "All" || p.status === selectedStatus;
-      const q = searchQuery.toLowerCase();
-      const matchSearch =
-        p.title.toLowerCase().includes(q) ||
-        p.location.toLowerCase().includes(q) ||
-        p.client.toLowerCase().includes(q) ||
-        p.tags.some((t) => t.toLowerCase().includes(q));
-      return matchCat && matchStatus && matchSearch;
+      const catMatches =
+        selectedCategory === "All Categories" ||
+        selectedCategory === "All" ||
+        p.category.toUpperCase() === selectedCategory.toUpperCase();
+      
+      const statusMatches =
+        selectedStatus === "All" ||
+        p.status?.toUpperCase() === selectedStatus.toUpperCase();
+
+      return catMatches && statusMatches;
     })
     .sort((a, b) => {
       if (sortBy === "title") return a.title.localeCompare(b.title);
       if (sortBy === "oldest") return a.year.localeCompare(b.year);
-      return b.year.localeCompare(a.year); // default newest
+      return b.year.localeCompare(a.year);
     });
 
   return (
-    <div className="min-h-screen bg-[#0E0F14] text-[#E0DFDC] font-sans flex">
+    <div className="min-h-screen bg-[#0A0B0E] text-[#E0DFDC] font-sans flex antialiased">
       
-      {/* ── TOAST NOTIFICATION STACK ── */}
+      {/* ── TOAST NOTIFICATIONS ── */}
       <div className="fixed top-6 right-6 z-50 flex flex-col gap-2.5 max-w-sm pointer-events-none">
         <AnimatePresence>
           {toasts.map((toast) => (
@@ -324,7 +322,7 @@ export default function AdminDashboard() {
               exit={{ opacity: 0, x: 40 }}
             >
               <div className="mt-0.5 shrink-0">
-                {toast.type === "success" && <CheckCircle2 className="w-4 h-4 text-[#C8A84E]" />}
+                {toast.type === "success" && <CheckCircle2 className="w-4 h-4 text-[#DFB75C]" />}
                 {toast.type === "error" && <AlertTriangle className="w-4 h-4 text-red-400" />}
                 {toast.type === "info" && <Sparkles className="w-4 h-4 text-blue-400" />}
               </div>
@@ -340,47 +338,45 @@ export default function AdminDashboard() {
       {/* ══════════════════════════════════════════════════════════
           1. FIXED LEFT SIDEBAR (EXACT MATCH TO REFERENCE IMAGE)
           ══════════════════════════════════════════════════════════ */}
-      <aside className="w-[270px] bg-[#0A0B0E] border-r border-[#1C1E26] hidden lg:flex flex-col justify-between fixed top-0 left-0 h-screen z-40 p-6 select-none">
+      <aside className="w-[275px] bg-[#07080A] border-r border-[#16171D] hidden lg:flex flex-col justify-between fixed top-0 left-0 h-screen z-40 p-6 select-none">
         
-        {/* Top: EEST Architecture Studio Brand Logo */}
-        <div className="space-y-8">
-          <div className="flex items-center gap-3.5 pb-2">
-            {/* Geometric Gold Logo Box */}
-            <div className="w-10 h-10 border-2 border-[#C8A84E] rounded-md flex items-center justify-center text-[#C8A84E] shrink-0">
-              <div className="grid grid-cols-2 gap-0.5 w-5 h-5">
-                <div className="border border-[#C8A84E]" />
-                <div className="border border-[#C8A84E]" />
-                <div className="border border-[#C8A84E]" />
-                <div className="border border-[#C8A84E] bg-[#C8A84E]" />
-              </div>
-            </div>
+        <div className="space-y-7">
+          
+          {/* Top Logo: EEST Architecture Studio Monogram */}
+          <div className="flex items-center gap-3.5 pt-1">
+            <svg width="42" height="42" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+              <rect x="2" y="2" width="36" height="36" rx="4" stroke="#DFB75C" strokeWidth="2.5" />
+              <path d="M12 12H28V20H20V28H12V12Z" stroke="#DFB75C" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M20 20H28V28H20V20Z" stroke="#DFB75C" strokeWidth="2.5" fill="#DFB75C"/>
+            </svg>
 
             <div>
-              <div className="font-display font-bold text-sm tracking-[0.25em] text-[#C8A84E] leading-tight">
+              <div className="font-display font-bold text-sm tracking-[0.28em] text-[#DFB75C] leading-none">
                 E E S T
               </div>
-              <div className="text-[0.55rem] tracking-[0.2em] uppercase text-[#8A8F9E]">
+              <div className="text-[0.52rem] tracking-[0.22em] uppercase text-[#7F8494] mt-1.5 font-medium">
                 ARCHITECTURE STUDIO
               </div>
             </div>
           </div>
 
-          {/* Navigation Groups */}
-          <div className="space-y-6">
+          {/* Navigation Items */}
+          <div className="space-y-6 pt-2">
             
             {/* Group 1: STUDIO MANAGEMENT */}
             <div className="space-y-2">
-              <div className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[#555A6B] px-3">
+              <div className="text-[0.62rem] font-bold uppercase tracking-[0.22em] text-[#555A6B] px-3">
                 STUDIO MANAGEMENT
               </div>
 
-              <div className="space-y-1">
+              <div className="space-y-1.5">
+                {/* Active Projects Portfolio Button (Solid Gold) */}
                 <button
                   onClick={() => setActiveNav("projects")}
                   className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all cursor-pointer ${
                     activeNav === "projects"
-                      ? "bg-[#C8A84E] text-[#0C0D11] font-bold shadow-sm"
-                      : "text-[#8A8F9E] hover:text-white hover:bg-[#14161F]"
+                      ? "bg-[#DFB75C] text-[#000000] font-bold shadow-sm"
+                      : "text-[#8A8F9E] hover:text-white hover:bg-[#12131A]"
                   }`}
                 >
                   <FolderKanban className="w-4 h-4 shrink-0" />
@@ -391,8 +387,8 @@ export default function AdminDashboard() {
                   onClick={() => setActiveNav("analytics")}
                   className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all cursor-pointer ${
                     activeNav === "analytics"
-                      ? "bg-[#C8A84E] text-[#0C0D11] font-bold shadow-sm"
-                      : "text-[#8A8F9E] hover:text-white hover:bg-[#14161F]"
+                      ? "bg-[#DFB75C] text-[#000000] font-bold shadow-sm"
+                      : "text-[#8A8F9E] hover:text-white hover:bg-[#12131A]"
                   }`}
                 >
                   <BarChart3 className="w-4 h-4 shrink-0" />
@@ -403,8 +399,8 @@ export default function AdminDashboard() {
                   onClick={() => setActiveNav("media")}
                   className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all cursor-pointer ${
                     activeNav === "media"
-                      ? "bg-[#C8A84E] text-[#0C0D11] font-bold shadow-sm"
-                      : "text-[#8A8F9E] hover:text-white hover:bg-[#14161F]"
+                      ? "bg-[#DFB75C] text-[#000000] font-bold shadow-sm"
+                      : "text-[#8A8F9E] hover:text-white hover:bg-[#12131A]"
                   }`}
                 >
                   <ImageIcon className="w-4 h-4 shrink-0" />
@@ -415,8 +411,8 @@ export default function AdminDashboard() {
                   onClick={() => setActiveNav("team")}
                   className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all cursor-pointer ${
                     activeNav === "team"
-                      ? "bg-[#C8A84E] text-[#0C0D11] font-bold shadow-sm"
-                      : "text-[#8A8F9E] hover:text-white hover:bg-[#14161F]"
+                      ? "bg-[#DFB75C] text-[#000000] font-bold shadow-sm"
+                      : "text-[#8A8F9E] hover:text-white hover:bg-[#12131A]"
                   }`}
                 >
                   <Users className="w-4 h-4 shrink-0" />
@@ -426,15 +422,11 @@ export default function AdminDashboard() {
             </div>
 
             {/* Group 2: PUBLIC */}
-            <div className="space-y-2 pt-2 border-t border-[#161820]">
-              <div className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[#555A6B] px-3">
-                PUBLIC
-              </div>
-
+            <div className="space-y-2 pt-2 border-t border-[#14151B]">
               <Link
                 href="/#projects"
                 target="_blank"
-                className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold tracking-wide text-[#8A8F9E] hover:text-[#C8A84E] hover:bg-[#14161F] transition-all"
+                className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold tracking-wide text-[#8A8F9E] hover:text-[#DFB75C] hover:bg-[#12131A] transition-all"
               >
                 <Globe className="w-4 h-4 shrink-0" />
                 <span>View Public Portfolio</span>
@@ -445,17 +437,17 @@ export default function AdminDashboard() {
         </div>
 
         {/* Bottom Profile Section */}
-        <div className="space-y-4 pt-4 border-t border-[#161820]">
+        <div className="space-y-4 pt-4 border-t border-[#14151B]">
           <div className="flex items-center gap-3 px-1">
-            {/* Circular SRJ gold badge */}
-            <div className="w-10 h-10 rounded-full border border-[#C8A84E]/50 bg-[#161922] flex items-center justify-center font-display font-bold text-xs text-[#C8A84E] shrink-0">
+            {/* Circular SRJ Badge */}
+            <div className="w-10 h-10 rounded-full border-2 border-[#DFB75C]/60 bg-[#12131A] flex items-center justify-center font-display font-bold text-xs text-[#DFB75C] shrink-0">
               SRJ
             </div>
             <div className="truncate">
               <div className="font-display font-bold text-xs text-white truncate">
                 Syed Raza Jan
               </div>
-              <div className="text-[0.65rem] text-[#8A8F9E] truncate">
+              <div className="text-[0.65rem] text-[#7F8494] truncate">
                 Principal Architect
               </div>
             </div>
@@ -463,7 +455,7 @@ export default function AdminDashboard() {
 
           <Link
             href="/"
-            className="w-full flex items-center gap-2 px-3 py-2 text-xs text-[#6B7280] hover:text-red-400 transition-colors cursor-pointer"
+            className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-[#6B7280] hover:text-red-400 transition-colors cursor-pointer"
           >
             <LogOut className="w-3.5 h-3.5" />
             <span>Log out</span>
@@ -473,17 +465,16 @@ export default function AdminDashboard() {
       </aside>
 
       {/* ══════════════════════════════════════════════════════════
-          2. MAIN DASHBOARD CONTENT AREA (SCROLLABLE)
+          2. MAIN DASHBOARD CONTENT AREA
           ══════════════════════════════════════════════════════════ */}
-      <div className="flex-1 lg:ml-[270px] min-w-0 flex flex-col">
+      <div className="flex-1 lg:ml-[275px] min-w-0 flex flex-col">
         
-        {/* Main Content Container */}
-        <main className="max-w-[1440px] w-full mx-auto px-6 sm:px-10 lg:px-12 py-8 sm:py-10 space-y-8">
+        <main className="max-w-[1440px] w-full mx-auto px-6 sm:px-10 lg:px-12 py-8 sm:py-10 space-y-7">
           
-          {/* ── MAIN HEADER (MATCHING REFERENCE IMAGE) ── */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 pb-2">
+          {/* ── MAIN HEADER ── */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5">
             <div>
-              <div className="text-xs text-[#8A8F9E]">Welcome back,</div>
+              <div className="text-xs text-[#7F8494]">Welcome back,</div>
               <h1 className="font-display text-2xl sm:text-3xl font-bold text-white tracking-tight mt-0.5">
                 Syed Raza Jan
               </h1>
@@ -492,28 +483,29 @@ export default function AdminDashboard() {
               </p>
             </div>
 
-            {/* Right Action Tools: + Create Project & Notification */}
+            {/* Right Header Buttons: + Create Project & Notification */}
             <div className="flex items-center gap-3">
               <button
                 onClick={openCreateForm}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#C8A84E] hover:bg-[#B8962E] text-[#0C0D11] font-bold text-xs rounded-xl transition-all shadow-md cursor-pointer"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-[#DFB75C] hover:bg-[#C9A247] text-[#000000] font-bold text-xs rounded-lg transition-all shadow-sm cursor-pointer"
               >
                 <Plus className="w-4 h-4" />
                 <span>Create Project</span>
               </button>
 
-              {/* Notification Button */}
+              {/* Notification Icon */}
               <div className="relative">
                 <button
                   onClick={() => setIsNotifDropdownOpen(!isNotifDropdownOpen)}
-                  className="p-2.5 rounded-xl bg-[#14171E] hover:bg-[#1C202B] border border-[#222632] text-[#8A8F9E] hover:text-white transition-colors cursor-pointer relative"
+                  className="p-2.5 rounded-lg bg-[#111217] hover:bg-[#1A1C24] border border-[#1C1E26] text-[#8A8F9E] hover:text-white transition-colors cursor-pointer relative"
                   title="Notifications"
                 >
                   <Bell className="w-4 h-4" />
-                  <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#C8A84E]" />
+                  <span className="absolute -top-1 -right-1 text-[0.6rem] font-bold bg-transparent text-[#7F8494]">
+                    0
+                  </span>
                 </button>
 
-                {/* Notifications Dropdown */}
                 <AnimatePresence>
                   {isNotifDropdownOpen && (
                     <motion.div
@@ -526,7 +518,7 @@ export default function AdminDashboard() {
                         <span className="font-display font-bold text-xs uppercase tracking-wider text-white">
                           Studio Notifications
                         </span>
-                        <span className="text-[0.65rem] text-[#C8A84E]">Active</span>
+                        <span className="text-[0.65rem] text-[#DFB75C]">Active</span>
                       </div>
                       <div className="space-y-2 max-h-60 overflow-y-auto">
                         {notifications.map((n) => (
@@ -546,13 +538,13 @@ export default function AdminDashboard() {
           {/* ── 4 LARGE STATISTICS CARDS ── */}
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5">
             
-            {/* Card 1: Total Commissions */}
-            <div className="bg-[#14171E] border border-[#222632] rounded-2xl p-5 flex items-center gap-4.5">
-              <div className="w-12 h-12 rounded-full bg-[#20242F] border border-[#C8A84E]/30 flex items-center justify-center text-[#C8A84E] shrink-0">
+            {/* Card 1: TOTAL COMMISSIONS */}
+            <div className="bg-[#111217] border border-[#1C1E26] rounded-2xl p-5 flex items-center gap-4.5">
+              <div className="w-12 h-12 rounded-full border border-[#DFB75C]/40 bg-[#161720] flex items-center justify-center text-[#DFB75C] shrink-0">
                 <Building2 className="w-5 h-5" />
               </div>
               <div>
-                <div className="text-[0.65rem] font-bold uppercase tracking-wider text-[#8A8F9E]">
+                <div className="text-[0.65rem] font-bold uppercase tracking-wider text-[#7F8494]">
                   TOTAL COMMISSIONS
                 </div>
                 <div className="font-display text-2xl font-bold text-white mt-0.5">
@@ -562,13 +554,13 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            {/* Card 2: Featured Showcase */}
-            <div className="bg-[#14171E] border border-[#222632] rounded-2xl p-5 flex items-center gap-4.5">
-              <div className="w-12 h-12 rounded-full bg-[#20242F] border border-[#C8A84E]/40 flex items-center justify-center text-[#C8A84E] shrink-0">
+            {/* Card 2: FEATURED SHOWCASE */}
+            <div className="bg-[#111217] border border-[#1C1E26] rounded-2xl p-5 flex items-center gap-4.5">
+              <div className="w-12 h-12 rounded-full border border-[#DFB75C]/40 bg-[#161720] flex items-center justify-center text-[#DFB75C] shrink-0">
                 <Star className="w-5 h-5 fill-current" />
               </div>
               <div>
-                <div className="text-[0.65rem] font-bold uppercase tracking-wider text-[#C8A84E]">
+                <div className="text-[0.65rem] font-bold uppercase tracking-wider text-[#DFB75C]">
                   FEATURED SHOWCASE
                 </div>
                 <div className="font-display text-2xl font-bold text-white mt-0.5">
@@ -578,13 +570,13 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            {/* Card 3: Active Execution */}
-            <div className="bg-[#14171E] border border-[#222632] rounded-2xl p-5 flex items-center gap-4.5">
-              <div className="w-12 h-12 rounded-full bg-[#20242F] border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+            {/* Card 3: ACTIVE EXECUTION */}
+            <div className="bg-[#111217] border border-[#1C1E26] rounded-2xl p-5 flex items-center gap-4.5">
+              <div className="w-12 h-12 rounded-full border border-[#059669]/40 bg-[#161720] flex items-center justify-center text-[#34D399] shrink-0">
                 <Compass className="w-5 h-5" />
               </div>
               <div>
-                <div className="text-[0.65rem] font-bold uppercase tracking-wider text-[#8A8F9E]">
+                <div className="text-[0.65rem] font-bold uppercase tracking-wider text-[#7F8494]">
                   ACTIVE EXECUTION
                 </div>
                 <div className="font-display text-2xl font-bold text-white mt-0.5">
@@ -592,18 +584,18 @@ export default function AdminDashboard() {
                 </div>
                 <div className="text-[0.7rem] text-[#656A7A] flex items-center gap-1.5">
                   <span>Currently in progress</span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] inline-block animate-pulse" />
                 </div>
               </div>
             </div>
 
-            {/* Card 4: Completed Works */}
-            <div className="bg-[#14171E] border border-[#222632] rounded-2xl p-5 flex items-center gap-4.5">
-              <div className="w-12 h-12 rounded-full bg-[#20242F] border border-blue-500/30 flex items-center justify-center text-blue-400 shrink-0">
+            {/* Card 4: COMPLETED WORKS */}
+            <div className="bg-[#111217] border border-[#1C1E26] rounded-2xl p-5 flex items-center gap-4.5">
+              <div className="w-12 h-12 rounded-full border border-[#2563EB]/40 bg-[#161720] flex items-center justify-center text-[#60A5FA] shrink-0">
                 <Check className="w-5 h-5" />
               </div>
               <div>
-                <div className="text-[0.65rem] font-bold uppercase tracking-wider text-[#8A8F9E]">
+                <div className="text-[0.65rem] font-bold uppercase tracking-wider text-[#7F8494]">
                   COMPLETED WORKS
                 </div>
                 <div className="font-display text-2xl font-bold text-white mt-0.5">
@@ -615,35 +607,35 @@ export default function AdminDashboard() {
 
           </div>
 
-          {/* ── FILTER & CONTROL BAR (EXACT REFERENCE DESIGN) ── */}
+          {/* ── FILTER & CONTROL BAR (MATCHING REFERENCE IMAGE) ── */}
           <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 pt-1">
             
-            {/* Category Pills (Left Side) */}
+            {/* Category Pills (Left) */}
             <div className="flex items-center gap-2 overflow-x-auto pb-1 max-w-full">
               {[
-                { label: "All Categories", value: "All" },
-                { label: "Architecture", value: "Architecture" },
-                { label: "Interior", value: "Interior" },
-                { label: "3D Visualization", value: "3D Visualization" },
-                { label: "Master Planning", value: "Master Planning" },
-                { label: "Residential", value: "Residential" },
-                { label: "Commercial", value: "Commercial" },
+                "All Categories",
+                "Architecture",
+                "Interior",
+                "3D Visualization",
+                "Master Planning",
+                "Residential",
+                "Commercial",
               ].map((cat) => (
                 <button
-                  key={cat.value}
-                  onClick={() => setSelectedCategory(cat.value)}
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
                   className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer whitespace-nowrap border ${
-                    selectedCategory === cat.value
-                      ? "border-[#C8A84E]/70 bg-[#24221A] text-[#C8A84E] shadow-sm"
-                      : "border-[#222632] bg-[#14171E] text-[#8A8F9E] hover:text-white hover:border-[#32384A]"
+                    selectedCategory === cat
+                      ? "border-[#DFB75C] bg-[#1C1A14] text-[#DFB75C] shadow-sm"
+                      : "border-[#1C1E26] bg-[#111217] text-[#8A8F9E] hover:text-white hover:border-[#2E3344]"
                   }`}
                 >
-                  {cat.label}
+                  {cat}
                 </button>
               ))}
             </div>
 
-            {/* Dropdowns & View Toggles (Right Side) */}
+            {/* Right Controls */}
             <div className="flex items-center gap-3 shrink-0">
               
               {/* Status Filter */}
@@ -651,11 +643,11 @@ export default function AdminDashboard() {
                 <select
                   value={selectedStatus}
                   onChange={(e) => setSelectedStatus(e.target.value)}
-                  className="appearance-none px-4 py-2 pr-8 bg-[#14171E] border border-[#222632] rounded-xl text-xs text-[#8A8F9E] focus:outline-none focus:border-[#C8A84E] cursor-pointer"
+                  className="appearance-none px-4 py-2 pr-8 bg-[#111217] border border-[#1C1E26] rounded-xl text-xs text-[#8A8F9E] focus:outline-none focus:border-[#DFB75C] cursor-pointer"
                 >
                   <option value="All">/ All Status</option>
-                  <option value="In Progress">In Progress</option>
-                  <option value="Completed">Completed</option>
+                  <option value="IN PROGRESS">In Progress</option>
+                  <option value="COMPLETED">Completed</option>
                 </select>
                 <ChevronDown className="w-3.5 h-3.5 text-[#656A7A] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
@@ -665,7 +657,7 @@ export default function AdminDashboard() {
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as any)}
-                  className="appearance-none px-4 py-2 pr-8 bg-[#14171E] border border-[#222632] rounded-xl text-xs text-[#8A8F9E] focus:outline-none focus:border-[#C8A84E] cursor-pointer"
+                  className="appearance-none px-4 py-2 pr-8 bg-[#111217] border border-[#1C1E26] rounded-xl text-xs text-[#8A8F9E] focus:outline-none focus:border-[#DFB75C] cursor-pointer"
                 >
                   <option value="newest">Sort: Newest</option>
                   <option value="oldest">Sort: Oldest</option>
@@ -675,11 +667,11 @@ export default function AdminDashboard() {
               </div>
 
               {/* Grid / Table view toggle */}
-              <div className="flex items-center bg-[#14171E] border border-[#222632] rounded-xl p-1">
+              <div className="flex items-center bg-[#111217] border border-[#1C1E26] rounded-xl p-1">
                 <button
                   onClick={() => setViewMode("grid")}
                   className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
-                    viewMode === "grid" ? "bg-[#222632] text-white" : "text-[#656A7A]"
+                    viewMode === "grid" ? "bg-[#1C1E26] text-white" : "text-[#656A7A]"
                   }`}
                   title="Grid View"
                 >
@@ -688,7 +680,7 @@ export default function AdminDashboard() {
                 <button
                   onClick={() => setViewMode("table")}
                   className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
-                    viewMode === "table" ? "bg-[#222632] text-white" : "text-[#656A7A]"
+                    viewMode === "table" ? "bg-[#1C1E26] text-white" : "text-[#656A7A]"
                   }`}
                   title="List View"
                 >
@@ -700,33 +692,21 @@ export default function AdminDashboard() {
 
           </div>
 
-          {/* ── SEARCH BAR ── */}
-          <div className="relative max-w-md">
-            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#656A7A]" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search projects, locations, clients..."
-              className="w-full pl-10 pr-4 py-2.5 bg-[#14171E] border border-[#222632] rounded-xl text-xs text-white placeholder-[#555A6B] focus:outline-none focus:border-[#C8A84E] transition-colors"
-            />
-          </div>
-
           {/* ══════════════════════════════════════════════════════════
-              7. PROJECT GRID (3-COLUMN EXACT MATCH TO REFERENCE IMAGE)
+              3. THREE-COLUMN ARCHITECTURE PROJECT CARDS GRID
               ══════════════════════════════════════════════════════════ */}
           {isLoading ? (
             <div className="py-24 text-center text-[#656A7A] text-xs">
-              Loading architectural studio projects...
+              Loading studio projects...
             </div>
           ) : filteredProjects.length === 0 ? (
-            <div className="py-20 text-center space-y-3 bg-[#14171E] border border-[#222632] rounded-2xl">
+            <div className="py-20 text-center space-y-3 bg-[#111217] border border-[#1C1E26] rounded-2xl">
               <Building2 className="w-10 h-10 text-[#555A6B] mx-auto" />
               <p className="font-display text-white font-bold text-base">No Projects Found</p>
-              <p className="text-xs text-[#8A8F9E]">Try changing your category filter or search terms.</p>
+              <p className="text-xs text-[#8A8F9E]">Try changing your category filter.</p>
               <button
                 onClick={openCreateForm}
-                className="mt-2 inline-flex items-center gap-2 px-4 py-2 bg-[#C8A84E] text-[#0C0D11] font-bold text-xs rounded-xl"
+                className="mt-2 inline-flex items-center gap-2 px-4 py-2 bg-[#DFB75C] text-[#000000] font-bold text-xs rounded-xl"
               >
                 <Plus className="w-4 h-4" />
                 <span>Add First Project</span>
@@ -740,11 +720,11 @@ export default function AdminDashboard() {
                 <motion.div
                   key={project.id}
                   layout
-                  className="group bg-[#14171E] border border-[#222632] hover:border-[#363C4E] rounded-[16px] overflow-hidden transition-all duration-300 flex flex-col justify-between"
+                  className="group bg-[#111217] border border-[#1C1E26] hover:border-[#2D3240] rounded-[16px] overflow-hidden transition-all duration-300 flex flex-col justify-between"
                 >
                   <div>
                     {/* ── CARD IMAGE WITH BADGES ── */}
-                    <div className="relative aspect-[16/10] bg-[#1C202B] overflow-hidden">
+                    <div className="relative aspect-[16/10] bg-[#161720] overflow-hidden">
                       <Image
                         src={project.image}
                         alt={project.title}
@@ -757,19 +737,19 @@ export default function AdminDashboard() {
                       {/* Top Badges (Left) */}
                       <div className="absolute top-3 left-3 flex items-center gap-1.5">
                         {/* Category Badge */}
-                        <span className="px-2.5 py-1 rounded-md bg-[#0A0B0E]/85 backdrop-blur-md text-[0.62rem] font-bold tracking-wider uppercase text-[#C8A84E] border border-[#C8A84E]/30">
-                          {project.category}
+                        <span className="px-2.5 py-1 rounded-md bg-[#07080A]/90 backdrop-blur-md text-[0.62rem] font-bold tracking-wider uppercase text-[#DFB75C] border border-[#DFB75C]/30">
+                          {project.category.toUpperCase()}
                         </span>
 
                         {/* Status Badge */}
                         <span
                           className={`px-2.5 py-1 rounded-md backdrop-blur-md text-[0.62rem] font-bold tracking-wider uppercase border ${
-                            project.status === "In Progress"
-                              ? "bg-emerald-950/85 text-emerald-400 border-emerald-800/40"
-                              : "bg-blue-950/85 text-blue-400 border-blue-800/40"
+                            project.status?.toUpperCase() === "IN PROGRESS" || project.status === "In Progress"
+                              ? "bg-[#0E281E]/90 text-[#34D399] border-[#059669]/40"
+                              : "bg-[#13233D]/90 text-[#60A5FA] border-[#2563EB]/40"
                           }`}
                         >
-                          {project.status.toUpperCase()}
+                          {project.status?.toUpperCase() || "COMPLETED"}
                         </span>
                       </div>
 
@@ -778,8 +758,8 @@ export default function AdminDashboard() {
                         onClick={() => handleToggleFeatured(project.id)}
                         className={`absolute top-3 right-3 w-8 h-8 rounded-lg backdrop-blur-md flex items-center justify-center transition-colors cursor-pointer ${
                           project.featured
-                            ? "bg-[#C8A84E] text-[#0C0D11] shadow-md"
-                            : "bg-[#0A0B0E]/80 text-[#8A8F9E] hover:text-white"
+                            ? "bg-[#DFB75C] text-[#000000] shadow-md"
+                            : "bg-[#07080A]/80 text-[#DFB75C] hover:bg-[#07080A]"
                         }`}
                         title={project.featured ? "Featured showcase" : "Mark as featured"}
                       >
@@ -792,7 +772,7 @@ export default function AdminDashboard() {
                       
                       {/* Location & Year */}
                       <div className="flex items-center justify-between text-xs text-[#8A8F9E]">
-                        <span className="flex items-center gap-1 text-[#C8A84E]">
+                        <span className="flex items-center gap-1 text-[#DFB75C]">
                           <MapPin className="w-3.5 h-3.5" />
                           <span>{project.location}</span>
                         </span>
@@ -800,14 +780,14 @@ export default function AdminDashboard() {
                       </div>
 
                       {/* Title */}
-                      <h3 className="font-display font-bold text-[1.15rem] text-white group-hover:text-[#C8A84E] transition-colors leading-snug">
+                      <h3 className="font-display font-bold text-[1.12rem] text-white group-hover:text-[#DFB75C] transition-colors leading-snug">
                         {project.title}
                       </h3>
 
                       {/* Client */}
                       {project.client && (
                         <div className="text-xs text-[#8A8F9E]">
-                          <span className="text-[#C8A84E] font-medium">Client:</span> {project.client}
+                          <span className="text-[#DFB75C] font-medium">Client:</span> {project.client}
                         </div>
                       )}
 
@@ -819,12 +799,12 @@ export default function AdminDashboard() {
                   </div>
 
                   {/* ── CARD FOOTER: TAGS & ACTIONS ── */}
-                  <div className="p-5 pt-0 mt-1 flex items-center justify-between gap-2 border-t border-[#1C1F2B] pt-3">
+                  <div className="p-5 pt-0 mt-1 flex items-center justify-between gap-2 border-t border-[#181920] pt-3">
                     <div className="flex flex-wrap gap-1.5 max-w-[70%]">
                       {project.tags.slice(0, 2).map((tag, i) => (
                         <span
                           key={i}
-                          className="px-2.5 py-0.5 bg-[#1C202B] text-[#8A8F9E] text-[0.65rem] rounded-md font-medium"
+                          className="px-2.5 py-0.5 bg-[#161720] text-[#8A8F9E] text-[0.65rem] rounded-md font-medium"
                         >
                           {tag}
                         </span>
@@ -835,14 +815,14 @@ export default function AdminDashboard() {
                     <div className="flex items-center gap-1.5 shrink-0">
                       <button
                         onClick={() => openEditForm(project)}
-                        className="p-1.5 bg-[#1C202B] hover:bg-[#C8A84E] hover:text-[#0C0D11] text-[#8A8F9E] rounded-lg transition-colors cursor-pointer"
+                        className="p-1.5 bg-[#161720] hover:bg-[#DFB75C] hover:text-[#000000] text-[#8A8F9E] rounded-lg transition-colors cursor-pointer"
                         title="Edit Project"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => setDeleteTarget(project)}
-                        className="p-1.5 bg-[#1C202B] hover:bg-red-600 hover:text-white text-[#8A8F9E] rounded-lg transition-colors cursor-pointer"
+                        className="p-1.5 bg-[#161720] hover:bg-red-600 hover:text-white text-[#8A8F9E] rounded-lg transition-colors cursor-pointer"
                         title="Delete Project"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -856,10 +836,10 @@ export default function AdminDashboard() {
           ) : (
             
             /* ── TABLE VIEW ── */
-            <div className="bg-[#14171E] border border-[#222632] rounded-2xl overflow-hidden shadow-xl">
+            <div className="bg-[#111217] border border-[#1C1E26] rounded-2xl overflow-hidden shadow-xl">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-[#181C26] text-[#8A8F9E] uppercase tracking-wider font-semibold border-b border-[#222632]">
+                  <thead className="bg-[#161720] text-[#8A8F9E] uppercase tracking-wider font-semibold border-b border-[#1C1E26]">
                     <tr>
                       <th className="py-4 px-5">Project</th>
                       <th className="py-4 px-5">Category</th>
@@ -870,11 +850,11 @@ export default function AdminDashboard() {
                       <th className="py-4 px-5 text-right">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#1B1E29]">
+                  <tbody className="divide-y divide-[#181920]">
                     {filteredProjects.map((project) => (
-                      <tr key={project.id} className="hover:bg-[#181C26]/60 transition-colors">
+                      <tr key={project.id} className="hover:bg-[#161720]/60 transition-colors">
                         <td className="py-4 px-5 flex items-center gap-3.5">
-                          <div className="relative w-12 h-12 rounded-xl bg-[#20242F] overflow-hidden shrink-0">
+                          <div className="relative w-12 h-12 rounded-xl bg-[#1C1E26] overflow-hidden shrink-0">
                             <Image src={project.image} alt={project.title} fill unoptimized className="object-cover" />
                           </div>
                           <div>
@@ -882,7 +862,7 @@ export default function AdminDashboard() {
                             {project.client && <div className="text-xs text-[#73798C]">Client: {project.client}</div>}
                           </div>
                         </td>
-                        <td className="py-4 px-5 text-[#C8A84E] font-medium">
+                        <td className="py-4 px-5 text-[#DFB75C] font-medium">
                           {project.category}
                         </td>
                         <td className="py-4 px-5 text-[#8A8F9E]">{project.location}</td>
@@ -890,19 +870,19 @@ export default function AdminDashboard() {
                         <td className="py-4 px-5">
                           <span
                             className={`px-2.5 py-1 rounded text-[0.65rem] font-bold ${
-                              project.status === "In Progress"
-                                ? "bg-emerald-950/80 text-emerald-400 border border-emerald-800/40"
-                                : "bg-blue-950/80 text-blue-400 border border-blue-800/40"
+                              project.status?.toUpperCase() === "IN PROGRESS" || project.status === "In Progress"
+                                ? "bg-[#0E281E]/80 text-[#34D399] border border-[#059669]/40"
+                                : "bg-[#13233D]/80 text-[#60A5FA] border border-[#2563EB]/40"
                             }`}
                           >
-                            {project.status}
+                            {project.status?.toUpperCase() || "COMPLETED"}
                           </span>
                         </td>
                         <td className="py-4 px-5 text-center">
                           <button
                             onClick={() => handleToggleFeatured(project.id)}
                             className={`p-1.5 rounded cursor-pointer ${
-                              project.featured ? "text-[#C8A84E]" : "text-[#555A6B] hover:text-white"
+                              project.featured ? "text-[#DFB75C]" : "text-[#555A6B] hover:text-white"
                             }`}
                           >
                             <Star className={`w-4 h-4 ${project.featured ? "fill-current" : ""}`} />
@@ -911,13 +891,13 @@ export default function AdminDashboard() {
                         <td className="py-4 px-5 text-right space-x-2">
                           <button
                             onClick={() => openEditForm(project)}
-                            className="p-1.5 bg-[#20242F] hover:bg-[#C8A84E] hover:text-[#0C0D11] rounded-lg text-[#8A8F9E] transition-colors cursor-pointer"
+                            className="p-1.5 bg-[#161720] hover:bg-[#DFB75C] hover:text-[#000000] rounded-lg text-[#8A8F9E] transition-colors cursor-pointer"
                           >
                             <Edit2 className="w-3.5 h-3.5" />
                           </button>
                           <button
                             onClick={() => setDeleteTarget(project)}
-                            className="p-1.5 bg-[#20242F] hover:bg-red-600 hover:text-white rounded-lg text-[#8A8F9E] transition-colors cursor-pointer"
+                            className="p-1.5 bg-[#161720] hover:bg-red-600 hover:text-white rounded-lg text-[#8A8F9E] transition-colors cursor-pointer"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -934,29 +914,29 @@ export default function AdminDashboard() {
       </div>
 
       {/* ══════════════════════════════════════════════════════════
-          CREATE / EDIT MODAL DRAWER
+          CREATE / EDIT MODAL
           ══════════════════════════════════════════════════════════ */}
       <AnimatePresence>
         {isFormOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
             <motion.div
-              className="w-full max-w-2xl bg-[#14171E] border border-[#2B2F3E] rounded-2xl shadow-2xl overflow-hidden my-8"
+              className="w-full max-w-2xl bg-[#111217] border border-[#2B2F3E] rounded-2xl shadow-2xl overflow-hidden my-8"
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
             >
-              <div className="px-6 py-4 border-b border-[#222632] flex items-center justify-between bg-[#181C26]">
+              <div className="px-6 py-4 border-b border-[#1C1E26] flex items-center justify-between bg-[#161720]">
                 <div>
                   <h2 className="font-display font-bold text-lg text-white">
                     {editingProject ? "Edit Project Details" : "Create Architecture Project"}
                   </h2>
-                  <p className="text-xs text-[#C8A84E] font-medium">
+                  <p className="text-xs text-[#DFB75C] font-medium">
                     {editingProject ? "Update portfolio showcase entry" : "Publish new project to portfolio"}
                   </p>
                 </div>
                 <button
                   onClick={() => setIsFormOpen(false)}
-                  className="w-8 h-8 rounded-lg bg-[#222632] text-[#8A8F9E] hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                  className="w-8 h-8 rounded-lg bg-[#1C1E26] text-[#8A8F9E] hover:text-white flex items-center justify-center transition-colors cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -975,7 +955,7 @@ export default function AdminDashboard() {
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                     placeholder="e.g. Cecil Resort & Luxury Villas"
-                    className="w-full px-4 py-2.5 bg-[#0C0D11] border border-[#262A38] rounded-xl text-sm text-white focus:outline-none focus:border-[#C8A84E]"
+                    className="w-full px-4 py-2.5 bg-[#07080A] border border-[#262A38] rounded-xl text-sm text-white focus:outline-none focus:border-[#DFB75C]"
                   />
                 </div>
 
@@ -988,9 +968,9 @@ export default function AdminDashboard() {
                     <select
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                      className="w-full px-3 py-2.5 bg-[#0C0D11] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#C8A84E]"
+                      className="w-full px-3 py-2.5 bg-[#07080A] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#DFB75C]"
                     >
-                      {PROJECT_CATEGORIES.filter((c) => c !== "All").map((cat) => (
+                      {["ARCHITECTURE", "INTERIOR", "3D VISUALIZATION", "MASTER PLANNING", "RESIDENTIAL", "COMMERCIAL"].map((cat) => (
                         <option key={cat} value={cat}>
                           {cat}
                         </option>
@@ -1004,14 +984,11 @@ export default function AdminDashboard() {
                     </label>
                     <select
                       value={formData.status}
-                      onChange={(e) => setFormData({ ...formData, status: e.target.value as Project["status"] })}
-                      className="w-full px-3 py-2.5 bg-[#0C0D11] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#C8A84E]"
+                      onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
+                      className="w-full px-3 py-2.5 bg-[#07080A] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#DFB75C]"
                     >
-                      {PROJECT_STATUSES.map((st) => (
-                        <option key={st} value={st}>
-                          {st}
-                        </option>
-                      ))}
+                      <option value="IN PROGRESS">IN PROGRESS</option>
+                      <option value="COMPLETED">COMPLETED</option>
                     </select>
                   </div>
                 </div>
@@ -1027,7 +1004,7 @@ export default function AdminDashboard() {
                       value={formData.location}
                       onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                       placeholder="e.g. Murree Hills, Pakistan"
-                      className="w-full px-4 py-2.5 bg-[#0C0D11] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#C8A84E]"
+                      className="w-full px-4 py-2.5 bg-[#07080A] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#DFB75C]"
                     />
                   </div>
 
@@ -1040,7 +1017,7 @@ export default function AdminDashboard() {
                       value={formData.year}
                       onChange={(e) => setFormData({ ...formData, year: e.target.value })}
                       placeholder="e.g. 2025 – 2026"
-                      className="w-full px-4 py-2.5 bg-[#0C0D11] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#C8A84E]"
+                      className="w-full px-4 py-2.5 bg-[#07080A] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#DFB75C]"
                     />
                   </div>
                 </div>
@@ -1054,8 +1031,8 @@ export default function AdminDashboard() {
                     type="text"
                     value={formData.client}
                     onChange={(e) => setFormData({ ...formData, client: e.target.value })}
-                    placeholder="e.g. Lahkhan Group & Canopy Resorts"
-                    className="w-full px-4 py-2.5 bg-[#0C0D11] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#C8A84E]"
+                    placeholder="e.g. Lahore Group & Canopy Resorts"
+                    className="w-full px-4 py-2.5 bg-[#07080A] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#DFB75C]"
                   />
                 </div>
 
@@ -1070,10 +1047,10 @@ export default function AdminDashboard() {
                       value={formData.image}
                       onChange={(e) => setFormData({ ...formData, image: e.target.value })}
                       placeholder="Paste Image URL..."
-                      className="flex-1 px-4 py-2.5 bg-[#0C0D11] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#C8A84E]"
+                      className="flex-1 px-4 py-2.5 bg-[#07080A] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#DFB75C]"
                     />
-                    <label className="inline-flex items-center gap-1.5 px-3 py-2 bg-[#20242F] hover:bg-[#2A303F] border border-[#32384A] text-xs text-white rounded-xl cursor-pointer transition-colors shrink-0">
-                      <Upload className="w-3.5 h-3.5 text-[#C8A84E]" />
+                    <label className="inline-flex items-center gap-1.5 px-3 py-2 bg-[#1C1E26] hover:bg-[#2A303F] border border-[#32384A] text-xs text-white rounded-xl cursor-pointer transition-colors shrink-0">
+                      <Upload className="w-3.5 h-3.5 text-[#DFB75C]" />
                       <span>Upload</span>
                       <input type="file" accept="image/*" onChange={handleImageFileUpload} className="hidden" />
                     </label>
@@ -1087,14 +1064,13 @@ export default function AdminDashboard() {
                         type="button"
                         key={pr.label}
                         onClick={() => setFormData({ ...formData, image: pr.url })}
-                        className="px-2.5 py-1 bg-[#181C26] hover:bg-[#222632] text-[0.65rem] text-[#8A8F9E] rounded-md border border-[#222632] cursor-pointer"
+                        className="px-2.5 py-1 bg-[#161720] hover:bg-[#1C1E26] text-[0.65rem] text-[#8A8F9E] rounded-md border border-[#1C1E26] cursor-pointer"
                       >
                         {pr.label}
                       </button>
                     ))}
                   </div>
 
-                  {/* Live preview */}
                   {formData.image && (
                     <div className="relative aspect-[16/9] w-full rounded-xl overflow-hidden border border-[#262A38] bg-black mt-2">
                       <Image src={formData.image} alt="Preview" fill unoptimized className="object-cover" />
@@ -1113,7 +1089,7 @@ export default function AdminDashboard() {
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     placeholder="Comprehensive architectural overview..."
-                    className="w-full px-4 py-2.5 bg-[#0C0D11] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#C8A84E] leading-relaxed"
+                    className="w-full px-4 py-2.5 bg-[#07080A] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#DFB75C] leading-relaxed"
                   />
                 </div>
 
@@ -1128,7 +1104,7 @@ export default function AdminDashboard() {
                       value={formData.tags}
                       onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
                       placeholder="e.g. Hospitality, Site Planning"
-                      className="w-full px-4 py-2 bg-[#0C0D11] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#C8A84E]"
+                      className="w-full px-4 py-2 bg-[#07080A] border border-[#262A38] rounded-xl text-xs text-white focus:outline-none focus:border-[#DFB75C]"
                     />
                   </div>
 
@@ -1138,7 +1114,7 @@ export default function AdminDashboard() {
                       id="featCheck"
                       checked={formData.featured}
                       onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                      className="w-4 h-4 accent-[#C8A84E] rounded cursor-pointer"
+                      className="w-4 h-4 accent-[#DFB75C] rounded cursor-pointer"
                     />
                     <label htmlFor="featCheck" className="text-xs font-bold text-white cursor-pointer select-none">
                       Featured Showcase ⭐
@@ -1147,17 +1123,17 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Modal actions */}
-                <div className="pt-4 border-t border-[#222632] flex items-center justify-end gap-3">
+                <div className="pt-4 border-t border-[#1C1E26] flex items-center justify-end gap-3">
                   <button
                     type="button"
                     onClick={() => setIsFormOpen(false)}
-                    className="px-5 py-2.5 bg-[#20242F] hover:bg-[#2A303F] text-[#8A8F9E] hover:text-white text-xs font-semibold rounded-xl cursor-pointer"
+                    className="px-5 py-2.5 bg-[#1C1E26] hover:bg-[#262835] text-[#8A8F9E] hover:text-white text-xs font-semibold rounded-xl cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-6 py-2.5 bg-[#C8A84E] hover:bg-[#B8962E] text-[#0C0D11] font-bold text-xs rounded-xl cursor-pointer shadow-md"
+                    className="px-6 py-2.5 bg-[#DFB75C] hover:bg-[#C9A247] text-[#000000] font-bold text-xs rounded-xl cursor-pointer shadow-md"
                   >
                     {editingProject ? "Save Changes" : "Publish Project"}
                   </button>
@@ -1174,7 +1150,7 @@ export default function AdminDashboard() {
         {deleteTarget && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
             <motion.div
-              className="w-full max-w-sm bg-[#14171E] border border-[#2B2F3E] rounded-2xl p-6 shadow-2xl text-center space-y-4"
+              className="w-full max-w-sm bg-[#111217] border border-[#2B2F3E] rounded-2xl p-6 shadow-2xl text-center space-y-4"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
@@ -1189,7 +1165,7 @@ export default function AdminDashboard() {
               <div className="flex items-center justify-center gap-3 pt-2">
                 <button
                   onClick={() => setDeleteTarget(null)}
-                  className="px-4 py-2 bg-[#20242F] text-white text-xs font-semibold rounded-xl cursor-pointer"
+                  className="px-4 py-2 bg-[#1C1E26] text-white text-xs font-semibold rounded-xl cursor-pointer"
                 >
                   Cancel
                 </button>

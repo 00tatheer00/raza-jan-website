@@ -3,35 +3,35 @@
     "id": "proj-1",
     "number": "01",
     "title": "Cecil Resort & Luxury Villas",
-    "category": "Architecture",
+    "category": "ARCHITECTURE",
     "location": "Murree Hills, Pakistan",
     "year": "2025 – 2026",
-    "client": "Lahkhan Group & Canopy Resorts",
-    "description": "Comprehensive architectural design, master planning, and on-site execution coordination for luxury hillside resort villas blending contextual stone architecture with contemporary hospitality design.",
+    "client": "Lahore Group & Canopy Resorts",
+    "description": "Comprehensive architectural design, master planning, and on-site execution coordination for luxury hillside resort villas blending contextual stone...",
     "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop",
     "featured": true,
     "tags": ["Hospitality", "Site Planning"],
-    "status": "In Progress"
+    "status": "IN PROGRESS"
   },
   {
     "id": "proj-2",
     "number": "02",
     "title": "Georgetown Waterfront Urban Development",
-    "category": "Master Planning",
+    "category": "MASTER PLANNING",
     "location": "Georgetown, Guyana",
     "year": "2024",
     "client": "Skyline International",
-    "description": "International urban development framework integrating mixed-use commercial hubs, sustainable zoning, pedestrian networks, and waterfront public spaces.",
-    "image": "https://images.unsplash.com/photo-1577495508048-b635879837f1?q=80&w=1200&auto=format&fit=crop",
+    "description": "International urban development framework integrating mixed-use commercial hubs, sustainable zoning, pedestrian networks, and...",
+    "image": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=1200&auto=format&fit=crop",
     "featured": false,
     "tags": ["Urban Planning", "Commercial"],
-    "status": "Completed"
+    "status": "COMPLETED"
   },
   {
     "id": "proj-3",
     "number": "03",
     "title": "Minimalist Concrete & Wood Residence",
-    "category": "Interior",
+    "category": "INTERIOR",
     "location": "Islamabad, Pakistan",
     "year": "2024",
     "client": "Private Commission",
@@ -39,48 +39,48 @@
     "image": "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1200&auto=format&fit=crop",
     "featured": false,
     "tags": ["Luxury Interior", "Residential"],
-    "status": "Completed"
+    "status": "COMPLETED"
   },
   {
     "id": "proj-4",
     "number": "04",
-    "title": "Healthcare Civic Center",
-    "category": "Architecture",
+    "title": "Healthcare Center",
+    "category": "ARCHITECTURE",
     "location": "Lahore, Pakistan",
     "year": "2023",
     "client": "Civic Development Group",
     "description": "Contemporary healthcare and civic facility designed around efficient circulation, natural daylight, public accessibility, and a calm architectural language.",
-    "image": "https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?q=80&w=1200&auto=format&fit=crop",
+    "image": "https://images.unsplash.com/photo-1586771107445-d3ca888129ff?q=80&w=1200&auto=format&fit=crop",
     "featured": false,
     "tags": ["Healthcare", "Civic"],
-    "status": "Completed"
+    "status": "COMPLETED"
   },
   {
     "id": "proj-5",
     "number": "05",
-    "title": "Contemporary Residence 3D Visualization",
-    "category": "3D Visualization",
+    "title": "Residence 3D Visualization",
+    "category": "3D VISUALIZATION",
     "location": "Dubai, UAE",
     "year": "2023",
     "client": "Private Client",
     "description": "High-end architectural visualization package presenting a contemporary luxury residence through cinematic exterior and interior renders.",
-    "image": "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1200&auto=format&fit=crop",
+    "image": "https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=1200&auto=format&fit=crop",
     "featured": false,
     "tags": ["3D Rendering", "Visualization"],
-    "status": "Completed"
+    "status": "COMPLETED"
   },
   {
     "id": "proj-6",
     "number": "06",
-    "title": "Faisal Town Commercial Strip Development",
-    "category": "Master Planning",
+    "title": "Commercial Strip Development",
+    "category": "MASTER PLANNING",
     "location": "Karachi, Pakistan",
     "year": "2023",
     "client": "Urban Development Partners",
     "description": "Commercial master planning concept focused on pedestrian-friendly retail streets, modern storefronts, landscape integration, and efficient circulation.",
-    "image": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200&auto=format&fit=crop",
+    "image": "https://images.unsplash.com/photo-1555636222-cae831e670b3?q=80&w=1200&auto=format&fit=crop",
     "featured": false,
     "tags": ["Commercial", "Master Planning"],
-    "status": "Completed"
+    "status": "COMPLETED"
   }
 ]
