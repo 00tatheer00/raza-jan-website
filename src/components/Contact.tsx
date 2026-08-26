@@ -17,7 +17,7 @@ export default function Contact() {
       <div className="container-custom">
         {/* Section Header */}
         <motion.div
-          className="flex items-center gap-3 mb-10 md:mb-14"
+          className="flex items-center gap-3 mb-12 md:mb-16"
           initial={{ opacity: 0, x: -20 }}
           animate={isInView ? { opacity: 1, x: 0 } : {}}
           transition={{ duration: 0.6 }}
@@ -29,11 +29,11 @@ export default function Contact() {
           </span>
         </motion.div>
 
-        {/* Two-column layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+        {/* Two-column layout with generous gap */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-14 lg:gap-20 items-start">
           
           {/* ── Left Column: Editorial Heading & Action Buttons ── */}
-          <div className="lg:col-span-6 space-y-8">
+          <div className="lg:col-span-6 space-y-10">
             <motion.h2
               className="text-display font-display font-bold tracking-[-0.02em] leading-[0.95]"
               initial={{ opacity: 0, y: 30 }}
@@ -68,32 +68,32 @@ export default function Contact() {
 
             {/* Availability Pill */}
             <motion.div
-              className="inline-flex items-center gap-3 px-4 py-2 bg-[var(--color-bg-alt)] border border-[var(--color-border)] text-xs font-semibold tracking-wider text-[var(--color-text)]"
+              className="inline-flex items-center gap-3 px-5 py-2.5 bg-[var(--color-bg-alt)] border border-[var(--color-border)] text-xs font-semibold tracking-wider text-[var(--color-text)]"
               initial={{ opacity: 0 }}
               animate={isInView ? { opacity: 1 } : {}}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
               <span>AVAILABLE FOR NEW COMMISSIONS &amp; CONSULTING</span>
             </motion.div>
 
             {/* Action Buttons */}
             <motion.div
-              className="flex flex-wrap gap-4 pt-2"
+              className="flex flex-wrap gap-5 pt-2"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.5 }}
             >
               <a
                 href={`mailto:${siteData.personal.email}`}
-                className="btn-primary group"
+                className="btn-primary group py-4 px-8"
               >
                 <span>EMAIL ME</span>
                 <Mail className="w-4 h-4 text-[var(--color-accent)] group-hover:text-white transition-colors" />
               </a>
               <a
                 href={`tel:${siteData.personal.phone}`}
-                className="btn-outline group"
+                className="btn-outline group py-4 px-8"
               >
                 <span>CALL NOW</span>
                 <Phone className="w-4 h-4 text-[var(--color-accent)] group-hover:translate-x-0.5 transition-transform" />
@@ -102,12 +102,12 @@ export default function Contact() {
           </div>
 
           {/* ── Right Column: Premium Architectural Contact Blocks ── */}
-          <div className="lg:col-span-6 space-y-6 lg:pt-2">
+          <div className="lg:col-span-6 space-y-7 lg:pt-2">
             
             {/* Card 01: Direct Email */}
             <motion.a
               href={`mailto:${siteData.personal.email}`}
-              className="group block p-7 sm:p-9 bg-white border border-[#E8E6E1] hover:border-[var(--color-accent)] transition-all duration-400 relative overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_32px_rgba(200,168,78,0.08)] hover:-translate-y-1"
+              className="group block p-8 sm:p-10 bg-white border border-[#E8E6E1] hover:border-[var(--color-accent)] transition-all duration-400 relative overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_32px_rgba(200,168,78,0.08)] hover:-translate-y-1"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.3 }}
@@ -143,7 +143,7 @@ export default function Contact() {
             {/* Card 02: Telephone & WhatsApp */}
             <motion.a
               href={`tel:${siteData.personal.phone}`}
-              className="group block p-7 sm:p-9 bg-white border border-[#E8E6E1] hover:border-[var(--color-accent)] transition-all duration-400 relative overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_32px_rgba(200,168,78,0.08)] hover:-translate-y-1"
+              className="group block p-8 sm:p-10 bg-white border border-[#E8E6E1] hover:border-[var(--color-accent)] transition-all duration-400 relative overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_32px_rgba(200,168,78,0.08)] hover:-translate-y-1"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.4 }}
@@ -178,7 +178,7 @@ export default function Contact() {
 
             {/* Card 03: Studio Base & Global Reach */}
             <motion.div
-              className="p-7 sm:p-9 bg-white border border-[#E8E6E1] relative overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.02)]"
+              className="p-8 sm:p-10 bg-white border border-[#E8E6E1] relative overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.02)]"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.5 }}

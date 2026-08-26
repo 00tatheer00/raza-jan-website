@@ -30,9 +30,9 @@
   --text-micro: clamp(0.65rem, 0.7vw, 0.75rem);
 
   /* Spacing */
-  --section-padding: clamp(5rem, 10vh, 10rem);
-  --container-max: 1400px;
-  --container-padding: clamp(1.5rem, 4vw, 4rem);
+  --section-padding: clamp(6rem, 12vh, 12rem);
+  --container-max: 1440px;
+  --container-padding: clamp(2rem, 5vw, 6rem);
 
   /* Transitions */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);

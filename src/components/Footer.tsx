@@ -27,7 +27,7 @@ export default function Footer() {
 
   return (
     <footer
-      className="relative border-t border-[var(--color-border)] bg-[var(--color-bg)] py-8 md:py-10 text-[var(--color-text-secondary)]"
+      className="relative border-t border-[var(--color-border)] bg-[var(--color-bg)] py-12 md:py-16 text-[var(--color-text-secondary)]"
       ref={ref}
     >
       {/* Subtle gold accent top line */}
@@ -62,7 +62,7 @@ export default function Footer() {
             </a>
           ))}
 
-          <span className="text-[var(--color-border)]">|</span>
+          <span className="text-[var(--color-border)] hidden sm:inline">|</span>
 
           {/* Back to top */}
           <button
