@@ -11,7 +11,11 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      className="section-padding relative overflow-hidden"
+      className="relative overflow-hidden bg-[var(--color-bg)]"
+      style={{
+        paddingTop: "clamp(5rem, 10vh, 9rem)",
+        paddingBottom: "clamp(5rem, 10vh, 9rem)",
+      }}
       ref={ref}
     >
       <div className="container-custom">
@@ -29,13 +33,15 @@ export default function Contact() {
           </span>
         </motion.div>
 
-        {/* Two-column layout with generous gap */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-14 lg:gap-20 items-start">
+        {/* Two-column layout with substantial gap */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
           
           {/* ── Left Column: Editorial Heading & Action Buttons ── */}
-          <div className="lg:col-span-6 space-y-10">
+          <div className="lg:col-span-6 flex flex-col justify-start">
+            
+            {/* Main Heading */}
             <motion.h2
-              className="text-display font-display font-bold tracking-[-0.02em] leading-[0.95]"
+              className="text-display font-display font-bold tracking-[-0.02em] leading-[0.95] mb-8"
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, delay: 0.15 }}
@@ -44,20 +50,21 @@ export default function Contact() {
               <br />
               <span className="text-[var(--color-text-secondary)]">SOMETHING</span>
               <br />
-              <span className="relative inline-block">
+              <span className="relative inline-block pb-2">
                 MEANINGFUL
+                <span className="text-[var(--color-accent)]">.</span>
                 <motion.span
-                  className="absolute -bottom-2 left-0 h-[2px] bg-[var(--color-accent)]"
+                  className="absolute bottom-0 left-0 h-[2px] bg-[var(--color-accent)]"
                   initial={{ width: 0 }}
                   animate={isInView ? { width: "100%" } : {}}
                   transition={{ duration: 0.8, delay: 0.7 }}
                 />
               </span>
-              <span className="text-[var(--color-accent)]">.</span>
             </motion.h2>
 
+            {/* Paragraph with clear margins */}
             <motion.p
-              className="text-[var(--color-text-secondary)] text-base md:text-lg leading-relaxed max-w-lg"
+              className="text-[var(--color-text-secondary)] text-base md:text-lg leading-relaxed max-w-lg mb-8"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.3 }}
@@ -68,64 +75,65 @@ export default function Contact() {
 
             {/* Availability Pill */}
             <motion.div
-              className="inline-flex items-center gap-3 px-5 py-2.5 bg-[var(--color-bg-alt)] border border-[var(--color-border)] text-xs font-semibold tracking-wider text-[var(--color-text)]"
+              className="inline-flex items-center gap-3 px-4 py-2.5 bg-[var(--color-bg-alt)] border border-[var(--color-border)] text-xs font-semibold tracking-wider text-[var(--color-text)] mb-10 self-start"
               initial={{ opacity: 0 }}
               animate={isInView ? { opacity: 1 } : {}}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               <span>AVAILABLE FOR NEW COMMISSIONS &amp; CONSULTING</span>
             </motion.div>
 
             {/* Action Buttons */}
             <motion.div
-              className="flex flex-wrap gap-5 pt-2"
+              className="flex flex-wrap gap-4"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.5 }}
             >
               <a
                 href={`mailto:${siteData.personal.email}`}
-                className="btn-primary group py-4 px-8"
+                className="btn-primary group"
               >
                 <span>EMAIL ME</span>
                 <Mail className="w-4 h-4 text-[var(--color-accent)] group-hover:text-white transition-colors" />
               </a>
               <a
                 href={`tel:${siteData.personal.phone}`}
-                className="btn-outline group py-4 px-8"
+                className="btn-outline group"
               >
                 <span>CALL NOW</span>
                 <Phone className="w-4 h-4 text-[var(--color-accent)] group-hover:translate-x-0.5 transition-transform" />
               </a>
             </motion.div>
+
           </div>
 
-          {/* ── Right Column: Premium Architectural Contact Blocks ── */}
-          <div className="lg:col-span-6 space-y-7 lg:pt-2">
+          {/* ── Right Column: 3 Standalone Architectural Cards with Explicit Margins & Gap ── */}
+          <div className="lg:col-span-6 flex flex-col gap-6 md:gap-8">
             
             {/* Card 01: Direct Email */}
             <motion.a
               href={`mailto:${siteData.personal.email}`}
-              className="group block p-8 sm:p-10 bg-white border border-[#E8E6E1] hover:border-[var(--color-accent)] transition-all duration-400 relative overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_32px_rgba(200,168,78,0.08)] hover:-translate-y-1"
+              className="group block p-7 sm:p-9 bg-white border border-[#E2DFD8] hover:border-[var(--color-accent)] transition-all duration-300 relative overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_30px_rgba(200,168,78,0.1)] hover:-translate-y-1"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.3 }}
             >
               {/* Gold Top Slide Line */}
-              <div className="absolute top-0 left-0 w-0 h-[2px] bg-[var(--color-accent)] group-hover:w-full transition-all duration-500 ease-out" />
+              <div className="absolute top-0 left-0 w-0 h-[2px] bg-[var(--color-accent)] group-hover:w-full transition-all duration-400 ease-out" />
 
               <div className="flex items-center justify-between gap-4 mb-4">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2.5">
                   <span className="font-display font-bold text-xs text-[var(--color-accent)] tracking-widest">
                     01
                   </span>
-                  <span className="w-1 h-1 rounded-full bg-[var(--color-accent)]" />
+                  <span className="text-[var(--color-accent)]">&middot;</span>
                   <span className="text-micro text-[var(--color-text-muted)] font-semibold tracking-wider">
                     DIRECT INQUIRY
                   </span>
                 </div>
-                <div className="w-8 h-8 rounded-xs border border-[#E8E6E1] group-hover:border-[var(--color-accent)] group-hover:bg-[var(--color-accent)] flex items-center justify-center transition-all duration-300">
+                <div className="w-8 h-8 rounded-xs border border-[#E2DFD8] group-hover:border-[var(--color-accent)] group-hover:bg-[var(--color-accent)] flex items-center justify-center transition-all duration-300">
                   <ArrowUpRight className="w-3.5 h-3.5 text-[#555555] group-hover:text-white transition-colors" />
                 </div>
               </div>
@@ -143,25 +151,25 @@ export default function Contact() {
             {/* Card 02: Telephone & WhatsApp */}
             <motion.a
               href={`tel:${siteData.personal.phone}`}
-              className="group block p-8 sm:p-10 bg-white border border-[#E8E6E1] hover:border-[var(--color-accent)] transition-all duration-400 relative overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_32px_rgba(200,168,78,0.08)] hover:-translate-y-1"
+              className="group block p-7 sm:p-9 bg-white border border-[#E2DFD8] hover:border-[var(--color-accent)] transition-all duration-300 relative overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_30px_rgba(200,168,78,0.1)] hover:-translate-y-1"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
               {/* Gold Top Slide Line */}
-              <div className="absolute top-0 left-0 w-0 h-[2px] bg-[var(--color-accent)] group-hover:w-full transition-all duration-500 ease-out" />
+              <div className="absolute top-0 left-0 w-0 h-[2px] bg-[var(--color-accent)] group-hover:w-full transition-all duration-400 ease-out" />
 
               <div className="flex items-center justify-between gap-4 mb-4">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2.5">
                   <span className="font-display font-bold text-xs text-[var(--color-accent)] tracking-widest">
                     02
                   </span>
-                  <span className="w-1 h-1 rounded-full bg-[var(--color-accent)]" />
+                  <span className="text-[var(--color-accent)]">&middot;</span>
                   <span className="text-micro text-[var(--color-text-muted)] font-semibold tracking-wider">
                     VOICE &amp; WHATSAPP
                   </span>
                 </div>
-                <div className="w-8 h-8 rounded-xs border border-[#E8E6E1] group-hover:border-[var(--color-accent)] group-hover:bg-[var(--color-accent)] flex items-center justify-center transition-all duration-300">
+                <div className="w-8 h-8 rounded-xs border border-[#E2DFD8] group-hover:border-[var(--color-accent)] group-hover:bg-[var(--color-accent)] flex items-center justify-center transition-all duration-300">
                   <ArrowUpRight className="w-3.5 h-3.5 text-[#555555] group-hover:text-white transition-colors" />
                 </div>
               </div>
@@ -178,22 +186,22 @@ export default function Contact() {
 
             {/* Card 03: Studio Base & Global Reach */}
             <motion.div
-              className="p-8 sm:p-10 bg-white border border-[#E8E6E1] relative overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.02)]"
+              className="p-7 sm:p-9 bg-white border border-[#E2DFD8] relative overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.03)]"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.5 }}
             >
               <div className="flex items-center justify-between gap-4 mb-4">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2.5">
                   <span className="font-display font-bold text-xs text-[var(--color-accent)] tracking-widest">
                     03
                   </span>
-                  <span className="w-1 h-1 rounded-full bg-[var(--color-accent)]" />
+                  <span className="text-[var(--color-accent)]">&middot;</span>
                   <span className="text-micro text-[var(--color-text-muted)] font-semibold tracking-wider">
                     STUDIO BASE &amp; REACH
                   </span>
                 </div>
-                <div className="w-8 h-8 rounded-xs border border-[#E8E6E1] flex items-center justify-center">
+                <div className="w-8 h-8 rounded-xs border border-[#E2DFD8] flex items-center justify-center">
                   <MapPin className="w-3.5 h-3.5 text-[var(--color-accent)]" />
                 </div>
               </div>
@@ -209,6 +217,7 @@ export default function Contact() {
             </motion.div>
 
           </div>
+
         </div>
       </div>
     </section>
