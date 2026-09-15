@@ -1,40 +1,53 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import Lenis from '@studio-freight/lenis';
+import { useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function SmoothScroll({ children }) {
-  const lenisRef = useRef(null);
-
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 2,
+    /* Ensure ScrollTrigger is synchronized with native high-performance scroll */
+    ScrollTrigger.config({
+      autoRefreshEvents: 'visibilitychange,DOMContentLoaded,load,resize',
     });
 
-    lenisRef.current = lenis;
+    /* Handle smooth scrolling for all anchor links */
+    const handleAnchorClick = (e) => {
+      const target = e.target.closest('a[href^="#"]');
+      if (!target) return;
+      const id = target.getAttribute('href');
+      if (!id || id === '#') return;
 
-    /* Connect Lenis to GSAP ScrollTrigger */
-    lenis.on('scroll', ScrollTrigger.update);
+      const element = document.querySelector(id);
+      if (element) {
+        e.preventDefault();
+        const navbarHeight = 80;
+        const targetPosition =
+          element.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+        window.scrollTo({
+          top: targetPosition,
+          behavior: 'smooth',
+        });
+      }
+    };
 
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000);
-    });
+    document.addEventListener('click', handleAnchorClick);
 
-    gsap.ticker.lagSmoothing(0);
+    /* Refresh ScrollTrigger on window resize and after load */
+    const onResize = () => ScrollTrigger.refresh();
+    window.addEventListener('resize', onResize);
+
+    /* Initial refresh */
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 400);
 
     return () => {
-      lenis.destroy();
-      gsap.ticker.remove(lenis.raf);
+      document.removeEventListener('click', handleAnchorClick);
+      window.removeEventListener('resize', onResize);
+      clearTimeout(timer);
     };
   }, []);
 

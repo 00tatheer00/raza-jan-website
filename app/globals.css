@@ -1574,43 +1574,46 @@ a.footer__contact-item:hover {
 }
 
 /* ============================================================
-   CUSTOM CURSOR — Premium circle follower
+   CUSTOM CURSOR — Luxury Follower Ring (Visible System Cursor)
    ============================================================ */
 body {
-  cursor: none;
+  cursor: default;
 }
 
-a, button, input, [role="button"] {
-  cursor: none;
-}
-
-.custom-cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 8px;
-  height: 8px;
-  background: var(--color-black);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 10001;
-  transform: translate(-50%, -50%);
-  mix-blend-mode: difference;
+a, button, [role="button"], input[type="submit"] {
+  cursor: pointer;
 }
 
 .custom-cursor-follower {
   position: fixed;
   top: 0;
   left: 0;
-  width: 40px;
-  height: 40px;
-  border: 1.5px solid var(--color-black);
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid rgba(217, 119, 6, 0.7);
+  background: rgba(217, 119, 6, 0.04);
   border-radius: 50%;
   pointer-events: none;
-  z-index: 10000;
-  opacity: 0.35;
-  mix-blend-mode: difference;
-  transform: translate(-50%, -50%);
+  z-index: 99999;
+  opacity: 0;
+  transform: translate3d(-100px, -100px, 0) translate(-50%, -50%);
+  transition: width 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+              height 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+              border-color 0.25s ease,
+              background-color 0.25s ease,
+              opacity 0.2s ease;
+  will-change: transform;
+}
+
+.custom-cursor-follower.is-active {
+  opacity: 1;
+}
+
+.custom-cursor-follower.is-hovered {
+  width: 54px;
+  height: 54px;
+  border-color: rgba(217, 119, 6, 0.95);
+  background-color: rgba(217, 119, 6, 0.12);
 }
 
 /* ============================================================
