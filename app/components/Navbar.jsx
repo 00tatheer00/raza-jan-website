@@ -8,21 +8,35 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+      setScrolled(window.scrollY > 40);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  /* Lock body scroll when mobile menu is open */
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileOpen]);
+
+  const closeMobile = () => setMobileOpen(false);
+
   return (
     <nav className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
       <div className="navbar__inner">
-        {/* Logo — matches ARCHIDEX style serif logo */}
+        {/* Logo */}
         <a href="#" className="navbar__logo">
           <span>SRJ Studio</span>
         </a>
 
-        {/* Desktop Menu — 3 groups, 2-row stacked layout like reference */}
+        {/* Desktop Menu — 3 groups, 2-row stacked layout */}
         <div className="navbar__menu">
           <div className="navbar__menu-group">
             <a href="#about" className="navbar__menu-item">About</a>
@@ -61,12 +75,28 @@ export default function Navbar() {
       {/* Mobile Menu Overlay */}
       {mobileOpen && (
         <div className="navbar__mobile-overlay">
-          <a href="#about" onClick={() => setMobileOpen(false)}>About</a>
-          <a href="#services" onClick={() => setMobileOpen(false)}>Services</a>
-          <a href="#projects" onClick={() => setMobileOpen(false)}>Projects</a>
-          <a href="#insights" onClick={() => setMobileOpen(false)}>Insights</a>
-          <a href="#team" onClick={() => setMobileOpen(false)}>Process</a>
-          <a href="#contact" onClick={() => setMobileOpen(false)}>Contact Us</a>
+          <div className="navbar__mobile-links">
+            <a href="#about" onClick={closeMobile}>About</a>
+            <a href="#services" onClick={closeMobile}>Services</a>
+            <a href="#projects" onClick={closeMobile}>Projects</a>
+            <a href="#team" onClick={closeMobile}>Process</a>
+            <a href="#insights" onClick={closeMobile}>Insights</a>
+            <a href="#contact" onClick={closeMobile}>Contact</a>
+          </div>
+
+          <div className="navbar__mobile-contact">
+            <a
+              href="https://wa.me/923465564074"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-pill"
+              onClick={closeMobile}
+            >
+              <span>WhatsApp Direct</span>
+              <span className="btn-arrow">→</span>
+            </a>
+            <p className="navbar__mobile-city">Islamabad, Pakistan · Global Practice</p>
+          </div>
         </div>
       )}
     </nav>
