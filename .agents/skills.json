@@ -1,9 +1,7 @@
 {
-  "$schema": "https://raw.githubusercontent.com/google-deepmind/antigravity/main/schemas/skills.json",
   "entries": [
     {
-      "path": ".agents/skills",
-      "description": "Local workspace skills for UI/UX audits, architectural guidelines, and project procedures"
+      "path": ".agents/skills"
     }
   ]
 }
