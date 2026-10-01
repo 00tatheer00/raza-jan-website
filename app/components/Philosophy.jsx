@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import quotesData from '@/data/quotes.json';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -48,8 +49,8 @@ const projects = [
     beds: 4,
     baths: 3,
     sqft: 3200,
-    priceFrom: '$4,000',
-    priceTo: '5,800',
+    priceFrom: '$2,800',
+    priceTo: '4,000',
   },
   {
     id: 5,
@@ -69,6 +70,29 @@ export default function Philosophy() {
   const statementRef = useRef(null);
   const carouselRef = useRef(null);
   const subTextRef = useRef(null);
+
+  /* Quotes switching & pause state */
+  const [isPaused, setIsPaused] = useState(false);
+  const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
+  const [isFading, setIsFading] = useState(false);
+
+  useEffect(() => {
+    if (isPaused) return;
+
+    const interval = setInterval(() => {
+      setIsFading(true);
+      setTimeout(() => {
+        setCurrentQuoteIndex((prev) => (prev + 1) % quotesData.length);
+        setIsFading(false);
+      }, 350);
+    }, 5500);
+
+    return () => clearInterval(interval);
+  }, [isPaused]);
+
+  const togglePause = () => {
+    setIsPaused((prev) => !prev);
+  };
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -119,7 +143,7 @@ export default function Philosophy() {
           stagger: 0.12,
           scrollTrigger: {
             trigger: carouselRef.current,
-            start: 'top 85%',
+            start: 'top 80%',
             toggleActions: 'play none none none',
           },
         }
@@ -148,21 +172,36 @@ export default function Philosophy() {
           ))}
         </div>
 
-        {/* Sub-text row with description + All Portfolio button */}
+        {/* Sub-text row with rotating quotes + Pause/Play toggle + All Portfolio button */}
         <div className="philosophy__sub" ref={subTextRef}>
           <div className="philosophy__controls">
-            <button className="philosophy__pause" aria-label="Pause carousel">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <rect x="3" y="2" width="3" height="12" fill="currentColor"/>
-                <rect x="10" y="2" width="3" height="12" fill="currentColor"/>
-              </svg>
+            <button
+              type="button"
+              className={`philosophy__pause ${isPaused ? 'philosophy__pause--paused' : ''}`}
+              onClick={togglePause}
+              aria-label={isPaused ? 'Resume quotes rotation' : 'Pause quotes rotation'}
+              title={isPaused ? 'Play' : 'Pause'}
+            >
+              {isPaused ? (
+                /* Play Icon */
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M4.5 3.2L13 8L4.5 12.8V3.2Z" />
+                </svg>
+              ) : (
+                /* Pause Icon */
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <rect x="3.5" y="2.5" width="3" height="11" rx="0.5" />
+                  <rect x="9.5" y="2.5" width="3" height="11" rx="0.5" />
+                </svg>
+              )}
             </button>
           </div>
 
-          <p className="philosophy__subtext">
-            The art of the table is anchored in the minerality
-            of the landscape, the household linen is imbued
-            with salt and the breath of the sea
+          <p
+            className={`philosophy__subtext ${isFading ? 'philosophy__subtext--fading' : ''}`}
+            aria-live="polite"
+          >
+            {quotesData[currentQuoteIndex]}
           </p>
 
           <a href="#projects" className="btn-pill">

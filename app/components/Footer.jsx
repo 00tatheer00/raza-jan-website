@@ -95,7 +95,7 @@ export default function Footer() {
 
       {/* Bottom bar */}
       <div className="footer__bottom">
-        <div className="footer__bottom-inner container">
+        <div className="footer__bottom-inner">
           <span className="footer__logo">SRJ STUDIO</span>
           <span className="footer__terms">Terms and conditions</span>
           <span className="footer__copy">&copy; 2026. All Rights Reserved.</span>

@@ -12,6 +12,8 @@ const services = [
     title: 'Architectural Design',
     titleItalic: 'and Planning',
     desc: 'From initial concept to detailed blueprints, we craft comprehensive architectural plans that balance aesthetics with structural integrity.',
+    scope: 'Concept Sketches • Site Feasibility • Masterplanning • Construction Docs',
+    tags: ['AutoCAD', 'SketchUp', 'Parametric BIM'],
     image: '/images/project-facade.jpg',
   },
   {
@@ -19,6 +21,8 @@ const services = [
     title: 'Interior Design & Styling',
     titleItalic: 'Services',
     desc: 'Creating harmonious interiors that reflect personality while maximizing spatial potential through material selection and lighting design.',
+    scope: 'Material Sourcing • Lighting Architecture • Turnkey Monograph Handover',
+    tags: ['Custom Millwork', 'Acoustic Tuning', 'FF&E Curation'],
     image: '/images/project-interior.jpg',
   },
   {
@@ -26,6 +30,8 @@ const services = [
     title: '3D Visualization and',
     titleItalic: 'Rendering',
     desc: 'Photorealistic 3D renders and walkthroughs that bring architectural concepts to life before construction begins.',
+    scope: '8K Stills • Cinematic Anamorphic Reels • Interactive Virtual Walkthroughs',
+    tags: ['3ds Max + Corona', 'Lumion 3D', 'Photometric Studies'],
     image: '/images/project-villa.jpg',
   },
   {
@@ -33,6 +39,8 @@ const services = [
     title: 'Turnkey Execution and',
     titleItalic: 'Co-Ordination',
     desc: 'End-to-end project management from procurement to handover, ensuring quality control at every construction milestone.',
+    scope: 'Spatial Calibration • Contractor Coordination • Turnkey Delivery',
+    tags: ['Site Supervision', 'QA/QC Compliance', 'Turnkey Handover'],
     image: '/images/project-1.jpg',
   },
 ];
@@ -42,17 +50,17 @@ export default function Services() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      /* Section header fade in */
+      /* Section header bar fade */
       gsap.fromTo(
         '.services__header',
-        { opacity: 0, y: 30 },
+        { opacity: 0, y: 25 },
         {
           opacity: 1,
           y: 0,
           duration: 0.7,
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: 'top 80%',
+            start: 'top 85%',
             toggleActions: 'play none none none',
           },
         }
@@ -62,12 +70,12 @@ export default function Services() {
       const rows = sectionRef.current.querySelectorAll('.services__row');
       gsap.fromTo(
         rows,
-        { opacity: 0, y: 50 },
+        { opacity: 0, y: 45 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.7,
-          stagger: 0.15,
+          duration: 0.75,
+          stagger: 0.14,
           scrollTrigger: {
             trigger: rows[0],
             start: 'top 85%',
@@ -81,52 +89,82 @@ export default function Services() {
   }, []);
 
   return (
-    <section className="services section--dark" ref={sectionRef} id="services">
-      {/* Section Header */}
+    <section className="services" ref={sectionRef} id="services">
+      {/* Ambient Atmospheric Glows from Stitch */}
+      <div className="services__glow services__glow--top" aria-hidden="true" />
+      <div className="services__glow services__glow--bottom" aria-hidden="true" />
+
+      {/* Section Divider Bar (Full Screen Width) */}
       <div className="services__header">
-        <div className="services__header-inner container">
+        <div className="services__header-inner">
           <div className="services__header-left">
-            <span className="services__dot"></span>
-            <h2 className="text-uppercase">Our Services</h2>
+            <span className="services__dot" />
+            <h3 className="services__header-title">Our Services</h3>
           </div>
-          <a href="#" className="services__learn-more">
+          <a href="#process" className="services__learn-more">
             Learn more
           </a>
         </div>
       </div>
 
-      {/* Service Rows */}
+      {/* The 4 Core Service Rows (Full Screen Width) */}
       <div className="services__list">
         {services.map((service) => (
-          <div className="services__row" key={service.num}>
-            <div className="services__row-inner container">
+          <article className="services__row" key={service.num}>
+            <div className="services__row-inner">
               {/* Number */}
               <span className="services__num">{service.num}.</span>
 
-              {/* Capsule/Oval Image */}
+              {/* Capsule/Oval Image Frame */}
               <div className="services__capsule">
                 <img src={service.image} alt={service.title} loading="lazy" />
+                <div className="services__capsule-overlay" />
               </div>
 
-              {/* Title */}
+              {/* Title Block & Software Tags */}
               <div className="services__title-block">
-                <h3 className="services__title">
+                <h4 className="services__title">
                   {service.title}{' '}
-                  <em className="text-italic">{service.titleItalic}</em>
-                </h3>
+                  <em className="services__title-italic">{service.titleItalic}</em>
+                </h4>
+                <div className="services__tags">
+                  {service.tags.map((tag, idx) => (
+                    <span className="services__tag" key={idx}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
 
-              {/* Description */}
-              <p className="services__desc">{service.desc}</p>
+              {/* Description & Detailed Scope */}
+              <div className="services__desc-block">
+                <p className="services__desc">{service.desc}</p>
+                <span className="services__scope">{service.scope}</span>
+              </div>
 
-              {/* Arrow Link */}
-              <a href="#" className="services__arrow" aria-label={`Learn more about ${service.title}`}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path d="M7 17L17 7M17 7H9M17 7V15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </a>
+              {/* Directional Diagonal Vector Arrow */}
+              <div className="services__arrow-wrap">
+                <a
+                  href="#contact"
+                  className="services__arrow-btn"
+                  aria-label={`Inquire about ${service.title}`}
+                >
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M4 12L12 4M12 4H5M12 4V11" />
+                  </svg>
+                </a>
+              </div>
             </div>
-          </div>
+          </article>
         ))}
       </div>
     </section>

@@ -11,6 +11,7 @@ import Stats from './components/Stats';
 import Team from './components/Team';
 import Process from './components/Process';
 import Insights from './components/Insights';
+import ClientInquiries from './components/ClientInquiries';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 import CustomCursor from './components/CustomCursor';
@@ -45,6 +46,7 @@ export default function Home() {
           <Team />
           <Process />
           <Insights />
+          <ClientInquiries />
           <Footer />
           <ScrollToTop />
         </main>
