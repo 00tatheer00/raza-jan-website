@@ -6,12 +6,37 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const skills = [
-  { name: '3ds Max + Corona', percent: 99 },
-  { name: 'Lumion', percent: 96 },
-  { name: 'Adobe Photoshop', percent: 75 },
-  { name: 'SketchUp', percent: 70 },
-  { name: 'AutoCAD', percent: 70 },
+const atelierStandards = [
+  {
+    category: 'Visualization & Light Simulation',
+    tool: '3ds Max + Corona Renderer',
+    role: 'Photorealistic CGI, Spectral Lighting & Material Synthesis',
+    badge: 'Atelier Benchmark',
+  },
+  {
+    category: 'Cinematic Spatial Media',
+    tool: 'Lumion Pro',
+    role: 'Ultra-HD Architectural Walkthroughs & Atmospheric Time-Lapse',
+    badge: 'Interactive Media',
+  },
+  {
+    category: 'Technical & Construction Fidelity',
+    tool: 'AutoCAD Advanced',
+    role: 'Comprehensive Structural Working Drawings & Municipal Filings',
+    badge: 'Production Standard',
+  },
+  {
+    category: 'Volumetric Form & Massing',
+    tool: 'SketchUp Pro',
+    role: 'Iterative Volumetric Studies & Daylight Orientation Analysis',
+    badge: 'Spatial Exploration',
+  },
+  {
+    category: 'Publishing & Editorial',
+    tool: 'Adobe Creative Suite',
+    role: 'Architectural Monographs, Client Presentations & Color Grading',
+    badge: 'Editorial Suite',
+  },
 ];
 
 export default function SkillBars() {
@@ -19,38 +44,18 @@ export default function SkillBars() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const bars = sectionRef.current.querySelectorAll('.skillbar__fill');
-      bars.forEach((bar, i) => {
-        const target = skills[i].percent;
-        gsap.fromTo(
-          bar,
-          { width: '0%' },
-          {
-            width: `${target}%`,
-            duration: 1.4,
-            delay: i * 0.15,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: 'top 80%',
-              toggleActions: 'play none none none',
-            },
-          }
-        );
-      });
-
-      /* Labels stagger */
       gsap.fromTo(
-        '.skillbar__row',
-        { opacity: 0, x: -20 },
+        '.atelier-tool__item',
+        { opacity: 0, y: 20 },
         {
           opacity: 1,
-          x: 0,
+          y: 0,
           duration: 0.5,
           stagger: 0.1,
+          ease: 'power3.out',
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: 'top 80%',
+            start: 'top 85%',
             toggleActions: 'play none none none',
           },
         }
@@ -61,17 +66,22 @@ export default function SkillBars() {
   }, []);
 
   return (
-    <div className="skillbars" ref={sectionRef}>
-      <h3 className="skillbars__title text-uppercase">Software Proficiency</h3>
-      <div className="skillbars__list">
-        {skills.map((skill, i) => (
-          <div className="skillbar__row" key={i}>
-            <div className="skillbar__info">
-              <span className="skillbar__name">{skill.name}</span>
-              <span className="skillbar__percent">{skill.percent}%</span>
+    <div className="atelier-tools" ref={sectionRef}>
+      <div className="atelier-tools__header">
+        <h4 className="atelier-tools__title text-uppercase">Atelier Tooling &amp; Technical Standards</h4>
+        <span className="atelier-tools__status">Bespoke Precision</span>
+      </div>
+
+      <div className="atelier-tools__list">
+        {atelierStandards.map((item, i) => (
+          <div className="atelier-tool__item" key={i}>
+            <div className="atelier-tool__top">
+              <span className="atelier-tool__category">{item.category}</span>
+              <span className="atelier-tool__badge">{item.badge}</span>
             </div>
-            <div className="skillbar__track">
-              <div className="skillbar__fill" style={{ width: '0%' }}></div>
+            <div className="atelier-tool__main">
+              <span className="atelier-tool__name">{item.tool}</span>
+              <p className="atelier-tool__role">{item.role}</p>
             </div>
           </div>
         ))}

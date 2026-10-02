@@ -16,53 +16,81 @@ export default function Preloader({ onComplete }) {
     const preloader = preloaderRef.current;
     if (!preloader) return;
 
-    /* Counter animation 0 → 100 in 1.1s */
-    const counter = { val: 0 };
-    gsap.to(counter, {
-      val: 100,
-      duration: 1.1,
-      ease: 'power2.out',
-      onUpdate: () => setCount(Math.round(counter.val)),
-    });
+    /* Check for prefers-reduced-motion */
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      preloader.style.display = 'none';
+      if (onComplete) onComplete();
+      ScrollTrigger.refresh();
+      return;
+    }
 
-    const tl = gsap.timeline({
-      onComplete: () => {
-        if (onComplete) onComplete();
-        setTimeout(() => ScrollTrigger.refresh(), 100);
-      },
-    });
+    // Safety fallback: if anything stalls animation, dismiss preloader within 2.2s
+    const fallbackTimer = setTimeout(() => {
+      if (preloader) {
+        preloader.style.opacity = '0';
+        preloader.style.pointerEvents = 'none';
+        setTimeout(() => {
+          if (preloader) preloader.style.display = 'none';
+          if (onComplete) onComplete();
+        }, 300);
+      }
+    }, 2200);
 
-    /* Text reveal */
-    tl.fromTo(
-      textRef.current,
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out' },
-      0.1
-    );
+    const ctx = gsap.context(() => {
+      /* Counter animation 0 → 100 in 1.1s */
+      const counter = { val: 0 };
+      gsap.to(counter, {
+        val: 100,
+        duration: 1.1,
+        ease: 'power2.out',
+        onUpdate: () => setCount(Math.round(counter.val)),
+      });
 
-    /* Text & counter fade out */
-    tl.to(textRef.current, { opacity: 0, y: -15, duration: 0.3 }, 1.15);
-    tl.to(counterRef.current, { opacity: 0, duration: 0.25 }, 1.15);
+      const tl = gsap.timeline({
+        onComplete: () => {
+          clearTimeout(fallbackTimer);
+          if (onComplete) onComplete();
+          setTimeout(() => ScrollTrigger.refresh(), 100);
+        },
+      });
 
-    /* Make non-blocking as soon as curtains start to part */
-    tl.add(() => {
-      if (preloader) preloader.style.pointerEvents = 'none';
-    }, 1.25);
+      /* Text reveal */
+      tl.fromTo(
+        textRef.current,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out' },
+        0.1
+      );
 
-    /* Curtain reveal — fast luxury split */
-    tl.to(
-      '.preloader__curtain-left',
-      { xPercent: -100, duration: 0.65, ease: 'power3.inOut' },
-      1.25
-    );
-    tl.to(
-      '.preloader__curtain-right',
-      { xPercent: 100, duration: 0.65, ease: 'power3.inOut' },
-      1.25
-    );
+      /* Text & counter fade out */
+      tl.to(textRef.current, { opacity: 0, y: -15, duration: 0.3 }, 1.15);
+      tl.to(counterRef.current, { opacity: 0, duration: 0.25 }, 1.15);
 
-    /* Hide and remove preloader container */
-    tl.to(preloader, { autoAlpha: 0, duration: 0.2 }, 1.8);
+      /* Make non-blocking as soon as curtains start to part */
+      tl.add(() => {
+        if (preloader) preloader.style.pointerEvents = 'none';
+      }, 1.25);
+
+      /* Curtain reveal — fast luxury split */
+      tl.to(
+        '.preloader__curtain-left',
+        { xPercent: -100, duration: 0.65, ease: 'power3.inOut' },
+        1.25
+      );
+      tl.to(
+        '.preloader__curtain-right',
+        { xPercent: 100, duration: 0.65, ease: 'power3.inOut' },
+        1.25
+      );
+
+      /* Hide and remove preloader container */
+      tl.to(preloader, { autoAlpha: 0, duration: 0.2 }, 1.8);
+    }, preloaderRef);
+
+    return () => {
+      clearTimeout(fallbackTimer);
+      ctx.revert();
+    };
   }, [onComplete]);
 
   return (

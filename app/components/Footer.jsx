@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -8,6 +8,14 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function Footer() {
   const sectionRef = useRef(null);
+  const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    if (!email) return;
+    setSubscribed(true);
+  };
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -52,21 +60,30 @@ export default function Footer() {
           {/* Column 2 — Newsletter */}
           <div className="footer__col">
             <h3 className="footer__col-title">JOIN OUR NEWSLETTER</h3>
-            <form className="footer__newsletter" onSubmit={(e) => e.preventDefault()}>
-              <div className="footer__input-group">
-                <input
-                  type="email"
-                  placeholder="Email*"
-                  className="footer__input"
-                  required
-                />
-                <button type="submit" className="footer__submit" aria-label="Subscribe">
-                  <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
-                    <path d="M4 12L12 4M12 4H5M12 4V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </button>
+            {subscribed ? (
+              <div className="footer__newsletter-success" role="status">
+                <span className="footer__newsletter-success-icon">✓</span>
+                <p>Thank you for subscribing to architectural dispatches.</p>
               </div>
-            </form>
+            ) : (
+              <form className="footer__newsletter" onSubmit={handleSubscribe}>
+                <div className="footer__input-group">
+                  <input
+                    type="email"
+                    placeholder="Email*"
+                    className="footer__input"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                  <button type="submit" className="footer__submit" aria-label="Subscribe to architectural newsletter">
+                    <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
+                      <path d="M4 12L12 4M12 4H5M12 4V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
 
           {/* Column 3 — Quick Links */}

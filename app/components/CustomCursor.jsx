@@ -47,7 +47,7 @@ export default function CustomCursor() {
     /* Attach hover effects to interactive elements */
     const attachHover = () => {
       const targets = document.querySelectorAll(
-        'a, button, .btn-pill, .philosophy__card, .services__row, .team__card, .insights__featured, .testimonials__dot'
+        'a, button, .btn-pill, .showcase__card, .showcase__filter-btn, .services__row, .insights__featured, .reviews__dot-btn, .process__step'
       );
       targets.forEach((el) => {
         el.removeEventListener('mouseenter', onHoverEnter);

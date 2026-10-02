@@ -215,7 +215,7 @@ export default function Navbar() {
 
       <div className="navbar__inner">
         {/* Logo */}
-        <a href="#" className="navbar__logo">
+        <a href="#home" className="navbar__logo">
           <span>SRJ Studio</span>
         </a>
 
@@ -225,78 +225,91 @@ export default function Navbar() {
           <a href="#services" className="navbar__menu-item">Services</a>
           <a href="#projects" className="navbar__menu-item">Projects</a>
           <a href="#insights" className="navbar__menu-item">Insights</a>
-          <a href="#team" className="navbar__menu-item">Process</a>
+          <a href="#process" className="navbar__menu-item">Process</a>
           <a href="#contact" className="navbar__menu-item">Contact Us</a>
         </div>
 
-        {/* Language Switcher — Protected from Google Translate mutation */}
-        <div className="navbar__lang notranslate" translate="no" ref={dropdownRef}>
-          <button
-            type="button"
-            className="navbar__lang-btn notranslate"
-            translate="no"
-            onClick={() => setDropdownOpen(!dropdownOpen)}
-            aria-expanded={dropdownOpen}
-            aria-haspopup="true"
-            aria-label={`Select language, currently ${currentLang.toUpperCase()}`}
-          >
-            <span className="navbar__lang-code-text notranslate" translate="no">
-              {currentLang.toUpperCase()}
-            </span>
-            <svg
-              className={`navbar__lang-arrow ${dropdownOpen ? 'navbar__lang-arrow--open' : ''}`}
-              width="10"
-              height="6"
-              viewBox="0 0 10 6"
-              fill="none"
+        {/* Right Actions: Language Switcher + Primary Inquire CTA */}
+        <div className="navbar__actions">
+          {/* Language Switcher — Protected from Google Translate mutation */}
+          <div className="navbar__lang notranslate" translate="no" ref={dropdownRef}>
+            <button
+              type="button"
+              className="navbar__lang-btn notranslate"
+              translate="no"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              aria-expanded={dropdownOpen}
+              aria-haspopup="true"
+              aria-label={`Select language, currently ${currentLang.toUpperCase()}`}
             >
-              <path
-                d="M1 1L5 5L9 1"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
+              <span className="navbar__lang-code-text notranslate" translate="no">
+                {currentLang.toUpperCase()}
+              </span>
+              <svg
+                className={`navbar__lang-arrow ${dropdownOpen ? 'navbar__lang-arrow--open' : ''}`}
+                width="10"
+                height="6"
+                viewBox="0 0 10 6"
+                fill="none"
+              >
+                <path
+                  d="M1 1L5 5L9 1"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
 
-          {/* Luxury Dropdown Menu */}
-          {dropdownOpen && (
-            <div className="navbar__lang-dropdown notranslate" translate="no" role="menu">
-              {languages.map((lang) => {
-                const isActive = lang.code === currentLang;
-                return (
-                  <button
-                    key={lang.code}
-                    type="button"
-                    role="menuitem"
-                    className={`navbar__lang-item notranslate ${isActive ? 'navbar__lang-item--active' : ''}`}
-                    translate="no"
-                    onClick={() => changeLanguage(lang.code)}
-                  >
-                    <div className="navbar__lang-item-left notranslate" translate="no">
-                      <span className="navbar__lang-flag">{lang.flag}</span>
-                      <span className="navbar__lang-native notranslate" translate="no">{lang.native}</span>
-                      <span className="navbar__lang-code notranslate" translate="no">{lang.code.toUpperCase()}</span>
-                    </div>
-                    {isActive && (
-                      <span className="navbar__lang-check">
-                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-                          <path
-                            d="M3 8.5L6.5 12L13 4"
-                            stroke="currentColor"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          )}
+            {/* Luxury Dropdown Menu */}
+            {dropdownOpen && (
+              <div className="navbar__lang-dropdown notranslate" translate="no" role="menu">
+                {languages.map((lang) => {
+                  const isActive = lang.code === currentLang;
+                  return (
+                    <button
+                      key={lang.code}
+                      type="button"
+                      role="menuitem"
+                      className={`navbar__lang-item notranslate ${isActive ? 'navbar__lang-item--active' : ''}`}
+                      translate="no"
+                      onClick={() => changeLanguage(lang.code)}
+                    >
+                      <div className="navbar__lang-item-left notranslate" translate="no">
+                        <span className="navbar__lang-flag">{lang.flag}</span>
+                        <span className="navbar__lang-native notranslate" translate="no">{lang.native}</span>
+                        <span className="navbar__lang-code notranslate" translate="no">{lang.code.toUpperCase()}</span>
+                      </div>
+                      {isActive && (
+                        <span className="navbar__lang-check">
+                          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                            <path
+                              d="M3 8.5L6.5 12L13 4"
+                              stroke="currentColor"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Primary Inquire CTA Pill Button */}
+          <a href="#inquire" className="navbar__inquire-btn" aria-label="Direct Commission & Inquiries">
+            <span>Inquire</span>
+            <span className="navbar__inquire-arrow">
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+                <path d="M4 12L12 4M12 4H5M12 4V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </span>
+          </a>
         </div>
 
         {/* Mobile Hamburger */}
@@ -318,7 +331,7 @@ export default function Navbar() {
             <a href="#about" onClick={closeMobile}>About</a>
             <a href="#services" onClick={closeMobile}>Services</a>
             <a href="#projects" onClick={closeMobile}>Projects</a>
-            <a href="#team" onClick={closeMobile}>Process</a>
+            <a href="#process" onClick={closeMobile}>Process</a>
             <a href="#insights" onClick={closeMobile}>Insights</a>
             <a href="#contact" onClick={closeMobile}>Contact</a>
           </div>

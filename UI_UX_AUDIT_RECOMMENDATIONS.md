@@ -135,15 +135,15 @@ This document serves as a centralized reference catalog of all visual hierarchy,
 
 ---
 
-## 5. Priority Action Roadmap
+## 5. Priority Action Roadmap & Implementation Status
 
-| Priority | Category | Task | Impact |
-|:---|:---|:---|:---|
-| **P0 (Critical)** | Navigation | Fix broken `#process` ID in `Process.jsx` and link in `Navbar.jsx` & `Services.jsx` | Restores core site navigation |
-| **P0 (Critical)** | Accessibility | Increase `.testimonials__dot` touch target to 44 × 44px | Eliminates mobile tap failures |
-| **P1 (High)** | Conversion | Add "Inquire" pill button to Navbar pointing to `#inquire` | Drives lead generation |
-| **P1 (High)** | Accessibility | Boost `.footer__terms` / `.footer__copy` text contrast to `#a1a1aa` | Achieves WCAG 2.1 AA compliance |
-| **P1 (High)** | Content | Fix cutoff team heading and remove gear "Settings" icon | Eliminates amateur interface smells |
-| **P2 (Medium)** | Polish | Replace empty `href="#"` links with functional modals or inquiry links | Eliminates dead-end user loops |
-| **P2 (Medium)** | Architecture | Replace `SkillBars` percentages with curated capability tags | Aligns with luxury atelier standard |
-| **P2 (Medium)** | Feedback | Add success state to Footer newsletter subscription form | Eliminates silent form submission |
+| Priority | Category | Task | Impact | Status |
+|:---|:---|:---|:---|:---|
+| **P0 (Critical)** | Navigation | Fix broken `#process` ID in `Process.jsx` and link in `Navbar.jsx` & `Services.jsx` | Restores core site navigation | **✓ Resolved** |
+| **P0 (Critical)** | Accessibility | Increase `.testimonials__dot` touch target to 44 × 44px | Eliminates mobile tap failures | **✓ Resolved** |
+| **P1 (High)** | Conversion | Add "Inquire" pill button to Navbar pointing to `#inquire` | Drives lead generation | **✓ Resolved** |
+| **P1 (High)** | Accessibility | Boost `.footer__terms` / `.footer__copy` text contrast to `#a1a1aa` | Achieves WCAG 2.1 AA compliance | **✓ Resolved** |
+| **P1 (High)** | Content | Fix cutoff team heading and remove gear "Settings" icon | Eliminates amateur interface smells | **✓ Resolved** |
+| **P2 (Medium)** | Polish | Replace empty `href="#"` links with functional modals or inquiry links | Eliminates dead-end user loops | **✓ Resolved** |
+| **P2 (Medium)** | Architecture | Replace `SkillBars` percentages with curated capability tags | Aligns with luxury atelier standard | **✓ Resolved** |
+| **P2 (Medium)** | Feedback | Add success state to Footer newsletter subscription form | Eliminates silent form submission | **✓ Resolved** |

@@ -1,119 +1,124 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const testimonials = [
+const reviewsData = [
   {
     quote:
       'Working with SRJ Studio was transformative. Their architectural vision combined with meticulous attention to detail exceeded every expectation. The design process was seamless, and the final result is nothing short of extraordinary.',
     name: 'Ahmed Hassan',
     role: 'CEO, Horizon Developers · Islamabad',
-    image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=700&q=80',
   },
   {
     quote:
       'Syed Raza Jan brought a rare level of sophistication to our luxury villa project in Dubai. The spatial hierarchy, light study, and 3D visualization allowed us to experience the space before breaking ground.',
     name: 'Sarah Al-Mansoor',
     role: 'Private Client · Palm Jumeirah, Dubai',
-    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=700&q=80',
   },
   {
     quote:
       'The technical mastery from concept development to structural coordination is world-class. Raza Jan’s turnkey execution ensured zero deviations from the approved architectural rendering.',
     name: 'Engr. Tariq Mehmood',
     role: 'Managing Director, Apex Buildcon',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=700&q=80',
   },
 ];
 
 export default function Testimonials() {
   const [current, setCurrent] = useState(0);
+  const currentRef = useRef(0);
+  const isPausedRef = useRef(false);
   const sectionRef = useRef(null);
-  const contentRef = useRef(null);
+  const quoteRef = useRef(null);
+  const authorRef = useRef(null);
 
+  // Sync ref with state
+  currentRef.current = current;
+
+  // Smooth transition between reviews
+  const goToReview = useCallback((nextIndex) => {
+    if (nextIndex === currentRef.current) return;
+
+    if (quoteRef.current && authorRef.current) {
+      gsap.to([quoteRef.current, authorRef.current], {
+        opacity: 0,
+        y: -10,
+        duration: 0.25,
+        ease: 'power2.in',
+        onComplete: () => {
+          setCurrent(nextIndex);
+          gsap.fromTo(
+            [quoteRef.current, authorRef.current],
+            { opacity: 0, y: 12 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.35,
+              stagger: 0.05,
+              ease: 'power2.out',
+            }
+          );
+        },
+      });
+    } else {
+      setCurrent(nextIndex);
+    }
+  }, []);
+
+  // Entrance animations on scroll
   useEffect(() => {
     const ctx = gsap.context(() => {
-      /* Quote marks fade in */
+      // Header entrance animation
       gsap.fromTo(
-        '.testimonials__quote-mark',
-        { opacity: 0, scale: 0.8 },
-        {
-          opacity: 0.15,
-          scale: 1,
-          duration: 0.8,
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 75%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
-
-      /* Quote text line-by-line reveal */
-      gsap.fromTo(
-        '.testimonials__text',
-        { opacity: 0, y: 30 },
+        '.reviews__header',
+        { opacity: 0, y: 24 },
         {
           opacity: 1,
           y: 0,
           duration: 0.8,
+          ease: 'power3.out',
           scrollTrigger: {
-            trigger: '.testimonials__text',
+            trigger: sectionRef.current,
             start: 'top 80%',
             toggleActions: 'play none none none',
           },
         }
       );
 
-      /* Client info fade up */
+      // Quote entrance animation
       gsap.fromTo(
-        '.testimonials__client',
+        ['.reviews__quote-icon', '.reviews__quote-text'],
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.9,
+          stagger: 0.12,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: '.reviews__quote-wrap',
+            start: 'top 82%',
+            toggleActions: 'play none none none',
+          },
+        }
+      );
+
+      // Footer entrance animation
+      gsap.fromTo(
+        '.reviews__footer',
         { opacity: 0, y: 20 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.6,
-          delay: 0.3,
-          scrollTrigger: {
-            trigger: '.testimonials__client',
-            start: 'top 90%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
-
-      /* Portrait image clip-path reveal from right */
-      gsap.fromTo(
-        '.testimonials__portrait',
-        { clipPath: 'inset(0 100% 0 0)' },
-        {
-          clipPath: 'inset(0 0% 0 0)',
-          duration: 1.2,
-          ease: 'power3.inOut',
-          scrollTrigger: {
-            trigger: '.testimonials__portrait',
-            start: 'top 75%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
-
-      /* Section title horizontal slide from left */
-      gsap.fromTo(
-        '.testimonials__section-title',
-        { x: -100, opacity: 0 },
-        {
-          x: 0,
-          opacity: 1,
-          duration: 1,
+          duration: 0.7,
+          delay: 0.2,
           ease: 'power3.out',
           scrollTrigger: {
-            trigger: '.testimonials__section-title',
-            start: 'top 90%',
+            trigger: '.reviews__footer',
+            start: 'top 92%',
             toggleActions: 'play none none none',
           },
         }
@@ -123,85 +128,100 @@ export default function Testimonials() {
     return () => ctx.revert();
   }, []);
 
+  // Automatic transition every 5 seconds (pauses while hovering or interacting)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!isPausedRef.current) {
+        const next = (currentRef.current + 1) % reviewsData.length;
+        goToReview(next);
+      }
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [goToReview]);
+
   const handleSelect = (index) => {
-    if (index === current) return;
-    if (contentRef.current) {
-      gsap.to(contentRef.current, {
-        opacity: 0,
-        y: -10,
-        duration: 0.25,
-        onComplete: () => {
-          setCurrent(index);
-          gsap.fromTo(
-            contentRef.current,
-            { opacity: 0, y: 15 },
-            { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }
-          );
-        },
-      });
-    } else {
-      setCurrent(index);
-    }
+    goToReview(index);
   };
 
-  const item = testimonials[current];
+  const item = reviewsData[current];
 
   return (
-    <section className="testimonials section" ref={sectionRef}>
-      <div className="testimonials__inner">
-        {/* Left side — Quote */}
-        <div className="testimonials__left">
-          {/* Large quotation marks */}
-          <div className="testimonials__quote-mark" style={{ opacity: 0 }}>
-            <svg width="80" height="60" viewBox="0 0 80 60" fill="none">
-              <path
-                d="M0 40V20C0 8.95 8.95 0 20 0h5v12h-5c-4.42 0-8 3.58-8 8v4h13v24H0zm45 0V20C45 8.95 53.95 0 65 0h5v12h-5c-4.42 0-8 3.58-8 8v4h13v24H45z"
-                fill="currentColor"
-              />
-            </svg>
+    <section
+      className="reviews"
+      ref={sectionRef}
+      id="reviews"
+      onMouseEnter={() => {
+        isPausedRef.current = true;
+      }}
+      onMouseLeave={() => {
+        isPausedRef.current = false;
+      }}
+      onTouchStart={() => {
+        isPausedRef.current = true;
+      }}
+      onTouchEnd={() => {
+        isPausedRef.current = false;
+      }}
+    >
+      <div className="reviews__container">
+        {/* Top Header Row */}
+        <div className="reviews__header">
+          <div className="reviews__header-left">
+            <div className="reviews__badge">
+              <span className="reviews__badge-dot"></span>
+              <span className="reviews__badge-text">Client Testimonial &amp; Appraisal</span>
+            </div>
+            <h2 className="reviews__title">Words from Our Patrons</h2>
           </div>
 
-          <div ref={contentRef}>
-            <blockquote className="testimonials__text">
-              &ldquo;{item.quote}&rdquo;
-            </blockquote>
+          <div className="reviews__header-right">
+            <span className="reviews__watermark">Client Reviews</span>
+            <span className="reviews__sub-badge">Curated Endorsements</span>
+          </div>
+        </div>
 
-            <div className="testimonials__client">
-              <div className="testimonials__divider"></div>
-              <h4 className="testimonials__name">{item.name}</h4>
-              <p className="testimonials__role">{item.role}</p>
+        {/* Testimonial Quote Body */}
+        <div className="reviews__content">
+          <div className="reviews__quote-wrap">
+            <span className="reviews__quote-icon" aria-hidden="true">
+              “
+            </span>
+            <p className="reviews__quote-text" ref={quoteRef}>
+              {item.quote}
+            </p>
+          </div>
+
+          {/* Footer: Author & Interactive Carousel Controls */}
+          <div className="reviews__footer">
+            <div className="reviews__author" ref={authorRef}>
+              <div className="reviews__author-name">{item.name}</div>
+              <div className="reviews__author-role">{item.role}</div>
+            </div>
+
+            <div className="reviews__nav" role="tablist" aria-label="Client review selection">
+              {reviewsData.map((review, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  role="tab"
+                  aria-selected={idx === current}
+                  aria-label={`Testimonial from ${review.name}`}
+                  className="reviews__dot-btn"
+                  onClick={() => handleSelect(idx)}
+                >
+                  <span
+                    className={`reviews__dot-pill ${
+                      idx === current
+                        ? 'reviews__dot-pill--active'
+                        : 'reviews__dot-pill--inactive'
+                    }`}
+                  ></span>
+                </button>
+              ))}
             </div>
           </div>
-
-          {/* Navigation dots */}
-          <div className="testimonials__nav">
-            {testimonials.map((t, idx) => (
-              <button
-                key={idx}
-                className={`testimonials__dot ${idx === current ? 'testimonials__dot--active' : ''}`}
-                aria-label={`Testimonial ${idx + 1}`}
-                onClick={() => handleSelect(idx)}
-              ></button>
-            ))}
-          </div>
         </div>
-
-        {/* Right side — Portrait */}
-        <div className="testimonials__right">
-          <div className="testimonials__portrait" style={{ clipPath: 'inset(0 100% 0 0)' }}>
-            <img
-              src={item.image}
-              alt={`Client portrait — ${item.name}`}
-              loading="lazy"
-              key={item.name}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Section title — massive bottom text */}
-      <div className="testimonials__section-title" style={{ opacity: 0 }}>
-        <h2>CLIENTS REVIEWS</h2>
       </div>
     </section>
   );

@@ -194,7 +194,7 @@ export default function ClientInquiries() {
                     </div>
 
                     <div className="inquiries__field">
-                      <label htmlFor="user_phone">Phone / WhatsApp</label>
+                      <label htmlFor="user_phone">Phone / WhatsApp <span className="inquiries__optional"></span></label>
                       <input
                         type="tel"
                         id="user_phone"
@@ -225,7 +225,7 @@ export default function ClientInquiries() {
                     </div>
 
                     <div className="inquiries__field">
-                      <label htmlFor="project_location">Project Location</label>
+                      <label htmlFor="project_location">Project Location <span className="inquiries__optional">(Optional)</span></label>
                       <input
                         type="text"
                         id="project_location"

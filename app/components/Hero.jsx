@@ -59,11 +59,11 @@ export default function Hero() {
 
       <div className="hero__content">
         <div className="hero__left">
-          {/* Eyebrow Badge — "• BUILDING FUTURE HOMES" */}
+          {/* Eyebrow Badge — "• ARCHITECTURAL PRACTICE & SPATIAL DESIGN" */}
           <div className="hero__eyebrow" ref={eyebrowRef} style={{ opacity: 0 }}>
             <div className="eyebrow-badge">
               <span className="dot"></span>
-              <span>Building Future Homes</span>
+              <span>Architectural Practice &amp; Spatial Design</span>
             </div>
           </div>
 

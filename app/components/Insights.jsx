@@ -68,7 +68,7 @@ export default function Insights() {
           {/* Article list — right */}
           <div className="insights__list">
             {articles.map((article, i) => (
-              <a href="#" className="insights__article" key={i}>
+              <a href="#contact" className="insights__article" key={i} aria-label={`Read architectural insight: ${article.title}`}>
                 <div className="insights__article-content">
                   <h4 className="insights__article-title">{article.title}</h4>
                   <div className="insights__article-meta">
@@ -85,7 +85,7 @@ export default function Insights() {
               </a>
             ))}
 
-            <a href="#" className="btn-pill" style={{ marginTop: '1.5rem', alignSelf: 'flex-start' }}>
+            <a href="#contact" className="btn-pill" style={{ marginTop: '1.5rem', alignSelf: 'flex-start' }} aria-label="Request architectural monographs and publications">
               <span>See Insights</span>
               <span className="btn-arrow">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
