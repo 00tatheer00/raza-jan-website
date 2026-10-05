@@ -1,0 +1,29 @@
+[
+  {
+    "id": "review-1",
+    "name": "Ahmed Hassan",
+    "role": "CEO, Horizon Developers · Islamabad",
+    "quote": "Working with SRJ Studio was transformative. Their architectural vision combined with meticulous attention to detail exceeded every expectation. The design process was seamless, and the final result is nothing short of extraordinary.",
+    "rating": 5,
+    "display_order": 1,
+    "is_published": true
+  },
+  {
+    "id": "review-2",
+    "name": "Sarah Al-Mansoor",
+    "role": "Private Client · Palm Jumeirah, Dubai",
+    "quote": "Syed Raza Jan brought a rare level of sophistication to our luxury villa project in Dubai. The spatial hierarchy, light study, and 3D visualization allowed us to experience the space before breaking ground.",
+    "rating": 5,
+    "display_order": 2,
+    "is_published": true
+  },
+  {
+    "id": "review-3",
+    "name": "Engr. Tariq Mehmood",
+    "role": "Managing Director, Apex Buildcon",
+    "quote": "The technical mastery from concept development to structural coordination is world-class. Raza Jan’s turnkey execution ensured zero deviations from the approved architectural rendering.",
+    "rating": 5,
+    "display_order": 3,
+    "is_published": true
+  }
+]

@@ -16,8 +16,16 @@ export default function Preloader({ onComplete }) {
     const preloader = preloaderRef.current;
     if (!preloader) return;
 
+    /* Skip preloader if already viewed during this session (e.g. navigating back from /projects) */
+    if (typeof window !== 'undefined' && window.__hasLoadedSRJPreloader) {
+      if (preloader) preloader.style.display = 'none';
+      if (onComplete) onComplete();
+      return;
+    }
+
     /* Check for prefers-reduced-motion */
     if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      window.__hasLoadedSRJPreloader = true;
       preloader.style.display = 'none';
       if (onComplete) onComplete();
       ScrollTrigger.refresh();
@@ -26,6 +34,7 @@ export default function Preloader({ onComplete }) {
 
     // Safety fallback: if anything stalls animation, dismiss preloader within 2.2s
     const fallbackTimer = setTimeout(() => {
+      if (typeof window !== 'undefined') window.__hasLoadedSRJPreloader = true;
       if (preloader) {
         preloader.style.opacity = '0';
         preloader.style.pointerEvents = 'none';
@@ -49,6 +58,7 @@ export default function Preloader({ onComplete }) {
       const tl = gsap.timeline({
         onComplete: () => {
           clearTimeout(fallbackTimer);
+          if (typeof window !== 'undefined') window.__hasLoadedSRJPreloader = true;
           if (onComplete) onComplete();
           setTimeout(() => ScrollTrigger.refresh(), 100);
         },

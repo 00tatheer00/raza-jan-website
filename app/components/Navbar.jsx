@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const languages = [
   { code: 'en', label: 'English', native: 'English', flag: '🇬🇧' },
@@ -12,11 +14,85 @@ const languages = [
 ];
 
 export default function Navbar() {
+  const pathname = usePathname();
+  const router = useRouter();
+
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [currentLang, setCurrentLang] = useState('en');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  // Auto-scroll to hash when navigating between pages (e.g. from /projects to /#about)
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.hash && pathname === '/') {
+      const targetId = window.location.hash.replace('#', '');
+      const timer = setTimeout(() => {
+        const el = document.getElementById(targetId);
+        if (el) {
+          const navbarHeight = 80;
+          const targetPosition = el.getBoundingClientRect().top + window.scrollY - navbarHeight;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth',
+          });
+        }
+      }, 250);
+      return () => clearTimeout(timer);
+    }
+  }, [pathname]);
+
+  const handleNavigation = (e, href) => {
+    setMobileOpen(false);
+
+    if (!href) return;
+
+    // External link
+    if (href.startsWith('http') || href.startsWith('mailto') || href.startsWith('tel')) {
+      return;
+    }
+
+    // Home link
+    if (href === '/' || href === '#home' || href === '/#home') {
+      e.preventDefault();
+      if (pathname === '/') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.history.pushState(null, '', '/');
+      } else {
+        router.push('/');
+      }
+      return;
+    }
+
+    // Section anchor (e.g. '#about' or '/#about')
+    const isAnchor = href.startsWith('#') || href.startsWith('/#');
+    if (isAnchor) {
+      e.preventDefault();
+      const targetId = href.replace('/#', '').replace('#', '');
+
+      if (pathname === '/') {
+        const el = document.getElementById(targetId);
+        if (el) {
+          const navbarHeight = 80;
+          const targetPosition = el.getBoundingClientRect().top + window.scrollY - navbarHeight;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth',
+          });
+          window.history.pushState(null, '', `#${targetId}`);
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      } else {
+        router.push(`/#${targetId}`);
+      }
+      return;
+    }
+
+    // Standard Next.js route (e.g. '/projects')
+    e.preventDefault();
+    router.push(href);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -215,18 +291,18 @@ export default function Navbar() {
 
       <div className="navbar__inner">
         {/* Logo */}
-        <a href="#home" className="navbar__logo">
+        <Link href="/" className="navbar__logo" onClick={(e) => handleNavigation(e, '/')}>
           <span>SRJ Studio</span>
-        </a>
+        </Link>
 
         {/* Desktop Menu — Horizontal Row */}
         <div className="navbar__menu">
-          <a href="#about" className="navbar__menu-item">About</a>
-          <a href="#services" className="navbar__menu-item">Services</a>
-          <a href="#projects" className="navbar__menu-item">Projects</a>
-          <a href="#insights" className="navbar__menu-item">Insights</a>
-          <a href="#process" className="navbar__menu-item">Process</a>
-          <a href="#contact" className="navbar__menu-item">Contact Us</a>
+          <a href="/#about" onClick={(e) => handleNavigation(e, '/#about')} className="navbar__menu-item">About</a>
+          <a href="/#services" onClick={(e) => handleNavigation(e, '/#services')} className="navbar__menu-item">Services</a>
+          <Link href="/projects" onClick={(e) => handleNavigation(e, '/projects')} className="navbar__menu-item">Projects</Link>
+          <a href="/#process" onClick={(e) => handleNavigation(e, '/#process')} className="navbar__menu-item">Process</a>
+          <a href="/#insights" onClick={(e) => handleNavigation(e, '/#insights')} className="navbar__menu-item">Insights</a>
+          <a href="/#contact" onClick={(e) => handleNavigation(e, '/#contact')} className="navbar__menu-item">Contact Us</a>
         </div>
 
         {/* Right Actions: Language Switcher + Primary Inquire CTA */}
@@ -302,7 +378,12 @@ export default function Navbar() {
           </div>
 
           {/* Primary Inquire CTA Pill Button */}
-          <a href="#inquire" className="navbar__inquire-btn" aria-label="Direct Commission & Inquiries">
+          <a
+            href="/#inquire"
+            onClick={(e) => handleNavigation(e, '/#inquire')}
+            className="navbar__inquire-btn"
+            aria-label="Direct Commission & Inquiries"
+          >
             <span>Inquire</span>
             <span className="navbar__inquire-arrow">
               <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
@@ -328,12 +409,12 @@ export default function Navbar() {
       {mobileOpen && (
         <div className="navbar__mobile-overlay">
           <div className="navbar__mobile-links">
-            <a href="#about" onClick={closeMobile}>About</a>
-            <a href="#services" onClick={closeMobile}>Services</a>
-            <a href="#projects" onClick={closeMobile}>Projects</a>
-            <a href="#process" onClick={closeMobile}>Process</a>
-            <a href="#insights" onClick={closeMobile}>Insights</a>
-            <a href="#contact" onClick={closeMobile}>Contact</a>
+            <a href="/#about" onClick={(e) => handleNavigation(e, '/#about')}>About</a>
+            <a href="/#services" onClick={(e) => handleNavigation(e, '/#services')}>Services</a>
+            <Link href="/projects" onClick={(e) => handleNavigation(e, '/projects')}>Projects</Link>
+            <a href="/#process" onClick={(e) => handleNavigation(e, '/#process')}>Process</a>
+            <a href="/#insights" onClick={(e) => handleNavigation(e, '/#insights')}>Insights</a>
+            <a href="/#contact" onClick={(e) => handleNavigation(e, '/#contact')}>Contact</a>
           </div>
 
           {/* Mobile Language Selector */}

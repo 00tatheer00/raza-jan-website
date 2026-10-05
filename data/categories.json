@@ -1,0 +1,26 @@
+[
+  {
+    "id": "architecture",
+    "name": "Architecture",
+    "label": "Architecture & Villas",
+    "display_order": 1
+  },
+  {
+    "id": "interior",
+    "name": "Interior",
+    "label": "Interior Architecture",
+    "display_order": 2
+  },
+  {
+    "id": "turnkey",
+    "name": "Turnkey",
+    "label": "Turnkey Execution",
+    "display_order": 3
+  },
+  {
+    "id": "hello",
+    "name": "hello",
+    "label": "hello",
+    "display_order": 4
+  }
+]

@@ -6,7 +6,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const reviewsData = [
+const defaultReviews = [
   {
     quote:
       'Working with SRJ Studio was transformative. Their architectural vision combined with meticulous attention to detail exceeded every expectation. The design process was seamless, and the final result is nothing short of extraordinary.',
@@ -28,12 +28,28 @@ const reviewsData = [
 ];
 
 export default function Testimonials() {
+  const [reviews, setReviews] = useState(defaultReviews);
   const [current, setCurrent] = useState(0);
   const currentRef = useRef(0);
   const isPausedRef = useRef(false);
   const sectionRef = useRef(null);
   const quoteRef = useRef(null);
   const authorRef = useRef(null);
+
+  // Dynamically fetch reviews from API (Supabase / local storage)
+  useEffect(() => {
+    fetch('/api/reviews')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.reviews && data.reviews.length > 0) {
+          const published = data.reviews.filter((r) => r.is_published !== false);
+          if (published.length > 0) {
+            setReviews(published);
+          }
+        }
+      })
+      .catch((err) => console.warn('Dynamic reviews load warning:', err));
+  }, []);
 
   // Sync ref with state
   currentRef.current = current;
@@ -130,21 +146,22 @@ export default function Testimonials() {
 
   // Automatic transition every 5 seconds (pauses while hovering or interacting)
   useEffect(() => {
+    if (!reviews || reviews.length === 0) return;
     const interval = setInterval(() => {
       if (!isPausedRef.current) {
-        const next = (currentRef.current + 1) % reviewsData.length;
+        const next = (currentRef.current + 1) % reviews.length;
         goToReview(next);
       }
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [goToReview]);
+  }, [goToReview, reviews]);
 
   const handleSelect = (index) => {
     goToReview(index);
   };
 
-  const item = reviewsData[current];
+  const item = reviews[current] || reviews[0] || {};
 
   return (
     <section
@@ -200,9 +217,9 @@ export default function Testimonials() {
             </div>
 
             <div className="reviews__nav" role="tablist" aria-label="Client review selection">
-              {reviewsData.map((review, idx) => (
+              {reviews.map((review, idx) => (
                 <button
-                  key={idx}
+                  key={review.id || idx}
                   type="button"
                   role="tab"
                   aria-selected={idx === current}

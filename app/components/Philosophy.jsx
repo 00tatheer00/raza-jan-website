@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import quotesData from '@/data/quotes.json';
@@ -129,8 +130,8 @@ export default function Philosophy() {
             {quotesData[currentQuoteIndex]}
           </p>
 
-          <a href="#projects" className="btn-pill">
-            <span>Explore Project Showcase</span>
+          <Link href="/projects" className="btn-pill">
+            <span>Explore Projects</span>
             <span className="btn-arrow">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <path
@@ -142,7 +143,7 @@ export default function Philosophy() {
                 />
               </svg>
             </span>
-          </a>
+          </Link>
         </div>
       </div>
     </section>

@@ -15,10 +15,11 @@ export default function SmoothScroll({ children }) {
 
     /* Handle smooth scrolling for all anchor links */
     const handleAnchorClick = (e) => {
-      const target = e.target.closest('a[href^="#"]');
+      const target = e.target.closest('a[href^="#"], a[href^="/#"]');
       if (!target) return;
-      const id = target.getAttribute('href');
-      if (!id || id === '#') return;
+      const rawHref = target.getAttribute('href');
+      if (!rawHref || rawHref === '#' || rawHref === '/#') return;
+      const id = rawHref.replace('/#', '#');
 
       const element = document.querySelector(id);
       if (element) {
@@ -30,6 +31,7 @@ export default function SmoothScroll({ children }) {
           top: targetPosition,
           behavior: 'smooth',
         });
+        window.history.pushState(null, '', id);
       }
     };
 

@@ -90,10 +90,10 @@ export default function Footer() {
           <div className="footer__col">
             <h3 className="footer__col-title">QUICK LINKS</h3>
             <nav className="footer__links">
-              <a href="#about">Company</a>
-              <a href="#projects">Work</a>
-              <a href="#services">Services</a>
-              <a href="#contact">Career</a>
+              <a href="/#about">Company</a>
+              <a href="/projects">Work</a>
+              <a href="/#services">Services</a>
+              <a href="/#contact">Contact</a>
             </nav>
           </div>
 

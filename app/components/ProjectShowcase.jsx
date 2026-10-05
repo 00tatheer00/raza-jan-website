@@ -1,11 +1,14 @@
 'use client';
 
 import { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import Link from 'next/link';
+import { createClient } from '@/lib/supabase/client';
 
 const projectsData = [
   {
     id: 1,
     title: 'Modern Escape Villa',
+    slug: 'modern-escape-villa',
     category: 'Architecture',
     discipline: 'Architecture & Landscape',
     location: 'Islamabad · Pakistan',
@@ -17,6 +20,7 @@ const projectsData = [
   {
     id: 2,
     title: 'Travertine Timber Atelier',
+    slug: 'travertine-timber-atelier',
     category: 'Interior',
     discipline: 'Interior Architecture & Styling',
     location: 'Lahore · Pakistan',
@@ -28,6 +32,7 @@ const projectsData = [
   {
     id: 3,
     title: 'Cantilever Concrete Villa',
+    slug: 'cantilever-concrete-villa',
     category: 'Architecture',
     discipline: 'Brutalist Residence & Planning',
     location: 'Islamabad · Pakistan',
@@ -39,6 +44,7 @@ const projectsData = [
   {
     id: 4,
     title: 'Elegant Soft Makeover',
+    slug: 'elegant-soft-makeover',
     category: 'Turnkey',
     discipline: 'Turnkey Execution & Supervision',
     location: 'Islamabad · Pakistan',
@@ -50,6 +56,7 @@ const projectsData = [
   {
     id: 5,
     title: 'Horizon Sanctuary House',
+    slug: 'horizon-sanctuary-house',
     category: 'Architecture',
     discipline: 'Sustainable & Biophilic Architecture',
     location: 'Murree Hills · Pakistan',
@@ -60,7 +67,8 @@ const projectsData = [
   },
 ];
 
-const categories = [
+
+const defaultCategories = [
   { id: 'all', label: 'All Projects' },
   { id: 'Architecture', label: 'Architecture & Villas' },
   { id: 'Interior', label: 'Interior Architecture' },
@@ -68,6 +76,8 @@ const categories = [
 ];
 
 export default function ProjectShowcase() {
+  const [projects, setProjects] = useState(projectsData);
+  const [categories, setCategories] = useState(defaultCategories);
   const [activeCategory, setActiveCategory] = useState('all');
   const [gliderPos, setGliderPos] = useState({ left: 0, top: 0, width: 0, height: 0, ready: false });
 
@@ -79,10 +89,61 @@ export default function ProjectShowcase() {
   const ringCircleRef = useRef(null);
   const prevPositionsRef = useRef(new Map());
 
+  // Fetch live categories from API
+  useEffect(() => {
+    async function loadCategories() {
+      try {
+        const res = await fetch('/api/categories');
+        const data = await res.json();
+        if (data?.categories && data.categories.length > 0) {
+          const mapped = [
+            { id: 'all', label: 'All Projects' },
+            ...data.categories.map((c) => ({
+              id: c.name,
+              label: c.label || c.name,
+            })),
+          ];
+          setCategories(mapped);
+        }
+      } catch (e) {
+        console.warn('Error loading dynamic showcase categories:', e);
+      }
+    }
+    loadCategories();
+  }, []);
+
+  // Fetch live published projects from Supabase
+  useEffect(() => {
+    async function loadShowcaseProjects() {
+      try {
+        const supabase = createClient();
+        const { data, error } = await supabase
+          .from('projects')
+          .select('*')
+          .eq('is_published', true)
+          .order('display_order', { ascending: true })
+          .order('created_at', { ascending: true });
+
+        if (!error && data && data.length > 0) {
+          // If some projects are explicitly marked featured, display them first
+          const featured = data.filter((p) => p.featured);
+          const list = featured.length > 0 ? featured : data;
+          setProjects(list);
+        }
+      } catch (err) {
+        console.error('Error loading showcase projects from Supabase:', err);
+      }
+    }
+
+    loadShowcaseProjects();
+  }, []);
+
+
   const filteredProjects =
     activeCategory === 'all'
-      ? projectsData
-      : projectsData.filter((p) => p.category === activeCategory);
+      ? projects
+      : projects.filter((p) => p.category === activeCategory);
+
 
   // Gliding Pill Position Calculation (Supports multi-line wrap, resize, fonts.ready)
   const updateGlider = () => {
@@ -442,17 +503,17 @@ export default function ProjectShowcase() {
                 {/* Image Media Container - Completely Static Images */}
                 <div className="showcase__card-media">
                   <img
-                    src={project.image}
+                    src={project.image_url || project.image}
                     alt={`${project.title} — Architectural Commission by Syed Raza Jan`}
                     loading={idx < 2 ? 'eager' : 'lazy'}
                   />
                   <div className="showcase__card-overlay" aria-hidden="true" />
 
-                  {/* Corner Action Button with Swapping Double Arrow */}
-                  <a
-                    href="#inquire"
+                  {/* Corner Action Button with Swapping Double Arrow linking to project case study */}
+                  <Link
+                    href={`/projects/${project.slug || project.id}`}
                     className="showcase__card-action"
-                    aria-label={`Inquire about commission for ${project.title}`}
+                    aria-label={`Explore case study for ${project.title}`}
                   >
                     <span className="showcase__card-action-icon">
                       <svg
@@ -486,7 +547,7 @@ export default function ProjectShowcase() {
                         />
                       </svg>
                     </span>
-                  </a>
+                  </Link>
                 </div>
 
                 {/* Card Meta & Architectural Details */}
@@ -496,12 +557,15 @@ export default function ProjectShowcase() {
                     <div className="showcase__card-accent-bar" aria-hidden="true" />
 
                     <h3 className="showcase__card-title">
-                      <span className="showcase__card-title-text">{project.title}</span>
+                      <Link href={`/projects/${project.slug || project.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                        <span className="showcase__card-title-text">{project.title}</span>
+                      </Link>
                       <span className="showcase__card-title-underline" aria-hidden="true" />
                     </h3>
                     <span className="showcase__card-category">{project.discipline}</span>
                     <p className="showcase__card-scope">{project.scope}</p>
                   </div>
+
 
                   <div className="showcase__card-footer-row">
                     <div className="showcase__card-meta-item">
@@ -553,19 +617,42 @@ export default function ProjectShowcase() {
           <div className="showcase__bottom-text">
             <span>Have an architectural commission or master planning brief in contemplation?</span>
           </div>
-          <a href="#inquire" className="showcase__bottom-btn">
-            <span>Initiate Project Dialogue</span>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path
-                d="M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </a>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+            <Link
+              href="/projects"
+              className="showcase__bottom-btn"
+              style={{
+                background: 'rgba(255, 255, 255, 0.05)',
+                color: '#fff',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+              }}
+            >
+              <span>Explore All Works</span>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path
+                  d="M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </Link>
+            <a href="#inquire" className="showcase__bottom-btn">
+              <span>Initiate Project Dialogue</span>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path
+                  d="M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </a>
+          </div>
         </div>
+
       </div>
     </section>
   );

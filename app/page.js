@@ -19,11 +19,23 @@ import Preloader from './components/Preloader';
 import SmoothScroll from './components/SmoothScroll';
 
 export default function Home() {
-  const [loaded, setLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return Boolean(window.__hasLoadedSRJPreloader);
+    }
+    return false;
+  });
+
+  const handlePreloaderComplete = () => {
+    if (typeof window !== 'undefined') {
+      window.__hasLoadedSRJPreloader = true;
+    }
+    setLoaded(true);
+  };
 
   return (
     <>
-      {!loaded && <Preloader onComplete={() => setLoaded(true)} />}
+      {!loaded && <Preloader onComplete={handlePreloaderComplete} />}
 
       {/* Floating decorative elements */}
       <div className="floating-elements">
