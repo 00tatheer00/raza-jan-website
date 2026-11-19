@@ -85,13 +85,11 @@ export default function Hero() {
             with lasting functionality to bring your ideas to life.
           </p>
           <a
-            href="https://theminearch.com/"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#inquire"
             className="btn-pill"
-            aria-label="Visit The Mine Architects (Company Website)"
+            aria-label="Direct Commission & Inquiries"
           >
-            <span>The Mine Architects</span>
+            <span>Inquire</span>
             <span className="btn-arrow">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <path d="M4 12L12 4M12 4H5M12 4V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>

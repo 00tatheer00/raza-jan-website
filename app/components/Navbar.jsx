@@ -299,14 +299,6 @@ export default function Navbar() {
         <div className="navbar__menu">
           <a href="/#about" onClick={(e) => handleNavigation(e, '/#about')} className="navbar__menu-item">About</a>
           <Link href="/projects" onClick={(e) => handleNavigation(e, '/projects')} className="navbar__menu-item">Projects</Link>
-          <a
-            href="https://theminearch.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="navbar__menu-item"
-          >
-            The Mine Arch ↗
-          </a>
           <a href="/#contact" onClick={(e) => handleNavigation(e, '/#contact')} className="navbar__menu-item">Contact Us</a>
         </div>
 
@@ -382,14 +374,15 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Primary Inquire CTA Pill Button */}
+          {/* Company CTA Pill Button */}
           <a
-            href="/#inquire"
-            onClick={(e) => handleNavigation(e, '/#inquire')}
+            href="https://theminearch.com/"
+            target="_blank"
+            rel="noopener noreferrer"
             className="navbar__inquire-btn"
-            aria-label="Direct Commission & Inquiries"
+            aria-label="Visit The Mine Architects (Company Website)"
           >
-            <span>Inquire</span>
+            <span>The Mine Arch</span>
             <span className="navbar__inquire-arrow">
               <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
                 <path d="M4 12L12 4M12 4H5M12 4V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -416,6 +409,7 @@ export default function Navbar() {
           <div className="navbar__mobile-links">
             <a href="/#about" onClick={(e) => handleNavigation(e, '/#about')}>About</a>
             <Link href="/projects" onClick={(e) => handleNavigation(e, '/projects')}>Projects</Link>
+            <a href="/#inquire" onClick={(e) => handleNavigation(e, '/#inquire')}>Inquire</a>
             <a
               href="https://theminearch.com/"
               target="_blank"
