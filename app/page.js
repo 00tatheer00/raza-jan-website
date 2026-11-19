@@ -5,12 +5,9 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Philosophy from './components/Philosophy';
 import ProjectShowcase from './components/ProjectShowcase';
-import Services from './components/Services';
 import Testimonials from './components/Testimonials';
 import Partners from './components/Partners';
 import Stats from './components/Stats';
-import Process from './components/Process';
-import Insights from './components/Insights';
 import ClientInquiries from './components/ClientInquiries';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
@@ -52,12 +49,9 @@ export default function Home() {
           <Hero />
           <Philosophy />
           <ProjectShowcase />
-          <Services />
           <Testimonials />
           <Partners />
           <Stats />
-          <Process />
-          <Insights />
           <ClientInquiries />
           <Footer />
           <ScrollToTop />

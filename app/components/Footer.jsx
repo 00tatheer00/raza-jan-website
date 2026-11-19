@@ -92,7 +92,6 @@ export default function Footer() {
             <nav className="footer__links">
               <a href="/#about">Company</a>
               <a href="/projects">Work</a>
-              <a href="/#services">Services</a>
               <a href="/#contact">Contact</a>
             </nav>
           </div>

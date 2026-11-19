@@ -298,10 +298,7 @@ export default function Navbar() {
         {/* Desktop Menu — Horizontal Row */}
         <div className="navbar__menu">
           <a href="/#about" onClick={(e) => handleNavigation(e, '/#about')} className="navbar__menu-item">About</a>
-          <a href="/#services" onClick={(e) => handleNavigation(e, '/#services')} className="navbar__menu-item">Services</a>
           <Link href="/projects" onClick={(e) => handleNavigation(e, '/projects')} className="navbar__menu-item">Projects</Link>
-          <a href="/#process" onClick={(e) => handleNavigation(e, '/#process')} className="navbar__menu-item">Process</a>
-          <a href="/#insights" onClick={(e) => handleNavigation(e, '/#insights')} className="navbar__menu-item">Insights</a>
           <a href="/#contact" onClick={(e) => handleNavigation(e, '/#contact')} className="navbar__menu-item">Contact Us</a>
         </div>
 
@@ -410,10 +407,7 @@ export default function Navbar() {
         <div className="navbar__mobile-overlay">
           <div className="navbar__mobile-links">
             <a href="/#about" onClick={(e) => handleNavigation(e, '/#about')}>About</a>
-            <a href="/#services" onClick={(e) => handleNavigation(e, '/#services')}>Services</a>
             <Link href="/projects" onClick={(e) => handleNavigation(e, '/projects')}>Projects</Link>
-            <a href="/#process" onClick={(e) => handleNavigation(e, '/#process')}>Process</a>
-            <a href="/#insights" onClick={(e) => handleNavigation(e, '/#insights')}>Insights</a>
             <a href="/#contact" onClick={(e) => handleNavigation(e, '/#contact')}>Contact</a>
           </div>
 
