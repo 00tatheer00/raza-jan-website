@@ -5,7 +5,6 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Philosophy from './components/Philosophy';
 import ProjectShowcase from './components/ProjectShowcase';
-import Testimonials from './components/Testimonials';
 import Partners from './components/Partners';
 import Stats from './components/Stats';
 import ClientInquiries from './components/ClientInquiries';
@@ -49,7 +48,6 @@ export default function Home() {
           <Hero />
           <Philosophy />
           <ProjectShowcase />
-          <Testimonials />
           <Partners />
           <Stats />
           <ClientInquiries />
