@@ -284,7 +284,7 @@ export default function ClientInquiries() {
                   <div className="inquiries__email-fallback">
                     <span>Prefer email? Direct correspondence to </span>
                     <a
-                      href="https://mail.google.com/mail/?view=cm&fs=1&to=arrazajan@gmail.com&su=Architectural%20Inquiry%20%E2%80%94%20SRJ%20Studio"
+                      href="https://mail.google.com/mail/?view=cm&fs=1&to=arrazajan@gmail.com&su=Architectural%20Inquiry%20%E2%80%94%20Syed%20Raza%20Jan"
                       target="_blank"
                       rel="noopener noreferrer"
                     >

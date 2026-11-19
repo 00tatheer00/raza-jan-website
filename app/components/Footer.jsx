@@ -90,8 +90,9 @@ export default function Footer() {
           <div className="footer__col">
             <h3 className="footer__col-title">QUICK LINKS</h3>
             <nav className="footer__links">
-              <a href="/#about">Company</a>
+              <a href="/#about">About</a>
               <a href="/projects">Work</a>
+              <a href="https://theminearch.com/" target="_blank" rel="noopener noreferrer">The Mine Architects ↗</a>
               <a href="/#contact">Contact</a>
             </nav>
           </div>
@@ -112,7 +113,7 @@ export default function Footer() {
       {/* Bottom bar */}
       <div className="footer__bottom">
         <div className="footer__bottom-inner">
-          <span className="footer__logo">SRJ STUDIO</span>
+          <span className="footer__logo">SYED RAZA JAN</span>
           <span className="footer__terms">Terms and conditions</span>
           <span className="footer__copy">&copy; 2026. All Rights Reserved.</span>
         </div>

@@ -6,7 +6,7 @@ import fs from 'fs';
 import path from 'path';
 
 export const metadata = {
-  title: 'Architectural Portfolio & Selected Works | SRJ Studio',
+  title: 'Architectural Portfolio & Selected Works | Syed Raza Jan',
   description:
     'Explore the complete collection of luxury residential villas, bespoke interior ateliers, and full-scope turnkey architectural commissions by Syed Raza Jan.',
 };

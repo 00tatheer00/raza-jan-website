@@ -109,7 +109,7 @@ export default function Preloader({ onComplete }) {
       <div className="preloader__curtain-right"></div>
       <div className="preloader__content">
         <div className="preloader__text" ref={textRef} style={{ opacity: 0 }}>
-          <span className="preloader__name">SRJ STUDIO</span>
+          <span className="preloader__name">SYED RAZA JAN</span>
           <span className="preloader__tagline">Architectural Atelier</span>
         </div>
         <div className="preloader__counter" ref={counterRef}>

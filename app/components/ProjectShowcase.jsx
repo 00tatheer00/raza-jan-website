@@ -591,7 +591,7 @@ export default function ProjectShowcase() {
         </div>
 
         {/* Full-Width Architectural Disciplines Ticker Marquee Strip */}
-        <div className="showcase__ticker-strip" aria-label="SRJ Studio Architectural Disciplines">
+        <div className="showcase__ticker-strip" aria-label="Architectural Disciplines">
           <div className="showcase__ticker-track">
             <div className="showcase__ticker-group">
               <span>Architecture</span><span className="showcase__ticker-sep" aria-hidden="true">✦</span>

@@ -19,9 +19,9 @@ const dmSerif = DM_Serif_Display({
 });
 
 export const metadata = {
-  title: 'SRJ Studio — Syed Raza Jan | Architect & Interior Designer',
-  description: 'Architect with 9+ years of experience in architectural design, interior design, 3D visualization, and site execution. Based in Islamabad, Pakistan.',
-  keywords: 'architect, interior designer, 3D visualization, Islamabad, Pakistan, SRJ Studio, Syed Raza Jan',
+  title: 'Syed Raza Jan | Architect & Spatial Designer',
+  description: 'Principal Architect with 9+ years of experience in architectural design, interior architecture, 3D visualization, and site execution. CEO at The Mine Architects.',
+  keywords: 'architect, interior designer, 3D visualization, Islamabad, Pakistan, Syed Raza Jan, The Mine Architects',
 };
 
 export default function RootLayout({ children }) {

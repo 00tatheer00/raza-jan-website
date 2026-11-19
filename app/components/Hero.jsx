@@ -84,8 +84,14 @@ export default function Hero() {
             We create visionary spaces that inspire, combining innovative design
             with lasting functionality to bring your ideas to life.
           </p>
-          <a href="#about" className="btn-pill">
-            <span>About SRJ Studio</span>
+          <a
+            href="https://theminearch.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-pill"
+            aria-label="Visit The Mine Architects (Company Website)"
+          >
+            <span>The Mine Architects</span>
             <span className="btn-arrow">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <path d="M4 12L12 4M12 4H5M12 4V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>

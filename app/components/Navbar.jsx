@@ -292,13 +292,21 @@ export default function Navbar() {
       <div className="navbar__inner">
         {/* Logo */}
         <Link href="/" className="navbar__logo" onClick={(e) => handleNavigation(e, '/')}>
-          <span>SRJ Studio</span>
+          <span>Syed Raza Jan</span>
         </Link>
 
         {/* Desktop Menu — Horizontal Row */}
         <div className="navbar__menu">
           <a href="/#about" onClick={(e) => handleNavigation(e, '/#about')} className="navbar__menu-item">About</a>
           <Link href="/projects" onClick={(e) => handleNavigation(e, '/projects')} className="navbar__menu-item">Projects</Link>
+          <a
+            href="https://theminearch.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="navbar__menu-item"
+          >
+            The Mine Arch ↗
+          </a>
           <a href="/#contact" onClick={(e) => handleNavigation(e, '/#contact')} className="navbar__menu-item">Contact Us</a>
         </div>
 
@@ -408,6 +416,14 @@ export default function Navbar() {
           <div className="navbar__mobile-links">
             <a href="/#about" onClick={(e) => handleNavigation(e, '/#about')}>About</a>
             <Link href="/projects" onClick={(e) => handleNavigation(e, '/projects')}>Projects</Link>
+            <a
+              href="https://theminearch.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={closeMobile}
+            >
+              The Mine Arch ↗
+            </a>
             <a href="/#contact" onClick={(e) => handleNavigation(e, '/#contact')}>Contact</a>
           </div>
 
